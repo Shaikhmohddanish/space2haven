@@ -4,10 +4,7 @@ import { connectDB } from "@/lib/dbConnection";
 import mongoose from "mongoose";
 
 // ✅ Correctly typed API handler for DELETE request
-export async function DELETE(
-  req: NextRequest,
-  context: { params: Record<string, string> }
-) {
+export async function DELETE(req: NextRequest, context:any) {
   const { params } = context;
   console.log("🛠 DELETE API called. Awaiting params...");
 
