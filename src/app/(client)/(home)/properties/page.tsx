@@ -44,7 +44,6 @@ const PropertiesPage = () => {
   const [filters, setFilters] = useState<FilterObject>({
     city: "",
     state: "",
-    bhk: "",
     budget: { min: "", max: "" },
     propertyType: [],
     configuration: [],

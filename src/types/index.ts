@@ -130,7 +130,6 @@ export interface ServiceCardProps {
 export interface FilterObject {
   city: string;
   state: string;
-  bhk: string;
   configuration: string[];
   possession?: string; 
   developer?:string;
@@ -144,7 +143,6 @@ export interface FilterObject {
 export interface FilterObject {
   city: string;
   state: string;
-  bhk: string;
   budget: { min: string; max: string };
   propertyType: string[];
 }

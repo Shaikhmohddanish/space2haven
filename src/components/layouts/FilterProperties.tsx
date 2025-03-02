@@ -9,6 +9,8 @@ interface FiltersState {
   propertyType: string[];
   possession: string;
   developer: string;
+  city: string;    // 🟢 Added missing property
+  state: string;   // 🟢 Added missing property
 }
 
 const FilterProperties = ({
@@ -44,6 +46,8 @@ const FilterProperties = ({
     propertyType: Array.isArray(filters?.propertyType) ? filters.propertyType : [],
     possession: filters?.possession || "",
     developer: filters?.developer || "",
+    city: filters?.city || "",       // 🟢 Initialize new field
+  state: filters?.state || "",     // 🟢 Initialize new field
   });
 
   useEffect(() => {
@@ -53,26 +57,28 @@ const FilterProperties = ({
       propertyType: Array.isArray(filters?.propertyType) ? filters.propertyType : [],
       possession: filters?.possession || "",
       developer: filters?.developer || "",
+      city: filters?.city || "",
+      state: filters?.state || "",
     });
   }, [filters]);
 
-  // ✅ Handle input changes correctly
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
     const isCheckbox = type === "checkbox";
-
+  
     setLocalFilters((prev) => {
       if (isCheckbox) {
         const target = e.target as HTMLInputElement;
         const checked = target.checked;
-
+  
         if (name === "configuration") {
           const updatedConfig = checked
             ? [...prev.configuration, value]
             : prev.configuration.filter((item) => item !== value);
           return { ...prev, configuration: updatedConfig };
         }
-
+  
         if (name === "propertyType") {
           const updatedPropertyType = checked
             ? [...prev.propertyType, value]
@@ -86,22 +92,25 @@ const FilterProperties = ({
           budget: { ...prev.budget, [budgetKey]: value },
         };
       } else {
+        // 🟢 Handle other input types, including new fields like city, state, bhk
         return { ...prev, [name]: value };
       }
       return prev;
     });
   };
+  
 
-  // ✅ Apply Filters
   const applyFiltersHandler = () => {
     setFilters({
       ...localFilters,
       configuration: localFilters.configuration.length > 0 ? localFilters.configuration : [],
+      propertyType: localFilters.propertyType.length > 0 ? localFilters.propertyType : [],
     });
   
     toast({ description: "Filters applied!" });
     setOpen(false);
   };
+  
   
 
   // ✅ Clear Filters
@@ -112,6 +121,8 @@ const FilterProperties = ({
       propertyType: [],
       possession: "",
       developer: "",
+      city: "",
+      state: "",
     };
 
     setLocalFilters(resetFilters);
