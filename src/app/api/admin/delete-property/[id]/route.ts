@@ -4,14 +4,17 @@ import { connectDB } from "@/lib/dbConnection";
 import mongoose from "mongoose";
 
 // ✅ Correctly typed API handler for DELETE request
-export async function DELETE(req: NextRequest, context: { params: { id: string } }) {
+export async function DELETE(
+  req: NextRequest,
+  context: { params: Record<string, string> }
+) {
   const { params } = context;
   console.log("🛠 DELETE API called. Awaiting params...");
 
   try {
     await connectDB(); // Ensure database connection
 
-    const id = params?.id;
+    const id = params.id;
     console.log("🔍 Property ID to delete:", id);
 
     if (!id || typeof id !== "string") {
