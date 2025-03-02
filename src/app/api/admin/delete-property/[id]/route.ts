@@ -3,14 +3,14 @@ import PropertyModel from "@/models/propertyModel";
 import { connectDB } from "@/lib/dbConnection";
 import mongoose from "mongoose";
 
-export const DELETE = async (req: NextRequest, { params }: { params: { id: string } }) => {
+export const DELETE = async (req: NextRequest, context: { params: { id: string } }) => {
   console.log("🛠 DELETE API called. Awaiting params...");
 
   try {
     await connectDB(); // Ensure database connection
 
-    // ✅ Extract the ID properly
-    const { id } = params;
+    // 🛠 Corrected parameter extraction
+    const id = context.params?.id;
     console.log("🔍 Property ID to delete:", id);
 
     if (!id || typeof id !== "string") {
