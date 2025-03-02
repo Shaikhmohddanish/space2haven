@@ -3,13 +3,8 @@ import PropertyModel from "@/models/propertyModel";
 import { connectDB } from "@/lib/dbConnection";
 import mongoose from "mongoose";
 
-interface Context {
-  params: {
-    id: string;
-  };
-}
-
-export const DELETE = async (req: NextRequest, { params }: Context) => {
+// ✅ Correctly typed API handler for DELETE request
+export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
   console.log("🛠 DELETE API called. Awaiting params...");
 
   try {
@@ -62,4 +57,4 @@ export const DELETE = async (req: NextRequest, { params }: Context) => {
     console.error("❌ Error deleting property:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
-};
+}
