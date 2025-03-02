@@ -1,9 +1,10 @@
-import PropertyModel from "@/models/propertyModel";
 import { NextRequest, NextResponse } from "next/server";
+import PropertyModel from "@/models/propertyModel";
 import { connectDB } from "@/lib/dbConnection";
 import mongoose from "mongoose";
+import { RouteHandlerContext } from "next";
 
-export const DELETE = async (req: NextRequest, context: { params: { id: string } }) => {
+export const DELETE = async (req: NextRequest, context: RouteHandlerContext<{ id: string }>) => {
   console.log("🛠 DELETE API called. Awaiting params...");
 
   try {
