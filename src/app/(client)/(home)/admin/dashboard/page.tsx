@@ -12,6 +12,27 @@ const Dashboard = () => {
   const [properties, setProperties] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
+  const dashboardData = [
+    {
+      link: "/admin/add-property",
+      title: "Add Property",
+      color: "bg-red-500",
+      hover: "bg-red-600",
+    },
+    {
+      link: "/admin/add-interior",
+      title: "Add Interior",
+      color: "bg-blue-500",
+      hover: "bg-blue-600",
+    },
+    {
+      link: "/admin/all-properties",
+      title: "All Properties",
+      color: "bg-emerald-500",
+      hover: "bg-emerald-600",
+    },
+  ];
+
   useEffect(() => {
     const storedAdminDetails = localStorage.getItem("adminDetails");
     setAdminDetails(storedAdminDetails);
@@ -36,7 +57,6 @@ const Dashboard = () => {
     }
   };
 
-
   return (
     <section className="min-h-screen py-24 px-4 bg-sand-soft flex-center flex-col bg-[url(/images/pattern.png)]">
       {adminDetails ? (
@@ -59,7 +79,6 @@ const Dashboard = () => {
             ))}
           </div>
 
-         
         </>
       ) : (
         <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-home">Access Denied..!</h1>
@@ -69,24 +88,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-
-export const dashboardData = [
-  {
-    link: "/admin/add-property",
-    title: "Add Property",
-    color: "bg-red-500",
-    hover: "bg-red-600",
-  },
-  {
-    link: "/admin/add-interior",
-    title: "Add Interior",
-    color: "bg-blue-500",
-    hover: "bg-blue-600",
-  },
-  {
-    link: "/admin/all-properties",
-    title: "All Properties",
-    color: "bg-emerald-500",
-    hover: "bg-emerald-600",
-  },
-];
