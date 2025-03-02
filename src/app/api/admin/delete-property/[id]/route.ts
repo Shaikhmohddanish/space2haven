@@ -2,16 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import PropertyModel from "@/models/propertyModel";
 import { connectDB } from "@/lib/dbConnection";
 import mongoose from "mongoose";
-import { RouteHandlerContext } from "next";
 
-export const DELETE = async (req: NextRequest, context: RouteHandlerContext<{ id: string }>) => {
+export const DELETE = async (req: NextRequest, { params }: { params: { id: string } }) => {
   console.log("🛠 DELETE API called. Awaiting params...");
 
   try {
     await connectDB(); // Ensure database connection
 
     // ✅ Extract the ID properly
-    const { id } = context.params;
+    const { id } = params;
     console.log("🔍 Property ID to delete:", id);
 
     if (!id || typeof id !== "string") {
