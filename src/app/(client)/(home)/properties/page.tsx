@@ -1,11 +1,14 @@
 "use client";
 
 import { Suspense, useEffect, useState } from "react";
-import { HalfBanner, LoaderLayout, PropertiesPageContent } from "@/components";
+import { LoaderLayout, PropertiesPageContent } from "@/components";
 import { FilterObject } from "@/types";
+import dynamic from "next/dynamic";
 import { useParams, usePathname } from "next/navigation";
 import axios from "axios";
 import PropertyDetails from "./[id]/PropertyDetails"; // ✅ Import Property Details Component
+
+const HalfBanner = dynamic(() => import("@/components/layouts/HalfBanner"), { ssr: false });
 
 interface Property {
   _id: string;
@@ -112,10 +115,10 @@ const PropertiesPage = () => {
   // ✅ Otherwise, show the **Property Listings Grid**
   return (
     <>
+      <Suspense fallback={<LoaderLayout />}>
       <HalfBanner search={search} setSearch={setSearch} filters={filters} setFilters={setFilters} />
-      <Suspense fallback={<section className="min-h-screen w-full flex-center"><LoaderLayout /></section>}>
-        <PropertiesPageContent search={search} filters={filters} setFilters={setFilters} />
-      </Suspense>
+      <PropertiesPageContent search={search} filters={filters} setFilters={setFilters} />
+    </Suspense>
     </>
   );
 };
