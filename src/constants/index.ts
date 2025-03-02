@@ -175,12 +175,6 @@ export const dashboardData = [
         color: "bg-emerald-500",
         hover: "bg-emerald-600",
     },
-    {
-        link: "/admin/customers",
-        title: "Customers",
-        color: "bg-purple-500",
-        hover: "bg-purple-600",
-    },
 ]
 
 export const servicesList = [
