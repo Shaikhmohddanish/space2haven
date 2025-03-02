@@ -4,13 +4,13 @@ import { connectDB } from "@/lib/dbConnection";
 import mongoose from "mongoose";
 
 // ✅ Correctly typed API handler for DELETE request
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, context: { params: { id: string } }) {
+  const { params } = context;
   console.log("🛠 DELETE API called. Awaiting params...");
 
   try {
     await connectDB(); // Ensure database connection
 
-    // 🛠 Corrected parameter extraction
     const id = params?.id;
     console.log("🔍 Property ID to delete:", id);
 
@@ -24,7 +24,6 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
       return NextResponse.json({ error: "Invalid MongoDB ObjectId format" }, { status: 400 });
     }
 
-    // ✅ Find the property (Ensure it's NOT an array)
     const property = await PropertyModel.findById(id).lean();
 
     if (!property || typeof property !== "object" || Array.isArray(property)) {
@@ -34,14 +33,12 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
 
     console.log("🔍 Property found:", property);
 
-    // ✅ Ensure `_id` exists and is a valid ObjectId
     const propertyId = property?._id?.toString();
     if (!propertyId || !mongoose.Types.ObjectId.isValid(propertyId)) {
       console.error("❌ Error: Property has no valid _id field");
       return NextResponse.json({ error: "Property ID missing in database record" }, { status: 500 });
     }
 
-    // ✅ Ensure property is actually deleted
     const deletionResult = await PropertyModel.deleteOne({ _id: propertyId });
 
     if (deletionResult.deletedCount === 0) {
@@ -50,7 +47,6 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
     }
 
     console.log("✅ Property deleted successfully:", id);
-
     return NextResponse.json({ msg: "Property deleted successfully" }, { status: 200 });
 
   } catch (error) {
