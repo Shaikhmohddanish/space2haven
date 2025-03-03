@@ -159,7 +159,7 @@ const FilterProperties = ({
       <div className="mb-4">
         <p className="mb-2 font-medium text-gray-600">Property Type</p>
         <div className="flex flex-wrap gap-2">
-          {["Apartment", "Villa", "Bungalow", "Studio", "Penthouse"].map((type) => (
+          {["Commercial", "Residential", "Villa"].map((type) => (
             <label key={type} className="flex items-center gap-2">
               <input
                 type="checkbox"

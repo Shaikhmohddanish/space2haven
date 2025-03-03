@@ -326,4 +326,3 @@ export const contentStyles = {
     },
 };
 
-export const filterTypes = ["All", "Villa", "House", "Flat"];
