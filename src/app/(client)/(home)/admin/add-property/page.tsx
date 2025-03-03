@@ -8,6 +8,35 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
+const uploadImagesToCloudinary = async (files: File[]): Promise<string[]> => {
+  try {
+      const uploadPromises = files.map(async (file) => {
+          const formData = new FormData();
+          formData.append("file", file);
+
+          const response = await fetch("/api/upload-image", {
+              method: "POST",
+              body: formData,
+          });
+
+          const data = await response.json();
+
+          if (response.ok && data.url) {
+              return data.url;
+          } else {
+              console.error("❌ Error uploading to Cloudinary:", data.error);
+              return "";
+          }
+      });
+
+      const imageUrls = await Promise.all(uploadPromises);
+      return imageUrls.filter((url) => url !== "");  // ✅ Filter out empty URLs
+  } catch (error) {
+      console.error("❌ Error uploading images:", error);
+      return [];
+  }
+};
+
 const AddProperty: React.FC = () => {
 
   const router = useRouter();
@@ -118,7 +147,16 @@ const AddProperty: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+    setLoading(true);
+
+    let imageUrls: string[] = [];
+
+    // ✅ Step 1: Upload images to Cloudinary first if they exist
+    if (Array.isArray(formData.images) && formData.images.length > 0) {
+        imageUrls = await uploadImagesToCloudinary(formData.images as File[]);
+    }
+
+    // ✅ Step 2: Prepare form data with image URLs
     const form = new FormData();
 
     Object.keys(formData).forEach((key) => {
@@ -128,14 +166,21 @@ const AddProperty: React.FC = () => {
         }
     });
 
+    // ✅ Append Cloudinary image URLs to form data
+    if (imageUrls.length > 0) {
+        imageUrls.forEach((url) => form.append("images", url));
+    } else {
+        console.error("❌ No images uploaded or images array is empty!");
+    }
+
     // ✅ Ensure `possession` and `developer` are sent properly
     if (formData.possession) {
-      form.append("possession", formData.possession.trim());
-  }
+        form.append("possession", formData.possession.trim());
+    }
 
-  if (formData.developer) {
-      form.append("developer", formData.developer.trim());
-  }
+    if (formData.developer) {
+        form.append("developer", formData.developer.trim());
+    }
 
     // ✅ Address fields
     Object.keys(formData.address).forEach((addressKey) => {
@@ -144,8 +189,8 @@ const AddProperty: React.FC = () => {
             form.append(`address[${addressKey}]`, value.trim());
         }
     });
-    
-    console.log("FORM DATA "+ JSON.stringify(formData));  // ✅ Debugging step
+
+    console.log("FORM DATA " + JSON.stringify(formData));  // ✅ Debugging step
 
     // ✅ Multi-Select Configuration (BHK)
     if (Array.isArray(formData.configuration) && formData.configuration.length > 0) {
@@ -154,24 +199,11 @@ const AddProperty: React.FC = () => {
         console.warn("⚠️ No configurations selected.");
     }
 
-
     // ✅ Multi-Select Features
     if (Array.isArray(formData.features) && formData.features.length > 0) {
-        formData.features.forEach((feature) => {
-            form.append("features", JSON.stringify(formData.features));
-        });
+        form.append("features", JSON.stringify(formData.features));  // 🔥 Convert to JSON string
     } else {
         console.warn("⚠️ No features selected.");
-    }
-
-    // ✅ Images correctly appended
-    if (Array.isArray(formData.images) && formData.images.length > 0) {
-        formData.images.forEach((file) => {
-            console.log(`Appending image: ${file.name}, size: ${file.size}`);
-            form.append("images", file);
-        });
-    } else {
-        console.error("❌ No images found in FormData");
     }
 
     // ✅ Debugging: Check FormData
@@ -180,12 +212,12 @@ const AddProperty: React.FC = () => {
         console.log(pair[0], pair[1]);
     }
 
+    // ✅ Step 3: Submit form data to backend
     try {
-        setLoading(true);
-        const response = await axios.post("/api/admin/add-property", form, {
+        const response = await axios.post(`${window.location.origin}/api/admin/add-property`, form, {
             headers: { "Content-Type": "multipart/form-data" },
         });
-    
+
         toast({ description: response?.data?.msg });
         router.push("/properties");
     } catch (error: any) {
@@ -197,9 +229,6 @@ const AddProperty: React.FC = () => {
         setLoading(false);
     }
 };
-
-
-
 
   return (
     <section className="min-h-screen flex-center py-24 px-4 bg-gray-100 flex-col gap-4 w-full">
@@ -239,17 +268,53 @@ const AddProperty: React.FC = () => {
         </div>
 
         {/* Images */}
-        <div className="col-span-full">
-          <label className="block font-medium mb-1">Images (up to 10, max 500 KB each)</label>
-          <input
-            type="file"
-            name="images"
-            multiple
-            accept=".jpg, .jpeg, .png, .webp, .avif"
-            onChange={handleChange}
-            className="input-class w-full"
+<div className="col-span-full">
+  <label className="block font-medium mb-1">Images (up to 10, max 500 KB each)</label>
+  <input
+    type="file"
+    name="images"
+    multiple
+    accept=".jpg, .jpeg, .png, .webp, .avif"
+    onChange={(e) => {
+      const files = e.target.files;
+      if (files) {
+        const selectedFiles = Array.from(files);
+        const validFiles = selectedFiles.filter((file) => file.size <= 500 * 1024); // 500 KB size limit
+
+        if (selectedFiles.length > 10) {
+          alert("You can only upload up to 10 files.");
+          return;
+        }
+
+        if (validFiles.length < selectedFiles.length) {
+          alert("Some files exceed the 500 KB size limit and were excluded.");
+        }
+
+        setFormData((prevData) => ({
+          ...prevData,
+          images: validFiles.slice(0, 10), // Limit to 10 valid files
+        }));
+      }
+    }}
+    className="input-class w-full"
+  />
+
+  {/* Image Previews */}
+  {formData.images.length > 0 && (
+    <div className="mt-2 grid grid-cols-2 sm:grid-cols-4 gap-2">
+      {formData.images.map((file, index) => (
+        <div key={index} className="relative">
+          <img
+            src={URL.createObjectURL(file)}
+            alt={`Preview ${index + 1}`}
+            className="w-full h-20 object-cover rounded-md shadow-sm"
           />
         </div>
+      ))}
+    </div>
+  )}
+</div>
+
 
         {/* Description */}
         <div className="col-span-full">

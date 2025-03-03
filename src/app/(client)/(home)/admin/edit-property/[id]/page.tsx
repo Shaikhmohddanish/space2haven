@@ -3,10 +3,40 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
-import { CityNState } from "@/components";
 import { cityOptions } from "@/constants";
 import { useToast } from "@/hooks/use-toast";
 import { Option, PropertyFormValues } from "@/types";
+
+const uploadImagesToCloudinary = async (files: File[]): Promise<string[]> => {
+  try {
+      const uploadPromises = files.map(async (file) => {
+          const formData = new FormData();
+          formData.append("file", file);
+
+          const response = await fetch("/api/upload-image", {
+              method: "POST",
+              body: formData,
+          });
+
+          const data = await response.json();
+
+          if (response.ok && data.url) {
+              return data.url;
+          } else {
+              console.error("❌ Error uploading to Cloudinary:", data.error);
+              return "";
+          }
+      });
+
+      const imageUrls = await Promise.all(uploadPromises);
+      return imageUrls.filter((url) => url !== "");  // ✅ Filter out empty URLs
+  } catch (error) {
+      console.error("❌ Error uploading images:", error);
+      return [];
+  }
+};
+
+
 
 const EditProperty: React.FC = () => {
   const router = useRouter();
@@ -99,44 +129,54 @@ const handleMultiSelectChange = (name: keyof PropertyFormValues, value: string |
     setExistingImages((prevImages) => prevImages.filter((img) => img !== url));
   };
 
-  // ✅ Handle Form Submission
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-      setLoading(true);
-      const form = new FormData();
+    setLoading(true);
 
-      Object.keys(formData).forEach((key) => {
+    let imageUrls: string[] = [];
+
+    // ✅ Upload new images to Cloudinary if they exist
+    if (Array.isArray(formData.images) && formData.images.length > 0) {
+        imageUrls = await uploadImagesToCloudinary(formData.images as File[]);
+    }
+
+    // ✅ Combine existing images with new uploaded images
+    const allImageUrls = [...existingImages, ...imageUrls];
+
+    // ✅ Prepare form data with image URLs
+    const form = new FormData();
+
+    Object.keys(formData).forEach((key) => {
         const value = formData[key as keyof PropertyFormValues];
         if (key !== "images" && value !== undefined) {
-          form.append(key, typeof value === "string" ? value.trim() : JSON.stringify(value));
+            form.append(key, typeof value === "string" ? value.trim() : JSON.stringify(value));
         }
-      });
+    });
 
-      form.append("existingImages", JSON.stringify(existingImages));
-
-      if (Array.isArray(formData.images) && formData.images.length > 0) {
-        formData.images.forEach((file) => {
-          form.append("images", file);
-        });
-      }
-    
-
-      const response = await axios.put(`/api/admin/update-property/${id}`, form, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-
-      toast({ description: response.data.msg });
-      router.push("/admin/all-properties");
-    } catch (error: any) {
-      console.error("❌ Error updating property:", error);
-      toast({
-        description: error?.response?.data?.error || "Failed to update property",
-      });
-    } finally {
-      setLoading(false);
+    // ✅ Append combined image URLs to form data
+    if (allImageUrls.length > 0) {
+        allImageUrls.forEach((url) => form.append("images", url));
+    } else {
+        console.error("❌ No images uploaded or images array is empty!");
     }
-  };
+
+    try {
+        const response = await axios.put(`/api/admin/update-property/${id}`, form, {
+            headers: { "Content-Type": "multipart/form-data" },
+        });
+
+        toast({ description: response.data.msg });
+        router.push("/admin/all-properties");
+    } catch (error: any) {
+        console.error("❌ Error updating property:", error);
+        toast({
+            description: error?.response?.data?.error || "Failed to update property",
+        });
+    } finally {
+        setLoading(false);
+    }
+};
+
 
   // ✅ Center Loading Message
   if (loading)

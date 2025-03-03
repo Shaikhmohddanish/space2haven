@@ -1,41 +1,41 @@
 import { connectDB } from "@/lib/dbConnection";
 import PropertyModel from "@/models/propertyModel";
 import { NextRequest, NextResponse } from "next/server";
-import { addpropertyImages } from "@/lib/cloudinary";
 
 const processFormData = async (req: Request): Promise<any> => {
     const formData = await req.formData();
-        
+
     const propertyData: Record<string, any> = {};
     propertyData.images = []; // Ensure images is an array
 
+    // ✅ Handle image URLs directly instead of files
     for (const [key, value] of formData.entries()) {
-        if (key === "images" && value instanceof File) {  
-            console.log(`Processing image: ${value.name}`);  // ✅ Debugging
-            const buffer = await value.arrayBuffer();
-            const imgUrl = await addpropertyImages(Buffer.from(buffer));
-            if (imgUrl) {
-                propertyData.images.push(imgUrl);
-            }
+        if (key === "images") {
+            // ✅ Directly append image URLs to the array
+            propertyData.images.push(value.toString().trim());
         } else if (key.includes("[")) {
             const match = key.match(/^([^\[]+)\[([^\]]+)\]$/);
             if (match) {
                 const parentKey = match[1];
                 const childKey = match[2];
                 propertyData[parentKey] = propertyData[parentKey] || {};
-                propertyData[parentKey][childKey] = value;
+                propertyData[parentKey][childKey] = value.toString().trim();
             }
         } else {
             propertyData[key] = value.toString().trim();
         }
+
         if (typeof propertyData.configuration === "string") {
             try {
-              propertyData.configuration = JSON.parse(propertyData.configuration);
+                propertyData.configuration = JSON.parse(propertyData.configuration);
             } catch {
-              propertyData.configuration = [];
+                propertyData.configuration = [];
             }
         }
     }
+
+    console.log("✅ Uploaded Image URLs:", propertyData.images);
+
     return propertyData;
 };
 
@@ -43,7 +43,7 @@ const processFormData = async (req: Request): Promise<any> => {
 export const POST = async (req: NextRequest) => {
     try {
         console.log("✅ Request received for adding property");
-        
+
         const inputData = await processFormData(req);
         console.log("✅ Processed FormData:", inputData);
 
@@ -65,7 +65,6 @@ export const POST = async (req: NextRequest) => {
             { status: 200 }
         );
     } catch (error) {
-        // ✅ Fix: Ensure error is of type `Error`
         if (error instanceof Error) {
             console.error("❌ Error while adding property:", error.message);
             return NextResponse.json(
@@ -81,6 +80,3 @@ export const POST = async (req: NextRequest) => {
         }
     }
 };
-
-
-
