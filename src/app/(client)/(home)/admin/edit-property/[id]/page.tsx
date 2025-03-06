@@ -351,6 +351,7 @@ const handleMultiSelectChange = (name: keyof PropertyFormValues, value: string |
               <option value="Commercial">Commercial</option>
               <option value="Residential">Residential</option>
               <option value="Villa">Villa</option>
+              <option value="Land">Land</option>
             </select>
 
           </div>
