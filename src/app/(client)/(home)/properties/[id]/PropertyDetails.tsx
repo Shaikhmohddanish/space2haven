@@ -84,7 +84,7 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property, recommended
     : "N/A"}
           </h2>
           <h2 className="md:text-lg font-semibold">
-            <span className="font-bold">Area:</span> {area || "N/A"} sq.ft
+            <span className="font-bold">Area:</span> {area || "N/A"}
           </h2>
           <h1 className="font-bold text-xl">
             <span className="font-bold">Price:</span> ₹ {price || "N/A"}
