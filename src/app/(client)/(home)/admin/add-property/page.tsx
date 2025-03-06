@@ -385,11 +385,10 @@ const AddProperty: React.FC = () => {
               className="input-class w-full"
             >
               <option value="">Select Property Type</option>
-              
-              <option value="Commercial">Commercial</option>
               <option value="Residential">Residential</option>
+              <option value="Commercial">Commercial</option>
               <option value="Villa">Villa</option>
-              <option value="Land">Land</option>
+              <option value="Plots">Plots</option>
             </select>
 
           </div>
