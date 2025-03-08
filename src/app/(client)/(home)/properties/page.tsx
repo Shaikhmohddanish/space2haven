@@ -105,7 +105,7 @@ const PropertiesPage = () => {
     if (error) return <div className="text-center text-red-500 py-20">{error}</div>;
 
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="items-center justify-center min-h-screen">
         {property ? (
           <PropertyDetails property={property} recommended={recommended} />
         ) : (

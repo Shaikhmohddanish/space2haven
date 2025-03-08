@@ -533,44 +533,47 @@ const AddProperty: React.FC = () => {
         
       </div>
 
-      {/* Recommend Checkbox */}
-<div className="flex-center pt-4 gap-4">
-  <label className="block font-medium mb-1">Recommend to User</label>
-  <input
-    type="checkbox"
-    name="recommend"
-    checked={formData.recommend}
-    onChange={() =>
-      setFormData({ ...formData, recommend: !formData.recommend })
-    }
-  />
+      <div className="flex items-center gap-8 pt-4">
+  {/* Recommend Checkbox */}
+  <div className="flex items-center gap-2">
+    <input
+      type="checkbox"
+      name="recommend"
+      checked={formData.recommend}
+      onChange={() =>
+        setFormData({ ...formData, recommend: !formData.recommend })
+      }
+    />
+    <label className="font-medium">Recommend to User</label>
+  </div>
+
+  {/* Featured Checkbox */}
+  <div className="flex items-center gap-2">
+    <input
+      type="checkbox"
+      name="featured"
+      checked={formData.featured}
+      onChange={() =>
+        setFormData({ ...formData, featured: !formData.featured })
+      }
+    />
+    <label className="font-medium">Featured</label>
+  </div>
+
+  {/* New Property Checkbox */}
+  <div className="flex items-center gap-2">
+    <input
+      type="checkbox"
+      name="newProperty"
+      checked={formData.newProperty}
+      onChange={() =>
+        setFormData({ ...formData, newProperty: !formData.newProperty })
+      }
+    />
+    <label className="font-medium">New Property</label>
+  </div>
 </div>
 
-{/* Featured Checkbox */}
-<div className="flex-center pt-4 gap-4">
-  <label className="block font-medium mb-1">Featured</label>
-  <input
-    type="checkbox"
-    name="featured"
-    checked={formData.featured}
-    onChange={() =>
-      setFormData({ ...formData, featured: !formData.featured })
-    }
-  />
-</div>
-
-{/* New Property Checkbox */}
-<div className="flex-center pt-4 gap-4">
-  <label className="block font-medium mb-1">New Property</label>
-  <input
-    type="checkbox"
-    name="newProperty"
-    checked={formData.newProperty}
-    onChange={() =>
-      setFormData({ ...formData, newProperty: !formData.newProperty })
-    }
-  />
-</div>
 
 
       {/* Submit Button */}
