@@ -9,7 +9,12 @@ import axios from "axios";
 import PropertyDetails from "./[id]/PropertyDetails"; // ✅ Import Property Details Component
 
 const HalfBanner = dynamic(() => import("@/components/layouts/HalfBanner"), { ssr: false });
-
+interface Configuration {
+  bhkType: string;
+  carpetArea: string;
+  builtupArea: string;
+  price: string;
+}
 interface Property {
   _id: string;
   title: string;
@@ -17,6 +22,7 @@ interface Property {
   price: string;
   propertyType: string;
   configuration: string[];
+  configurations: Configuration[];  // ✅ New: For detailed configurations
   description: string;
   location: string;
   area: string;
