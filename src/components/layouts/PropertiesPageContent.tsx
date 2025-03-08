@@ -7,7 +7,8 @@ import { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { usePathname } from "next/navigation";
 import FeaturedPropertiesSlider from "./FeaturedPropertiesSlider";
-
+import { IoLocationOutline, IoBedOutline, IoCalendarOutline, IoHomeOutline } from "react-icons/io5";
+import NewPropertiesSlider from "./NewPropertiesSlider";
 const PropertiesPageContent = ({
   search,
   filters,
@@ -150,13 +151,12 @@ const PropertiesPageContent = ({
               </div>
             )}
 
-            {/* ✅ New Properties Slider */}
-            {newProperties.length > 0 && (
-              <div className="w-full my-6">
-                <h1 className="text-2xl font-semibold mb-4 text-home">New Properties</h1>
-                <DynamicCarousel data={newProperties as Property[]} loading={false} type="home-properties" />
-              </div>
-            )}
+{newProperties.length > 0 && (
+  <NewPropertiesSlider data={newProperties as Property[]} />
+)}
+
+
+
           </>
         )}
 
