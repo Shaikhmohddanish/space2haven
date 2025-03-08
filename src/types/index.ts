@@ -18,6 +18,7 @@ export interface Property {
   recommend:boolean;
   possession:string;
   developer:string;
+  featured:boolean;
   updatedAt: string
 }
 
@@ -145,6 +146,7 @@ export interface FilterObject {
   state: string;
   budget: { min: string; max: string };
   propertyType: string[];
+  developer?:string;
 }
 
 

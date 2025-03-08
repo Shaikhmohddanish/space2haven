@@ -5,7 +5,8 @@ import { PropertiesPageContentProps, Property } from "@/types";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { usePathname } from "next/navigation"; 
+import { usePathname } from "next/navigation";
+import FeaturedPropertiesSlider from "./FeaturedPropertiesSlider";
 
 const PropertiesPageContent = ({
   search,
@@ -59,19 +60,19 @@ const PropertiesPageContent = ({
     }
   }, [cachedProperties]);
 
-  // ✅ Apply Filters (Configuration, Property Type, Possession,developer, Budget)
+  // ✅ Apply Filters and Search
   useEffect(() => {
     let searchData = [...data];
-    
+
     // 🔎 Search Filter
     if (search) {
       searchData = searchData.filter((property) =>
-        [property.title, property.location, property.address.city, property.address.state]
+        [property.title, property.location, property.address.city, property.address.state,property.developer]
           .some((field) => field?.toLowerCase().includes(search.toLowerCase()))
       );
     }
 
-    // 🏠 Configuration (BHK) Filter
+    // 🏠 Configuration Filter
     if (filters.configuration.length > 0) {
       searchData = searchData.filter((property) =>
         property.configuration.some((bhk) => filters.configuration.includes(bhk))
@@ -120,10 +121,9 @@ const PropertiesPageContent = ({
     setPage(nextPage);
   };
 
-  // ✅ Filter Recommended Properties
+  // ✅ Filter Featured, Recommended, and New Properties
+  const featuredProperties = data.filter((property) => property.featured);
   const recommendedProperties = data.filter((property) => property.recommend);
-
-  // ✅ Filter New Properties (Built this year or last year)
   const newProperties = data.filter(
     (property) => property.yearBuilt === currentYear || property.yearBuilt === currentYear - 1
   );
@@ -131,18 +131,44 @@ const PropertiesPageContent = ({
   return (
     <section className="min-h-screen w-full flex justify-center items-start flex-col md:flex-row px-4 md:px-10 bg-[url(/images/pattern.png)]">
       <main className="flex flex-col w-full h-full p-4 md:p-6 gap-4">
-        <h1 className="text-2xl font-semibold">Discover Your Dream Property</h1>
+        {/* ✅ Show Sliders Only If Search is Empty */}
+        {!search && (
+          <>
+            {/* ✅ Featured Properties Slider */}
+            {featuredProperties.length > 0 && (
+              <div className="w-full my-6">
+                <h1 className="text-2xl font-semibold mb-4 text-home">Featured Properties</h1>
+                <FeaturedPropertiesSlider data={featuredProperties as Property[]} />
+                </div>
+            )}
 
-        {/* ✅ Property Listings */}
-        {loading ? (
-          <LoaderLayout />
-        ) : filteredData.length === 0 ? (
-          <div className="w-full min-h-[50vh] flex-center">
-            <p className="text-center text-home mt-4">
-              No properties match your search or filters. Try adjusting your filters or search criteria.
-            </p>
-          </div>
-        ) : (
+            {/* ✅ Recommended Properties Slider */}
+            {recommendedProperties.length > 0 && (
+              <div className="w-full my-6">
+                <h1 className="text-2xl font-semibold mb-4 text-home">Recommended Properties</h1>
+                <DynamicCarousel data={recommendedProperties as Property[]} loading={false} type="home-properties" />
+              </div>
+            )}
+
+            {/* ✅ New Properties Slider */}
+            {newProperties.length > 0 && (
+              <div className="w-full my-6">
+                <h1 className="text-2xl font-semibold mb-4 text-home">New Properties</h1>
+                <DynamicCarousel data={newProperties as Property[]} loading={false} type="home-properties" />
+              </div>
+            )}
+          </>
+        )}
+
+        {/* ✅ Show "Discover Your Dream Property with Us" if Search is Active */}
+        {search && (
+          <h1 className="text-2xl font-semibold text-center my-4 text-home">
+            Discover Your Dream Property with Us
+          </h1>
+        )}
+
+        {/* ✅ Property Listings Based on Search */}
+        {search && (
           <InfiniteScroll
             dataLength={displayedData.length}
             next={loadMoreData}
@@ -151,22 +177,6 @@ const PropertiesPageContent = ({
           >
             <DisplayProperties data={displayedData} />
           </InfiniteScroll>
-        )}
-
-        {/* ✅ Recommended Properties Slider */}
-        {recommendedProperties.length > 0 && (
-          <div className="w-full my-6">
-            <h1 className="text-2xl font-semibold mb-4 text-home">Recommended Properties</h1>
-            <DynamicCarousel data={recommendedProperties as Property[]} loading={false} type="home-properties" />
-          </div>
-        )}
-
-        {/* ✅ New Properties Slider */}
-        {newProperties.length > 0 && (
-          <div className="w-full my-6">
-            <h1 className="text-2xl font-semibold mb-4 text-home">New Properties</h1>
-            <DynamicCarousel data={newProperties as Property[]} loading={false} type="home-properties" />
-          </div>
         )}
       </main>
     </section>

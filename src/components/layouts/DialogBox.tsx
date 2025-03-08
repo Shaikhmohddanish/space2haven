@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useState } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { SlidersHorizontal } from "lucide-react";
 import { DialogForm, FilterProperties } from "..";
@@ -11,8 +12,10 @@ interface ExtendedDialogBoxProps extends DialogBoxProps {
 }
 
 const DialogBox = ({ type = "contact", filters, setFilters, className }: ExtendedDialogBoxProps) => {
+  const [isOpen, setIsOpen] = useState(false);  // 🟢 Add state to control dialog open/close
+
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger className={clsx(
         type === "filter" ? "filter-class self-center" : `text-sand-soft border-sand-soft btn-class`,
         className // ✅ Merge custom className if provided
@@ -32,10 +35,11 @@ const DialogBox = ({ type = "contact", filters, setFilters, className }: Extende
         </DialogHeader>
         {type === "filter" ? (
           filters && setFilters ? (
-            <FilterProperties filters={filters} setFilters={setFilters} setOpen={(open) => {
-              if (!open) return; // Ensures we only update when dialog is closing
-              setFilters((prev) => ({ ...prev })); // Keep previous filters intact
-            }} />
+            <FilterProperties
+              filters={filters}
+              setFilters={setFilters}
+              setOpen={setIsOpen}  // 🟢 Pass setIsOpen directly to close the dialog
+            />
           ) : (
             <p className="text-center text-gray-500">Filters are unavailable.</p>
           )

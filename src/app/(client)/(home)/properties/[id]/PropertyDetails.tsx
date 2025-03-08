@@ -18,6 +18,7 @@ const formatPrice = (price: string) => {
   }
 };
 
+
 import { 
   Shield, Wifi, Flame, Droplet, Dumbbell, Gamepad, Trees, Coffee, 
   Store, Film, BatteryCharging, Home, Key, Lock, Sun, Heart, Dog, CheckSquare, 
@@ -184,6 +185,8 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property, recommended
     <p className="text-gray-700 leading-relaxed">{description || "No description available."}</p>
   )}
 </div>
+
+<hr className="w-full max-w-full my-4" />
 
         <div>
         <h2 className="font-semibold mb-2">Amenities:</h2>
