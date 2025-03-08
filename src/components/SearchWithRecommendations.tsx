@@ -70,8 +70,8 @@ const SearchWithRecommendations = ({ page }: { page: "home" | "properties" | "in
   return (
     <div className="w-[90%] relative max-w-lg mx-auto mt-6">
       {/* ✅ Search Bar with Fixed Width Percentages */}
-      <div id="search-bar" className="flex items-center border border-gray-300 rounded-full overflow-hidden shadow-md bg-white w-full max-w-lg mx-auto">
-        <input
+      <div id="search-bar" className="flex items-center border border-gray-300 rounded-lg overflow-hidden shadow-md bg-white w-full max-w-lg mx-auto">
+      <input
           type="text"
           placeholder="Search by Locality, Property or Developer..."
           value={query}
@@ -80,7 +80,7 @@ const SearchWithRecommendations = ({ page }: { page: "home" | "properties" | "in
         />
         <button
           onClick={handleSearchRedirect}
-          className="w-[15%] h-12 flex items-center justify-center bg-gray-800 hover:bg-gray-700 text-white border-l border-gray-300"
+          className="w-[15%] h-12 flex items-center justify-center bg-white text-black border-l border-gray-300"
         >
           <Search className="h-5 w-5" />
         </button>
