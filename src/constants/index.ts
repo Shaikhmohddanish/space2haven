@@ -283,12 +283,7 @@ export const services = [
         imageSrc: "/icons/servicesIcons/tipsGuide.svg",
         title: "Design Interior",
         url: "/interior",
-    },
-    {
-        imageSrc: "/icons/servicesIcons/emiCalculator.svg",
-        title: "EMI Calculator",
-        url: "/calculate-emi",
-    },
+    }
 ];
 
 
