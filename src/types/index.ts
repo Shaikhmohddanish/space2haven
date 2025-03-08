@@ -18,6 +18,7 @@ export interface Property {
   recommend:boolean;
   possession:string;
   developer:string;
+  url:string;
   featured:boolean;
   updatedAt: string
 }
@@ -32,6 +33,9 @@ export interface PropertyCardProps {
   location: string;
   possession?: string; // Optional field for possession
   developer?:string;
+  url?:string;
+  featured?: boolean,
+  newProperty?: boolean,
   propertyType?: string; // Optional field for property type
   recommend?: boolean; // Changed true | false to boolean (simplified)
 }
@@ -55,6 +59,9 @@ export interface PropertyCardProps {
     recommend: boolean;
     possession: string;
     developer:string;
+    url:string;
+    featured: boolean;
+    newProperty: boolean;
   }
   
 
@@ -70,6 +77,9 @@ export interface Property {
   location: string;
   possession: string;
   developer:string;
+  url:string;
+  featured: boolean;
+  newProperty: boolean;
 }
 
 export interface InputProps {

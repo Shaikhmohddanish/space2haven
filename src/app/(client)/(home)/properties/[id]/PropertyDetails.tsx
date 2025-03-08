@@ -75,6 +75,9 @@ interface Property {
   features: string[];
   possession: string;
   developer: string;
+  url:string;
+  featured: boolean;
+  newProperty: boolean;
   address: {
     city: string;
     state: string;
@@ -109,6 +112,9 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property, recommended
     propertyType,
     possession,
     developer,
+    featured,
+    newProperty,
+    url,
     address,
     updatedAt,
   } = property;
@@ -166,6 +172,22 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property, recommended
             <p>{moment(updatedAt).fromNow()}</p>
           </div>
         </div>
+
+        {/* 📍 Google Map Integration */}
+        {url && (
+          <div className="my-6">
+            <h2 className="text-xl font-semibold mb-2">Location Map:</h2>
+            <iframe
+              src={url}
+              width="100%"
+              height="450"
+              style={{ border: 0 }}
+              allowFullScreen
+              loading="lazy"
+              className="rounded-lg shadow-md"
+            ></iframe>
+          </div>
+        )}
 
         <hr className="w-full max-w-full my-4" />
 

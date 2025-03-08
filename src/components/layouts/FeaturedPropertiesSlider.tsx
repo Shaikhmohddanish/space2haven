@@ -3,22 +3,23 @@ import { Property } from "@/types";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useSwipeable } from "react-swipeable"; // 🟢 Import useSwipeable
 
 interface FeaturedPropertiesSliderProps {
   data: Property[];
 }
 
 const formatPrice = (price: string) => {
-    const priceNumber = parseFloat(price.replace(/,/g, ''));  // Remove commas and convert to number
-    if (isNaN(priceNumber)) return "N/A";
-  
-    if (priceNumber >= 1_00_00_000) {  // Convert to Crore
-      return `${(priceNumber / 1_00_00_000).toFixed(2)} Cr`;
-    } else if (priceNumber >= 1_00_000) {  // Convert to Lakh
-      return `${(priceNumber / 1_00_000).toFixed(2)} Lakh`;
-    } else {  // Display in Rupees
-      return `${priceNumber.toLocaleString()} Rupees`;
-    }
+  const priceNumber = parseFloat(price.replace(/,/g, ""));
+  if (isNaN(priceNumber)) return "N/A";
+
+  if (priceNumber >= 1_00_00_000) {
+    return `${(priceNumber / 1_00_00_000).toFixed(2)} Cr`;
+  } else if (priceNumber >= 1_00_000) {
+    return `${(priceNumber / 1_00_000).toFixed(2)} Lakh`;
+  } else {
+    return `${priceNumber.toLocaleString()} Rupees`;
+  }
 };
 
 const FeaturedPropertiesSlider = ({ data }: FeaturedPropertiesSliderProps) => {
@@ -30,11 +31,11 @@ const FeaturedPropertiesSlider = ({ data }: FeaturedPropertiesSliderProps) => {
   useEffect(() => {
     const updateItemsPerPage = () => {
       if (window.innerWidth < 640) {
-        setItemsPerPage(1); // 1 card on mobile
+        setItemsPerPage(1);
       } else if (window.innerWidth < 1024) {
-        setItemsPerPage(2); // 2 cards on tablet
+        setItemsPerPage(2);
       } else {
-        setItemsPerPage(3); // 3 cards on desktop
+        setItemsPerPage(3);
       }
     };
 
@@ -55,20 +56,29 @@ const FeaturedPropertiesSlider = ({ data }: FeaturedPropertiesSliderProps) => {
     }
   };
 
-  return (
-    <div className="relative w-full my-6">
+  // 🟢 Handle Swipe Gestures
+  const handlers = useSwipeable({
+    onSwipedLeft: nextSlide,
+    onSwipedRight: prevSlide,
+    preventScrollOnSwipe: true,
+    trackMouse: true, // Optional: enables swipe on desktop with mouse drag
+  });
 
+  return (
+    <div className="relative w-full my-6" {...handlers}>
       {/* Carousel Wrapper */}
       <div className="relative overflow-hidden">
         <div
           className="flex transition-transform duration-500"
-          style={{ transform: `translateX(-${currentIndex * (100 / itemsPerPage)}%)` }}
+          style={{
+            transform: `translateX(-${currentIndex * (100 / itemsPerPage)}%)`,
+          }}
         >
           {data.map((property) => (
             <div
               key={property._id}
               className="min-w-full sm:min-w-[calc(100%/2)] md:min-w-[calc(100%/3)] p-4 transition-transform duration-300 hover:scale-105 cursor-pointer"
-              onClick={() => router.push(`/properties/${property._id}`)} // 🟢 Click to navigate to details
+              onClick={() => router.push(`/properties/${property._id}`)}
             >
               <div className="bg-white rounded-lg shadow-lg overflow-hidden relative group">
                 <Image
@@ -87,12 +97,6 @@ const FeaturedPropertiesSlider = ({ data }: FeaturedPropertiesSliderProps) => {
                     <p className="truncate">{property.propertyType}</p>
                   </div>
                 </div>
-                <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
-                  <div className="p-4 text-white">
-                    <p>{property.address.city}, {property.address.state}</p>
-                    <p>{property.possession}</p>
-                  </div>
-                </div>
               </div>
             </div>
           ))}
@@ -103,14 +107,18 @@ const FeaturedPropertiesSlider = ({ data }: FeaturedPropertiesSliderProps) => {
       <button
         onClick={prevSlide}
         disabled={currentIndex === 0}
-        className={`absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white rounded-full p-2 hover:bg-gray-700 transition shadow-md ${currentIndex === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
+        className={`absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white rounded-full p-2 hover:bg-gray-700 transition shadow-md ${
+          currentIndex === 0 ? "opacity-50 cursor-not-allowed" : ""
+        }`}
       >
         <ChevronLeft className="w-5 h-5" />
       </button>
       <button
         onClick={nextSlide}
         disabled={currentIndex >= data.length - itemsPerPage}
-        className={`absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white rounded-full p-2 hover:bg-gray-700 transition shadow-md ${currentIndex >= data.length - itemsPerPage ? "opacity-50 cursor-not-allowed" : ""}`}
+        className={`absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white rounded-full p-2 hover:bg-gray-700 transition shadow-md ${
+          currentIndex >= data.length - itemsPerPage ? "opacity-50 cursor-not-allowed" : ""
+        }`}
       >
         <ChevronRight className="w-5 h-5" />
       </button>

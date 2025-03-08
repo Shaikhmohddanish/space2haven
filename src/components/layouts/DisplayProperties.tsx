@@ -18,7 +18,10 @@ const DisplayProperties = ({ data }: { data: Property[] }) => {
         location, 
         possession, 
         developer,
-        recommend 
+        url,
+        featured,
+        newProperty,
+        recommend,
       }) => (
         <PropertyCard
           key={_id}
@@ -29,10 +32,13 @@ const DisplayProperties = ({ data }: { data: Property[] }) => {
           configuration={Array.isArray(configuration) ? configuration : []} // ✅ Ensure configuration is always an array
           possession={possession || "N/A"} // ✅ Handle missing possession
           developer={developer || "N/A"}
+          url={url || "N/A"}
           propertyType={propertyType || "N/A"} // ✅ Handle missing property type
           tag={propertyType || "N/A"}
           location={location || "Not specified"} // ✅ Handle missing location
           recommend={recommend ?? false} // ✅ Ensure recommend is always a boolean
+          featured={featured ?? false} // ✅ Ensure recommend is always a boolean
+          newProperty={newProperty ?? false} // ✅ Ensure recommend is always a boolean
         />
       ))}
     </div>

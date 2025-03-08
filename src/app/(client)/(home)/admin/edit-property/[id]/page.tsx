@@ -61,6 +61,9 @@ const EditProperty: React.FC = () => {
     recommend: false,
     possession: "",
     developer: "",
+    url:"",
+    featured: false,
+    newProperty: false,
   });
 
   // ✅ Fetch Property Details
@@ -218,6 +221,19 @@ const handleMultiSelectChange = (name: keyof PropertyFormValues, value: string |
             required
             className="input-class w-full"
             placeholder="Type Developer name..."
+          />
+        </div>
+
+        <div className="col-span-full">
+          <label className="block font-medium mb-1">Google Map Location</label>
+          <input
+            type="text"
+            name="url"
+            value={formData.url}
+            onChange={handleChange}
+            required
+            className="input-class w-full"
+            placeholder="Paste Google Map Location URL..."
           />
         </div>
 
@@ -472,10 +488,46 @@ const handleMultiSelectChange = (name: keyof PropertyFormValues, value: string |
 
         </div>
 
-        <div className="flex-center pt-4 gap-4">
-          <label className="block font-medium mb-1">Recommend to User</label>
-          <input type="checkbox" name="recommend" checked={formData.recommend} onChange={() => setFormData({ ...formData, recommend: !formData.recommend })} />
-        </div>
+      
+
+        {/* Recommend Checkbox */}
+<div className="flex-center pt-4 gap-4">
+  <label className="block font-medium mb-1">Recommend to User</label>
+  <input
+    type="checkbox"
+    name="recommend"
+    checked={formData.recommend}
+    onChange={() =>
+      setFormData({ ...formData, recommend: !formData.recommend })
+    }
+  />
+</div>
+
+{/* Featured Checkbox */}
+<div className="flex-center pt-4 gap-4">
+  <label className="block font-medium mb-1">Featured</label>
+  <input
+    type="checkbox"
+    name="featured"
+    checked={formData.featured}
+    onChange={() =>
+      setFormData({ ...formData, featured: !formData.featured })
+    }
+  />
+</div>
+
+{/* New Property Checkbox */}
+<div className="flex-center pt-4 gap-4">
+  <label className="block font-medium mb-1">New Property</label>
+  <input
+    type="checkbox"
+    name="newProperty"
+    checked={formData.newProperty}
+    onChange={() =>
+      setFormData({ ...formData, newProperty: !formData.newProperty })
+    }
+  />
+</div>
 
         <button type="submit" className="btn-class w-full" disabled={loading}>
           {loading ? "Updating..." : "Update Property"}

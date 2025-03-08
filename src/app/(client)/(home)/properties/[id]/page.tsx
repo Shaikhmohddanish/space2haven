@@ -78,6 +78,7 @@ const PropertyById = () => {
         address = { city: "", state: "" },
         possession = "N/A",
         developer = "N/A",
+        url="N/A",
         updatedAt
     } = propertyData;
 

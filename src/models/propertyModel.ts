@@ -19,6 +19,7 @@ const PropertySchema = new Schema({
     recommend: { type: Boolean, default: false },
     possession: { type: String, required: true },
     developer: { type: String, required: true },
+    url: { type: String, required: true },
 }, 
     { timestamps: true, versionKey: false }  // ✅ Remove __v field for clean data
 );

@@ -24,6 +24,9 @@ interface Property {
   features: string[];
   possession: string; // ✅ ADDED THIS FIELD
   developer: string;
+  featured: boolean;
+  newProperty: boolean;
+  url:string;
   address: {
     city: string;
     state: string;
@@ -102,14 +105,14 @@ const PropertiesPage = () => {
     if (error) return <div className="text-center text-red-500 py-20">{error}</div>;
 
     return (
-      <div className="max-w-6xl mx-auto p-6">
+      <div className="flex items-center justify-center min-h-screen">
         {property ? (
           <PropertyDetails property={property} recommended={recommended} />
         ) : (
-          <p className="text-center text-gray-500">Property not found.</p>
+          <p className="text-center text-gray-500 text-xl">Property not found.</p>
         )}
       </div>
-    );
+    );    
   }
 
   // ✅ Otherwise, show the **Property Listings Grid**
