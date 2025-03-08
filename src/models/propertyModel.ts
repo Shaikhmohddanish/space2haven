@@ -20,6 +20,8 @@ const PropertySchema = new Schema({
     possession: { type: String, required: true },
     developer: { type: String, required: true },
     url: { type: String, required: true },
+    featured: { type: Boolean, default: false },
+    newProperty: { type: Boolean, default: false },
 }, 
     { timestamps: true, versionKey: false }  // ✅ Remove __v field for clean data
 );

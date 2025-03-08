@@ -20,6 +20,7 @@ export interface Property {
   developer:string;
   url:string;
   featured:boolean;
+  newProperty:boolean;
   updatedAt: string
 }
 
@@ -33,11 +34,11 @@ export interface PropertyCardProps {
   location: string;
   possession?: string; // Optional field for possession
   developer?:string;
-  url?:string;
-  featured?: boolean,
-  newProperty?: boolean,
   propertyType?: string; // Optional field for property type
   recommend?: boolean; // Changed true | false to boolean (simplified)
+  url?:string;
+  featured?: boolean;
+  newProperty?: boolean;
 }
 
 
