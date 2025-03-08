@@ -4,6 +4,10 @@ import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
 import debounce from "lodash.debounce";
+import { createPortal } from "react-dom";
+
+// 🟢 Define isBrowser to prevent server-side rendering issues
+const isBrowser = typeof window !== "undefined";
 
 interface Property {
   _id: string;
@@ -64,36 +68,63 @@ const SearchWithRecommendations = ({ page }: { page: "home" | "properties" | "in
   };
 
   return (
-    <div className="relative w-full max-w-lg mx-auto mt-6">
-      {/* ✅ Show Search Bar on Home and Properties Pages */}
-      {(page === "home" || page === "properties") && (
-        <div className="flex items-center border border-gray-300 rounded-full overflow-hidden shadow-md bg-white">
-          <input
-            type="text"
-            placeholder="Search by title, location, city, or state..."
-            value={query}
-            onChange={(e) => handleSearch(e.target.value)}
-            className="flex-1 h-12 px-4 text-gray-700 border-none focus:ring-0 focus:outline-none"
-          />
-          <button
-            onClick={handleSearchRedirect}
-            className="h-12 w-12 flex items-center justify-center bg-gray-800 hover:bg-gray-700 text-white rounded-r-full"
-          >
-            <Search className="h-5 w-5" />
-          </button>
-        </div>
-      )}
+    <div className="w-[90%] relative max-w-lg mx-auto mt-6">
+      {/* ✅ Search Bar with Fixed Width Percentages */}
+      <div id="search-bar" className="flex items-center border border-gray-300 rounded-full overflow-hidden shadow-md bg-white w-full max-w-lg mx-auto">
+        <input
+          type="text"
+          placeholder="Search by Locality, Property or Developer..."
+          value={query}
+          onChange={(e) => handleSearch(e.target.value)}
+          className="w-[85%] h-12 px-2 text-gray-700 border-none focus:ring-0 focus:outline-none"
+        />
+        <button
+          onClick={handleSearchRedirect}
+          className="w-[15%] h-12 flex items-center justify-center bg-gray-800 hover:bg-gray-700 text-white border-l border-gray-300"
+        >
+          <Search className="h-5 w-5" />
+        </button>
+      </div>
 
       {/* ✅ Suggestions Dropdown (Only on Home Page) */}
-      {page === "home" && query.length > 1 && (
-        <div className="absolute z-50 w-full bg-white shadow-lg rounded-lg mt-2 max-h-64 overflow-auto border border-gray-200">
+      {page === "home" && query.length > 1 && isBrowser && createPortal(
+        <div
+          className="absolute z-50 bg-white shadow-lg rounded-lg mt-1 max-h-80 overflow-y-auto border border-gray-200"
+          style={{
+            position: "absolute",
+            top: (() => {
+              const searchBar = document.getElementById("search-bar");
+              if (searchBar) {
+                const rect = searchBar.getBoundingClientRect();
+                return rect.bottom + window.scrollY + "px";
+              }
+              return "0px";
+            })(),
+            left: (() => {
+              const searchBar = document.getElementById("search-bar");
+              if (searchBar) {
+                const rect = searchBar.getBoundingClientRect();
+                return rect.left + "px";
+              }
+              return "0px";
+            })(),
+            width: (() => {
+              const searchBar = document.getElementById("search-bar");
+              if (searchBar) {
+                const rect = searchBar.getBoundingClientRect();
+                return rect.width + "px";
+              }
+              return "100%";
+            })()
+          }}
+        >
           {loading ? (
             <div className="text-center text-blue-500 p-3">Loading...</div>
           ) : suggestions.length > 0 ? (
             suggestions.map((property) => (
               <div
                 key={property._id}
-                className="flex items-center gap-3 p-3 hover:bg-gray-100 cursor-pointer"
+                className="flex items-center gap-3 p-3 hover:bg-gray-100 cursor-pointer transition-colors"
                 onClick={() => handleSelectProperty(property._id)}
               >
                 <img
@@ -101,9 +132,9 @@ const SearchWithRecommendations = ({ page }: { page: "home" | "properties" | "in
                   alt={property.title}
                   className="w-12 h-12 object-cover rounded-lg"
                 />
-                <div>
-                  <p className="text-sm font-semibold">{property.title}</p>
-                  <p className="text-xs text-gray-500">
+                <div className="flex-1">
+                  <p className="text-sm font-semibold truncate">{property.title}</p>
+                  <p className="text-xs text-gray-500 truncate">
                     {property.location}, {property.address.city}, {property.address.state}
                   </p>
                 </div>
@@ -112,7 +143,8 @@ const SearchWithRecommendations = ({ page }: { page: "home" | "properties" | "in
           ) : (
             <div className="text-center text-red-500 p-3">No matching properties found.</div>
           )}
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

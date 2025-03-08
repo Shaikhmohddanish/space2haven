@@ -466,19 +466,29 @@ const AddProperty: React.FC = () => {
   {showFeaturesDropdown && (
     <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg p-2">
       {[
-  "Barbeque Area",
-  "CCTV Security",
-  "Jogging Track",
-  "Kid's Area",
-  "Parking",
-  "Senior Citizen Zone",
-  "Swimming Pool",
-  "Garden",
-  "24/7 Security",
+  "24/7 Security & CCTV Surveillance",
   "Power Backup",
+  "High-Speed Elevators",
+  "Car Parking (Covered & Open)",
+  "Water Supply & Rainwater Harvesting",
+  "Swimming Pool",
   "Clubhouse",
-  "Lift"
-].map((feature) => (
+  "Gym & Fitness Center",
+  "Indoor Games",
+  "Multipurpose Court",
+  "Kids’ Play Area",
+  "Landscaped Gardens & Green Spaces",
+  "Jogging & Cycling Tracks",
+  "Yoga & Meditation Area",
+  "Elderly Sitting Areas",
+  "Pet-Friendly Zones",
+  "Smart Home Features",
+  "Retail & Convenience Stores",
+  "Multipurpose Hall & Co-Working Spaces",
+  "Cinema/Private Theatre",
+  "EV Charging Stations"
+]
+.map((feature) => (
         <label key={feature} className="flex items-center gap-2 py-1 px-2 hover:bg-gray-100 cursor-pointer">
           <input
             type="checkbox"
