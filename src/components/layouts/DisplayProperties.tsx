@@ -40,7 +40,6 @@ const DisplayProperties = ({ data }: { data: Property[] }) => {
           url={url || "N/A"}
           featured={featured ?? false} 
           newProperty={newProperty ?? false} 
-          configurations={Array.isArray(configurations) ? configurations : []}  // ✅ Add this line
         />
       ))}
     </div>

@@ -37,7 +37,6 @@ export interface PropertyCardProps {
   features: string[]; // Updated from string to string[]
   tag: string;
   configuration: string[]; // Updated from string to string[]
-  configurations: Configuration[];  // New: For detailed configurations
   location: string;
   possession?: string; // Optional field for possession
   developer?:string;
