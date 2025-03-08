@@ -43,13 +43,13 @@ const EditProperty: React.FC = () => {
   const { id } = useParams();
   const { toast } = useToast();
   const [loading, setLoading] = useState<boolean>(true);
-  const [locations, setLocations] = useState<Option[]>([]);
   const [showFeaturesDropdown, setShowFeaturesDropdown] = useState(false);
   const [existingImages, setExistingImages] = useState<string[]>([]);
   const [formData, setFormData] = useState<PropertyFormValues>({
     title: "",
     images: [],
     configuration: [],
+    configurations: [],  // New: For detailed configurations
     description: "",
     price: 0,
     location: "",
@@ -77,7 +77,8 @@ const EditProperty: React.FC = () => {
         setFormData({
           ...property,
           images: [],
-        });
+          configurations: property.configurations || [],  // ✅ Provide default empty array
+      });
         setLoading(false);
       } catch (error) {
         console.error("❌ Error fetching property:", error);
@@ -163,7 +164,7 @@ const handleMultiSelectChange = (name: keyof PropertyFormValues, value: string |
         console.error("❌ No images uploaded or images array is empty!");
     }
 
-    try {
+    try {        
         const response = await axios.put(`/api/admin/update-property/${id}`, form, {
             headers: { "Content-Type": "multipart/form-data" },
         });
@@ -529,6 +530,99 @@ const handleMultiSelectChange = (name: keyof PropertyFormValues, value: string |
     />
     <label className="font-medium">New Property</label>
   </div>
+</div>
+
+{/* Configurations Section */}
+<div className="col-span-full bg-gray-100 p-4 rounded-md mb-4">
+    <h2 className="font-semibold mb-2">Add Configurations</h2>
+    {formData.configurations?.map((config, index) => (
+        <div key={index} className="border-b pb-2 mb-2">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-2">
+                <div>
+                    <label className="block font-medium mb-1">BHK Type</label>
+                    <input
+                        type="text"
+                        value={config.bhkType}
+                        onChange={(e) => {
+                            const newConfigs = [...formData.configurations];
+                            newConfigs[index].bhkType = e.target.value;
+                            setFormData({ ...formData, configurations: newConfigs });
+                        }}
+                        className="input-class w-full"
+                        placeholder="E.g., 1 BHK"
+                    />
+                </div>
+                <div>
+                    <label className="block font-medium mb-1">Carpet Area</label>
+                    <input
+                        type="text"
+                        value={config.carpetArea}
+                        onChange={(e) => {
+                            const newConfigs = [...formData.configurations];
+                            newConfigs[index].carpetArea = e.target.value;
+                            setFormData({ ...formData, configurations: newConfigs });
+                        }}
+                        className="input-class w-full"
+                        placeholder="E.g., 338 Sq.ft"
+                    />
+                </div>
+                <div>
+                    <label className="block font-medium mb-1">Built-up Area</label>
+                    <input
+                        type="text"
+                        value={config.builtupArea}
+                        onChange={(e) => {
+                            const newConfigs = [...formData.configurations];
+                            newConfigs[index].builtupArea = e.target.value;
+                            setFormData({ ...formData, configurations: newConfigs });
+                        }}
+                        className="input-class w-full"
+                        placeholder="E.g., On Request"
+                    />
+                </div>
+                <div>
+                    <label className="block font-medium mb-1">Price</label>
+                    <input
+                        type="text"
+                        value={config.price}
+                        onChange={(e) => {
+                            const newConfigs = [...formData.configurations];
+                            newConfigs[index].price = e.target.value;
+                            setFormData({ ...formData, configurations: newConfigs });
+                        }}
+                        className="input-class w-full"
+                        placeholder="E.g., INR 26.0 Lacs"
+                    />
+                </div>
+            </div>
+            <button
+                type="button"
+                className="text-red-500 text-sm"
+                onClick={() => {
+                    const newConfigs = formData.configurations.filter((_, i) => i !== index);
+                    setFormData({ ...formData, configurations: newConfigs });
+                }}
+            >
+                Remove
+            </button>
+        </div>
+    ))}
+
+    <button
+        type="button"
+        className="btn-class w-full flex justify-center"
+        onClick={() => {
+            setFormData({
+                ...formData,
+                configurations: [
+                    ...formData.configurations,
+                    { bhkType: '', carpetArea: '', builtupArea: '', price: '' },
+                ],
+            });
+        }}
+    >
+        + Add Configuration
+    </button>
 </div>
 
 

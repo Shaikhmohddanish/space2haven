@@ -1,4 +1,9 @@
-import { SetStateAction } from "react";
+export interface Configuration {
+  bhkType: string;
+  carpetArea: string;
+  builtupArea: string;
+  price: string;
+}
 
 export interface Property {
   title: string;
@@ -21,6 +26,7 @@ export interface Property {
   url:string;
   featured:boolean;
   newProperty:boolean;
+  configurations: Configuration[];  // New: For detailed configurations
   updatedAt: string
 }
 
@@ -31,6 +37,7 @@ export interface PropertyCardProps {
   features: string[]; // Updated from string to string[]
   tag: string;
   configuration: string[]; // Updated from string to string[]
+  configurations: Configuration[];  // New: For detailed configurations
   location: string;
   possession?: string; // Optional field for possession
   developer?:string;
@@ -42,10 +49,12 @@ export interface PropertyCardProps {
 }
 
 
+
   export interface PropertyFormValues {
     title: string;
     images: File[];
     configuration: string[]; // 🔥 Change from string to string[]
+    configurations: Configuration[];  // New: For detailed configurations
     description: string;
     price: number;
     location: string;
@@ -72,6 +81,7 @@ export interface Property {
   price: string;
   images: string[];
   configuration: string[],
+  configurations: Configuration[];  // New: For detailed configurations
   features: string[];
   yearBuilt: number;
   area: string;

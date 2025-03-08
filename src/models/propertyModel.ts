@@ -7,6 +7,14 @@ const PropertySchema = new Schema({
     price: { type: String, required: true },
     propertyType: { type: String, required: true },
     configuration: { type: [String], required: true },
+    configurations: [  // ✅ New: Array of objects for detailed configurations
+        {
+            bhkType: { type: String, required: true },        // e.g., "1 BHK"
+            carpetArea: { type: String, required: true },      // e.g., "338 Sq.ft"
+            builtupArea: { type: String, default: "On Request" },  // e.g., "On Request"
+            price: { type: String, required: true }            // e.g., "INR 26.0 Lacs"
+        }
+    ],
     description: { type: String, required: true },
     location: { type: String, required: true },
     address: {
