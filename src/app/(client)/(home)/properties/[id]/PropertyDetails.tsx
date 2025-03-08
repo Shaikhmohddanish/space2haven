@@ -173,12 +173,11 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property, recommended
           </div>
         </div>
 
-        {/* 📍 Google Map Integration */}
         {url && (
           <div className="my-6">
             <h2 className="text-xl font-semibold mb-2">Location Map:</h2>
             <iframe
-              src={url}
+              src={`https://www.google.com/maps?q=${encodeURIComponent(url)}&output=embed`}
               width="100%"
               height="450"
               style={{ border: 0 }}
@@ -188,6 +187,7 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property, recommended
             ></iframe>
           </div>
         )}
+
 
         <hr className="w-full max-w-full my-4" />
 
