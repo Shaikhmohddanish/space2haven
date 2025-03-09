@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import axios from "axios";
 import { useToast } from "@/hooks/use-toast";
+import { formatPrice } from "@/utils/formatPrice";
 
 const AllProperties = () => {
   const { toast } = useToast();
@@ -93,7 +94,7 @@ const AllProperties = () => {
                 {properties.map((property) => (
                   <tr key={property._id} className="hover:bg-gray-50">
                     <td className="border border-gray-300 p-2">{property.title}</td>
-                    <td className="border border-gray-300 p-2">₹{property.price}</td>
+                    <td className="border border-gray-300 p-2">₹{formatPrice(property.price)}</td>
                     <td className="border border-gray-300 p-2">{property.location}</td>
                     <td className="border border-gray-300 p-2 flex gap-2">
                       <Link

@@ -4,23 +4,12 @@ import { ChevronLeft, ChevronRight, MapPin, Home, CalendarDays, Star } from "luc
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useSwipeable } from "react-swipeable";
+import { formatPrice } from "@/utils/formatPrice";
 
 interface FeaturedPropertiesSliderProps {
   data: Property[];
 }
 
-const formatPrice = (price: string) => {
-  const priceNumber = parseFloat(price.replace(/,/g, ""));
-  if (isNaN(priceNumber)) return "N/A";
-
-  if (priceNumber >= 1_00_00_000) {
-    return `${(priceNumber / 1_00_00_000).toFixed(2)} Cr`;
-  } else if (priceNumber >= 1_00_000) {
-    return `${(priceNumber / 1_00_000).toFixed(2)} Lakh`;
-  } else {
-    return `${priceNumber.toLocaleString()} Rupees`;
-  }
-};
 
 const FeaturedPropertiesSlider = ({ data }: FeaturedPropertiesSliderProps) => {
   const router = useRouter();
