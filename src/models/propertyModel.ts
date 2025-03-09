@@ -7,12 +7,14 @@ const PropertySchema = new Schema({
     price: { type: String, required: true },
     propertyType: { type: String, required: true },
     configuration: { type: [String], required: true },
-    configurations: [  // ✅ New: Array of objects for detailed configurations
+    configurations: [
         {
-            bhkType: { type: String, required: true },        // e.g., "1 BHK"
-            carpetArea: { type: String, required: true },      // e.g., "338 Sq.ft"
+            bhkType: { type: String, required: true },             // e.g., "1 BHK"
+            carpetArea: { type: String, required: true },          // e.g., "338"
+            carpetAreaUnit: { type: String, default: "Sq.ft" },    // New: Unit for carpet area (default to "Sq.ft")
             builtupArea: { type: String, default: "On Request" },  // e.g., "On Request"
-            price: { type: String, required: true }            // e.g., "INR 26.0 Lacs"
+            builtupAreaUnit: { type: String, default: "Sq.ft" },   // New: Unit for built-up area (default to "Sq.ft")
+            price: { type: String, required: true }                // e.g., "2600000" (store as a string but only numbers)
         }
     ],
     description: { type: String, required: true },
