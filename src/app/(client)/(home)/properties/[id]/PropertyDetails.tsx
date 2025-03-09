@@ -46,10 +46,12 @@ const amenityIcons: { [key: string]: JSX.Element } = {
 };
 
 
-interface Configuration {
+export interface Configuration {
   bhkType: string;
   carpetArea: string;
   builtupArea: string;
+  carpetAreaUnit: string;
+  builtupAreaUnit: string;
   price: string;
 }
 
@@ -159,35 +161,44 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property, recommended
           </h2>
         </div>
 
-        {/* 🟢 Display Configurations Only if Available */}
-        {configurations && configurations.length > 0 && (
-          <>
-            {/* 🟢 Tab-based Filter */}
-            <div className="flex gap-2 my-4">
-              {["All", ...new Set((configurations || []).map((config) => config.bhkType))].map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab)}
-                  className={`px-4 py-2 rounded-md ${activeTab === tab ? "bg-green-200 text-green-800" : "bg-gray-100 text-gray-600"}`}
-                >
-                  {tab}
-                </button>
-              ))}
-            </div>
+       {/* 🟢 Display Configurations Only if Available */}
+{configurations && configurations.length > 0 && (
+  <>
+    {/* 🟢 Tab-based Filter */}
+    <div className="flex gap-2 my-4">
+      {["All", ...new Set(configurations.map((config) => config.bhkType))].map((tab) => (
+        <button
+          key={tab}
+          onClick={() => setActiveTab(tab)}
+          className={`px-4 py-2 rounded-md ${
+            activeTab === tab ? "bg-green-200 text-green-800" : "bg-gray-100 text-gray-600"
+          }`}
+        >
+          {tab}
+        </button>
+      ))}
+    </div>
 
-            {/* 🟢 Display Configurations */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-              {filteredConfigs.map((config, index) => (
-                <div key={index} className="border p-4 rounded-lg shadow-sm">
-                  <h2 className="text-lg font-semibold mb-2">{config.bhkType}</h2>
-                  <p><span className="font-bold">Carpet Area:</span> {config.carpetArea || "N/A"}</p>
-                  <p><span className="font-bold">Builtup Area:</span> {config.builtupArea || "On Request"}</p>
-                  <p><span className="font-bold">Price:</span> ₹ {formatPrice(config.price) || "N/A"}</p>
-                </div>
-              ))}
-            </div>
-          </>
-        )}
+    {/* 🟢 Display Configurations */}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+      {filteredConfigs.map((config, index) => (
+        <div key={index} className="border p-4 rounded-lg shadow-sm">
+          <h2 className="text-lg font-semibold mb-2">{config.bhkType || "N/A"}</h2>
+          <p>
+            <span className="font-bold">Carpet Area:</span> {config.carpetArea || "N/A"} {config.carpetAreaUnit || ""}
+          </p>
+          <p>
+            <span className="font-bold">Built-up Area:</span> {config.builtupArea || "On Request"} {config.builtupAreaUnit || ""}
+          </p>
+          <p>
+            <span className="font-bold">Price:</span> ₹ {config.price ? formatPrice(config.price) : "N/A"}
+          </p>
+        </div>
+      ))}
+    </div>
+  </>
+)}
+
 
 
         {/* 📍 Location & Other Info */}
