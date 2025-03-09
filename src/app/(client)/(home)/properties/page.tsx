@@ -9,10 +9,12 @@ import axios from "axios";
 import PropertyDetails from "./[id]/PropertyDetails"; // ✅ Import Property Details Component
 
 const HalfBanner = dynamic(() => import("@/components/layouts/HalfBanner"), { ssr: false });
-interface Configuration {
+export interface Configuration {
   bhkType: string;
   carpetArea: string;
   builtupArea: string;
+  carpetAreaUnit: string;
+  builtupAreaUnit: string;
   price: string;
 }
 interface Property {
@@ -26,6 +28,7 @@ interface Property {
   description: string;
   location: string;
   area: string;
+  areaUnit:string;
   yearBuilt: number;
   features: string[];
   possession: string; // ✅ ADDED THIS FIELD

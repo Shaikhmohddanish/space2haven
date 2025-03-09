@@ -67,6 +67,7 @@ interface Property {
   description: string;
   location: string;
   area: string;
+  areaUnit: string;
   yearBuilt: number;
   features: string[];
   possession: string;
