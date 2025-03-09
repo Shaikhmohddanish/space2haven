@@ -118,12 +118,14 @@ const PropertiesPageContent = ({
   const handleNextPage = () => {
     if (page < totalPages) {
       setPage((prev) => prev + 1);
+      window.scrollTo({ top: 0, behavior: "smooth" }); // 🟢 Scroll to top
     }
   };
 
   const handlePrevPage = () => {
     if (page > 1) {
       setPage((prev) => prev - 1);
+      window.scrollTo({ top: 0, behavior: "smooth" }); // 🟢 Scroll to top
     }
   };
 
