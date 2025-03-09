@@ -1,6 +1,5 @@
 import { HomeBanner, PropertyPane, Services, GetInTouchForm } from "@/components"
 import CityProjects from "@/components/layouts/CityProjects"
-import NewProjects from "@/components/layouts/NewProjects"
 import WhoWeAre from "@/components/layouts/WhoWeAre"
 import { services } from "@/constants"
 
@@ -13,7 +12,6 @@ const Home = () => {
       <PropertyPane contentType="home-interior" />
       <CityProjects/>
       <GetInTouchForm />
-      <NewProjects/>
     </section>
   )
 }
