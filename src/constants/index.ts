@@ -319,5 +319,15 @@ export const contentStyles = {
         description: "Experience the perfect blend of style and functionality.",
         descriptionColor: "text-grey-2",
     },
+    // 🆕 Added "who-we-are" Configuration
+    "who-we-are": {
+        title: "Who We Are",
+        titleColor: "text-sand-soft",
+        hrColor: "bg-sand-soft2",
+        description:
+            "Learn more about our vision, mission, and values. Discover why we are the right choice for your real estate and interior needs.",
+        descriptionColor: "text-sand-soft",
+    },
 };
+
 

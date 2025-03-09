@@ -1,6 +1,9 @@
 import { ServiceSectionProps } from "@/types";
 import ServiceCard from "./ServiceCard";
 import Pattern from "./Pattern";
+import { contentStyles } from "@/constants";
+
+const { title, titleColor, hrColor, descriptionColor } = contentStyles["who-we-are"];
 
 const Services = ({ 
   title, 
@@ -9,22 +12,22 @@ const Services = ({
 }: ServiceSectionProps) => {
   return (
     <section
-      className={`section-general-class relative ${bgClassName} min-h-[80vh] py-2`}
+    className="w-full bg-[url(/images/pattern.png)] bg-home bg-cover bg-center px-6 md:px-12 py-4 md:py-6"
     >
       {/* Background Pattern */}
       <Pattern />
 
       {/* Section Content */}
       <div className="relative z-10 flex flex-col items-center gap-0 w-full">
-        
-        {/* Section Header */}
-        <h1 className="text-sand-soft2 text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-1">
-          {title}
-        </h1>
-        <p className="text-sand-soft2 text-lg md:text-xl text-center mb-1">
+      
+        {/* Header */}
+      <div className="flex-center gap-2 flex-col mb-6">
+      <h1 className={`header-class ${titleColor}`}>{title}</h1>
+      <p className="text-sand-soft2 text-lg md:text-xl text-center">
           We're good at our services
         </p>
-        <hr className="bg-sand-soft2 w-1/2 h-px mb-2" />
+      <hr className={hrColor} />
+      </div>
 
         {/* Services Grid */}
         <div className="w-full max-w-7xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-2 mt-0 mx-auto">
