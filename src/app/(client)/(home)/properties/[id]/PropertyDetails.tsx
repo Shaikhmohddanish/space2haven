@@ -4,19 +4,7 @@ import React,{ useState } from "react";
 import { DisplayCarousel, DialogBox, DynamicCarousel } from "@/components";
 import moment from "moment";
 import { useToast } from "@/hooks/use-toast";
-
-const formatPrice = (price: string) => {
-  const priceNumber = parseFloat(price.replace(/,/g, ''));  // Remove commas and convert to number
-  if (isNaN(priceNumber)) return "N/A";
-
-  if (priceNumber >= 1_00_00_000) {  // Convert to Crore
-    return `${(priceNumber / 1_00_00_000).toFixed(2)} Cr`;
-  } else if (priceNumber >= 1_00_000) {  // Convert to Lakh
-    return `${(priceNumber / 1_00_000).toFixed(2)} Lakh`;
-  } else {  // Display in Rupees
-    return `${priceNumber.toLocaleString()} Rupees`;
-  }
-};
+import { formatPrice } from "@/utils/formatPrice";
 
 
 import { 
