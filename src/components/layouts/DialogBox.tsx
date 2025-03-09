@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { SlidersHorizontal } from "lucide-react";
+import { Filter } from "lucide-react";
 import { DialogForm, FilterProperties } from "..";
 import { DialogBoxProps } from "@/types";
 import clsx from "clsx"; // ✅ Import clsx for className merging
@@ -20,7 +20,7 @@ const DialogBox = ({ type = "contact", filters, setFilters, className }: Extende
         type === "filter" ? "filter-class self-center" : `text-sand-soft border-sand-soft btn-class`,
         className // ✅ Merge custom className if provided
       )}>
-        {type === "filter" ? <SlidersHorizontal /> : "Get in Touch"}
+        {type === "filter" ? <Filter /> : "Get in Touch"}
       </DialogTrigger>
       <DialogContent className="bg-sand-soft rounded-lg">
         <DialogHeader>
