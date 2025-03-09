@@ -238,26 +238,28 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property, recommended
         <div>
   <h1 className="text-xl font-semibold">About</h1>
   {description && description.length > 200 ? (
-    <p className="text-gray-700 leading-relaxed">
-      {showFullDescription ? (
-  <p
-    className="text-gray-700 leading-relaxed whitespace-pre-line"
-    dangerouslySetInnerHTML={{ __html: description.replace(/\n/g, '<br />').replace(/\r/g, '') }}
-  />
-) : (
-  <p
-    className="text-gray-700 leading-relaxed whitespace-pre-line"
-    dangerouslySetInnerHTML={{ __html: `${description.slice(0, 200).replace(/\n/g, '<br />').replace(/\r/g, '')}...` }}
-  />
-)}
+    
 
-      <button 
-        onClick={() => setShowFullDescription(!showFullDescription)} 
-        className="text-blue-500 ml-2 underline hover:text-blue-700 transition"
-      >
-        {showFullDescription ? "Show less" : "See more"}
-      </button>
-    </p>
+    <div className="text-gray-700 leading-relaxed">
+    {showFullDescription ? (
+      <div
+        className="whitespace-pre-line"
+        dangerouslySetInnerHTML={{ __html: description.replace(/\n/g, '<br />').replace(/\r/g, '') }}
+      />
+    ) : (
+      <div
+        className="whitespace-pre-line"
+        dangerouslySetInnerHTML={{ __html: `${description.slice(0, 200).replace(/\n/g, '<br />').replace(/\r/g, '')}...` }}
+      />
+    )}
+    <button 
+      onClick={() => setShowFullDescription(!showFullDescription)} 
+      className="text-blue-500 ml-2 underline hover:text-blue-700 transition"
+    >
+      {showFullDescription ? "Show less" : "See more"}
+    </button>
+  </div>
+  
   ) : (
     <p className="text-gray-700 leading-relaxed whitespace-pre-line">{description || "No description available."}</p>
   )}
