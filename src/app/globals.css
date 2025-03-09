@@ -194,3 +194,37 @@ body {
 .splide__arrow:hover {
   background-color: #ccc;
 }
+
+
+.bg-white {
+  background-color: #fff;
+}
+
+.text-gray-600 {
+  color: #6b7280;
+}
+
+.text-black {
+  color: #000;
+}
+
+.text-blue-500 {
+  color: #3b82f6;
+}
+
+.text-blue-500:hover {
+  color: #2563eb;
+}
+
+.rounded-lg {
+  border-radius: 12px;
+}
+
+.shadow-md {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.hover\\:scale-105:hover {
+  transform: scale(1.05);
+}
+

@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
 import debounce from "lodash.debounce";
 import { createPortal } from "react-dom";
 
-// 🟢 Define isBrowser to prevent server-side rendering issues
-const isBrowser = typeof window !== "undefined";
+
+
 
 interface Property {
   _id: string;
@@ -25,7 +25,12 @@ const SearchWithRecommendations = ({ page }: { page: "home" | "properties" | "in
   const [suggestions, setSuggestions] = useState<Property[]>([]);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+// 🟢 Define isBrowser to prevent server-side rendering issues
+const [isClient, setIsClient] = useState(false);
 
+useEffect(() => {
+  setIsClient(true);
+}, []);
   // 🟢 Fetch properties based on search input
   const fetchProperties = useCallback(
     debounce(async (searchValue: string) => {
@@ -70,14 +75,16 @@ const SearchWithRecommendations = ({ page }: { page: "home" | "properties" | "in
   return (
     <div className="w-[90%] relative max-w-lg mx-auto mt-6">
       {/* ✅ Search Bar with Fixed Width Percentages */}
-      <div id="search-bar" className="flex items-center border border-gray-300 rounded-lg overflow-hidden shadow-md bg-white w-full max-w-lg mx-auto">
+      <div id="search-bar" className="flex items-center border border-gray-300 rounded-lg overflow-hidden shadow-md bg-white w-full max-w-lg mx-auto relative z-50">
       <input
-          type="text"
-          placeholder="Search by Locality, Property or Developer..."
-          value={query}
-          onChange={(e) => handleSearch(e.target.value)}
-          className="w-[85%] h-12 px-2 text-gray-700 border-none focus:ring-0 focus:outline-none"
-        />
+        type="text"
+        placeholder="Search by Locality, Property or Developer..."
+        value={query}
+        onClick={(e) => e.stopPropagation()} // ✅ Fix focus issue
+        onChange={(e) => handleSearch(e.target.value)}
+        className="w-[85%] h-12 px-2 text-gray-700 border-none focus:ring-0 focus:outline-none"
+      />
+
         <button
           onClick={handleSearchRedirect}
           className="w-[15%] h-12 flex items-center justify-center bg-white text-black border-l border-gray-300"
@@ -87,7 +94,7 @@ const SearchWithRecommendations = ({ page }: { page: "home" | "properties" | "in
       </div>
 
       {/* ✅ Suggestions Dropdown (Only on Home Page) */}
-      {page === "home" && query.length > 1 && isBrowser && createPortal(
+      {isClient && page === "home" && query.length > 1 && createPortal(
         <div
           className="absolute z-50 bg-white shadow-lg rounded-lg mt-1 max-h-80 overflow-y-auto border border-gray-200"
           style={{
