@@ -171,30 +171,35 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property, recommended
           </h2>
         </div>
 
-        {/* 🟢 Tab-based Filter */}
-        <div className="flex gap-2 my-4">
-        {["All", ...new Set((configurations || []).map((config) => config.bhkType))].map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`px-4 py-2 rounded-md ${activeTab === tab ? "bg-green-200 text-green-800" : "bg-gray-100 text-gray-600"}`}
-            >
-              {tab}
-            </button>
-          ))}
-        </div>
-
-        {/* 🟢 Display Configurations */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-          {filteredConfigs.map((config, index) => (
-            <div key={index} className="border p-4 rounded-lg shadow-sm">
-              <h2 className="text-lg font-semibold mb-2">{config.bhkType}</h2>
-              <p><span className="font-bold">Carpet Area:</span> {config.carpetArea || "N/A"}</p>
-              <p><span className="font-bold">Builtup Area:</span> {config.builtupArea || "On Request"}</p>
-              <p><span className="font-bold">Price:</span> ₹ {config.price || "N/A"}</p>
+        {/* 🟢 Display Configurations Only if Available */}
+        {configurations && configurations.length > 0 && (
+          <>
+            {/* 🟢 Tab-based Filter */}
+            <div className="flex gap-2 my-4">
+              {["All", ...new Set((configurations || []).map((config) => config.bhkType))].map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`px-4 py-2 rounded-md ${activeTab === tab ? "bg-green-200 text-green-800" : "bg-gray-100 text-gray-600"}`}
+                >
+                  {tab}
+                </button>
+              ))}
             </div>
-          ))}
-        </div>
+
+            {/* 🟢 Display Configurations */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              {filteredConfigs.map((config, index) => (
+                <div key={index} className="border p-4 rounded-lg shadow-sm">
+                  <h2 className="text-lg font-semibold mb-2">{config.bhkType}</h2>
+                  <p><span className="font-bold">Carpet Area:</span> {config.carpetArea || "N/A"}</p>
+                  <p><span className="font-bold">Builtup Area:</span> {config.builtupArea || "On Request"}</p>
+                  <p><span className="font-bold">Price:</span> ₹ {config.price || "N/A"}</p>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
 
 
         {/* 📍 Location & Other Info */}
@@ -234,7 +239,18 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property, recommended
   <h1 className="text-xl font-semibold">About</h1>
   {description && description.length > 200 ? (
     <p className="text-gray-700 leading-relaxed">
-      {showFullDescription ? description : `${description.slice(0, 200)}...`}
+      {showFullDescription ? (
+  <p
+    className="text-gray-700 leading-relaxed whitespace-pre-line"
+    dangerouslySetInnerHTML={{ __html: description.replace(/\n/g, '<br />').replace(/\r/g, '') }}
+  />
+) : (
+  <p
+    className="text-gray-700 leading-relaxed whitespace-pre-line"
+    dangerouslySetInnerHTML={{ __html: `${description.slice(0, 200).replace(/\n/g, '<br />').replace(/\r/g, '')}...` }}
+  />
+)}
+
       <button 
         onClick={() => setShowFullDescription(!showFullDescription)} 
         className="text-blue-500 ml-2 underline hover:text-blue-700 transition"
@@ -243,7 +259,7 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property, recommended
       </button>
     </p>
   ) : (
-    <p className="text-gray-700 leading-relaxed">{description || "No description available."}</p>
+    <p className="text-gray-700 leading-relaxed whitespace-pre-line">{description || "No description available."}</p>
   )}
 </div>
 
