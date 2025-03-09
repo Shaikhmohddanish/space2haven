@@ -76,7 +76,15 @@ const NewPropertiesSlider = ({ data }: { data: Property[] }) => {
   }
 
   return (
-    <div className="relative w-full my-6">
+    <div
+  className={`relative my-6 ${
+    uniqueData.length === 1
+      ? "lg:w-[33%] w-full"
+      : uniqueData.length === 2
+      ? "lg:w-[66%] w-full"
+      : "w-full"
+  }`}
+>
       <Slider {...sliderSettings}>
         {uniqueData.map((property) => (
           <div key={property._id} className="px-2">
