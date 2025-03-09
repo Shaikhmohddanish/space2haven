@@ -185,3 +185,12 @@ body {
     @apply w-full max-w-5xl bg-white p-4 rounded-lg shadow-lg;
   }
 }
+
+.splide__arrow {
+  background-color: #f0f0f0;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+.splide__arrow:hover {
+  background-color: #ccc;
+}

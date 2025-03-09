@@ -42,7 +42,7 @@ const HalfBanner = ({
         <div className="flex items-center border border-gray-300 rounded-full overflow-hidden shadow-md bg-white w-full max-w-lg mx-auto">
   <input
     type="text"
-    placeholder="Search by title, location, city, or state..."
+    placeholder="Search by Locality, Project, or Developer..."
     value={search}
     onChange={(e) => setSearch(e.target.value)}
     className="w-[70%] h-12 px-2 text-gray-700 border-none focus:ring-0 focus:outline-none"
