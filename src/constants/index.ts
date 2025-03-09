@@ -179,12 +179,12 @@ export const dashboardData = [
 
 export const servicesList = [
     {
-        title: "Buy A Property",
-        value: "buyProperty"
+        title: "Explore Our Designs",
+        value: "interiorDesign"
     },
     {
-        title: "Interior Design",
-        value: "interiorDesign"
+        title: "Explore Properties",
+        value: "buyProperty"
     },
 ]
 
@@ -274,17 +274,20 @@ export const cityOptions = [
 
 
 export const services = [
-    {
-        imageSrc: "/icons/servicesIcons/propertyAdvisory.svg",
-        title: "Buy a Property",
-        url: "/properties",
-    },
+    
     {
         imageSrc: "/icons/servicesIcons/tipsGuide.svg",
-        title: "Design Interior",
+        title: "Explore Our Designs",
         url: "/interior",
+    },
+    {
+        imageSrc: "/icons/servicesIcons/propertyAdvisory.svg",
+        title: "Explore Properties",
+        url: "/properties",
     }
 ];
+
+
 
 
 export const contentStyles = {

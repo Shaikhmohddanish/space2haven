@@ -11,8 +11,8 @@ const WhoWeAre: React.FC = () => {
     Our goal is not just to provide properties but to deliver an unmatched lifestyle experience. We believe in a customer-first approach, ensuring transparency, quality, and integrity in every deal. Join us at Space2Heaven and experience the difference of working with a trusted partner who values your dreams as much as you do.
   `;
 
-  const previewText = fullText.slice(0, 250) + (fullText.length > 250 ? "..." : "");
-  const isLongText = fullText.length > 250;
+  const previewText = fullText.slice(0, 350) + (fullText.length > 350 ? "..." : "");
+  const isLongText = fullText.length > 350;
 
   const { title, titleColor, hrColor, descriptionColor } = contentStyles["who-we-are"];
 
@@ -33,7 +33,7 @@ const WhoWeAre: React.FC = () => {
       {/* Description */}
       <div className="max-w-5xl mx-auto text-left px-4 md:px-6 mb-2">
         <div
-          className={`text-sm md:text-base lg:text-lg ${descriptionColor} whitespace-pre-line transition-all duration-300 ease-in-out ${
+          className={`text-lg md:text-xl  ${descriptionColor} whitespace-pre-line transition-all duration-300 ease-in-out ${
             isExpanded ? "max-h-full" : "max-h-[180px] overflow-hidden"
           }`}
         >
