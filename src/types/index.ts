@@ -148,6 +148,7 @@ export interface ServiceCardProps {
   imageSrc: string;
   title: string;
   url?: string;
+  className?:string;
 }
 
 export interface FilterObject {
