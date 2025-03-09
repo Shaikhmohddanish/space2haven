@@ -30,7 +30,6 @@ const PropertiesPageContent = ({
   const [page, setPage] = useState(1);
 
   const itemsPerPage = 4;
-  const currentYear = new Date().getFullYear();
 
   // ✅ Fetch Data if Not Cached
   useEffect(() => {
@@ -125,9 +124,9 @@ const PropertiesPageContent = ({
   // ✅ Filter Featured, Recommended, and New Properties
   const featuredProperties = data.filter((property) => property.featured);
   const recommendedProperties = data.filter((property) => property.recommend);
-  const newProperties = data.filter(
-    (property) => property.yearBuilt === currentYear || property.yearBuilt === currentYear - 1
-  );
+  const newProperties = Array.from(new Set(data.filter((property) => property.newProperty)));
+
+  
 
   return (
     <section className="min-h-screen w-full flex justify-center items-start flex-col md:flex-row px-4 md:px-10 bg-[url(/images/pattern.png)]">
@@ -143,17 +142,19 @@ const PropertiesPageContent = ({
                 </div>
             )}
 
-            {/* ✅ Recommended Properties Slider */}
             {recommendedProperties.length > 0 && (
               <div className="w-full my-6">
-                <h1 className="text-2xl font-semibold mb-4 text-home">Recommended Properties</h1>
-                <DynamicCarousel data={recommendedProperties as Property[]} loading={false} type="home-properties" />
+                  <h1 className="text-2xl font-semibold mb-4 text-home">Recommended Properties</h1>
+                  <NewPropertiesSlider data={recommendedProperties as Property[]} />
               </div>
-            )}
+          )}
 
-{newProperties.length > 0 && (
-  <NewPropertiesSlider data={newProperties as Property[]} />
-)}
+          {newProperties.length > 0 && (
+              <div className="w-full my-6">
+                  <h1 className="text-2xl font-semibold mb-4 text-home">New Properties</h1>
+                  <NewPropertiesSlider data={newProperties as Property[]} />
+              </div>
+          )}
 
 
 
