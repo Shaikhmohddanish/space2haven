@@ -117,16 +117,18 @@ const MobileNav = () => {
                                 })}
                                 {currentAdmin &&
                                     <>
-                                        <Link
-                                            href={"/admin/dashboard"}
-                                            className={cn("menu-link w-full", { "bg-grey-1 text-sand-soft": pathname === "/admin/dashboard" })}
-                                        >
-                                            <UserRoundCog size={20} />
-                                            <p className="font-semibold">
-                                                Admin Dashboard
-                                            </p>
+                                        <SheetClose asChild>
+    <Link
+        href={"/admin/dashboard"}
+        className={cn("menu-link w-full", { "bg-grey-1 text-sand-soft": pathname === "/admin/dashboard" })}
+    >
+        <UserRoundCog size={20} />
+        <p className="font-semibold">
+            Admin Dashboard
+        </p>
+    </Link>
+</SheetClose>
 
-                                        </Link>
                                         <button
                                             onClick={adminLogout}
                                             className="menu-link w-full hover:bg-grey-1 hover:text-sand-soft duration-300"
