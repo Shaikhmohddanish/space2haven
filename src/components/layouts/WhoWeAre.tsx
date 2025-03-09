@@ -21,7 +21,7 @@ const WhoWeAre: React.FC = () => {
       className="w-full bg-[url(/images/pattern.png)] bg-interior bg-cover bg-center px-6 md:px-12 py-4 md:py-6"
     >
       {/* Header */}
-      <div className="flex-center gap-4 flex-col mb-6 lg:mb-10">
+      <div className="flex-center gap-4 flex-col mb-4">
       <h1 className={`header-class ${titleColor}`}>{title}</h1>
       <hr className={hrColor} />
       </div>
