@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { Property } from "@/types";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, MapPin, Home, CalendarDays, Star } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useSwipeable } from "react-swipeable"; // 🟢 Import useSwipeable
+import { useSwipeable } from "react-swipeable";
 
 interface FeaturedPropertiesSliderProps {
   data: Property[];
@@ -27,7 +27,7 @@ const FeaturedPropertiesSlider = ({ data }: FeaturedPropertiesSliderProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(1);
 
-  // 🟢 Dynamically set items per page based on screen width
+  // Dynamically set items per page based on screen width
   useEffect(() => {
     const updateItemsPerPage = () => {
       if (window.innerWidth < 640) {
@@ -56,17 +56,16 @@ const FeaturedPropertiesSlider = ({ data }: FeaturedPropertiesSliderProps) => {
     }
   };
 
-  // 🟢 Handle Swipe Gestures
+  // Handle Swipe Gestures
   const handlers = useSwipeable({
     onSwipedLeft: nextSlide,
     onSwipedRight: prevSlide,
     preventScrollOnSwipe: true,
-    trackMouse: true, // Optional: enables swipe on desktop with mouse drag
+    trackMouse: true,
   });
 
   return (
     <div className="relative w-full my-6" {...handlers}>
-      {/* Carousel Wrapper */}
       <div className="relative overflow-hidden">
         <div
           className="flex transition-transform duration-500"
@@ -80,22 +79,57 @@ const FeaturedPropertiesSlider = ({ data }: FeaturedPropertiesSliderProps) => {
               className="min-w-full sm:min-w-[calc(100%/2)] md:min-w-[calc(100%/3)] p-4 transition-transform duration-300 hover:scale-105 cursor-pointer"
               onClick={() => router.push(`/properties/${property._id}`)}
             >
-              <div className="bg-white rounded-lg shadow-lg overflow-hidden relative group">
-                <Image
-                  src={property.images?.[0] || "/default-image.webp"}
-                  alt={property.title}
-                  width={400}
-                  height={250}
-                  className="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-300"
-                />
+              <div className="bg-white rounded-lg shadow-lg overflow-hidden relative group transition-all duration-300 hover:shadow-2xl">
+                {/* Property Image */}
+                <div className="relative">
+                  <Image
+                    src={property.images?.[0] || "/default-image.webp"}
+                    alt={property.title}
+                    width={400}
+                    height={250}
+                    className="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
+                  {property.featured && (
+                    <div className="absolute top-4 left-4 bg-yellow-500 text-white text-xs px-2 py-1 rounded shadow">
+                      Featured
+                    </div>
+                  )}
+                  {property.newProperty && (
+                    <div className="absolute top-4 right-4 bg-green-500 text-white text-xs px-2 py-1 rounded shadow">
+                      New
+                    </div>
+                  )}
+                </div>
+
+                {/* Property Details */}
                 <div className="p-4">
-                  <h2 className="text-lg font-semibold mb-1 truncate">{property.title}</h2>
-                  <p className="text-sm text-gray-500 mb-2 truncate">{property.location}</p>
-                  <p className="text-xl font-bold text-home mb-2">₹ {formatPrice(property.price) || "N/A"}</p>
-                  <div className="flex items-center justify-between text-gray-600 text-sm">
-                    <p className="truncate">{property.configuration.join(", ")}</p>
-                    <p className="truncate">{property.propertyType}</p>
+                  <h2 className="text-lg font-semibold mb-1 truncate text-gray-800">
+                    {property.title}
+                  </h2>
+                  <p className="text-sm text-gray-500 mb-2 flex items-center gap-1">
+                    <MapPin className="text-orange-soda" size={16} />
+                    {property.location}, {property.address.city}, {property.address.state}
+                  </p>
+                  <p className="text-xl font-bold text-green-600 mb-2">
+                    ₹ {formatPrice(property.price) || "N/A"}
+                  </p>
+
+                  {/* Additional Info */}
+                  <div className="flex items-center justify-between text-gray-600 text-sm mb-2">
+                    <p className="flex items-center gap-1">
+                      <Home className="text-orange-soda" size={16} />
+                      {property.configuration.join(", ")}
+                    </p>
+                    <p className="flex items-center gap-1">
+                      <CalendarDays className="text-orange-soda" size={16} />
+                      {property.possession}
+                    </p>
                   </div>
+
+                  {/* Property Type */}
+                  <p className="text-xs text-white bg-blue-500 inline-block px-2 py-1 rounded-full">
+                    {property.propertyType}
+                  </p>
                 </div>
               </div>
             </div>
