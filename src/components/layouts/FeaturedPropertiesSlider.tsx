@@ -65,7 +65,7 @@ const FeaturedPropertiesSlider = ({ data }: FeaturedPropertiesSliderProps) => {
             <div
               key={property._id}
               className="min-w-full sm:min-w-[calc(100%/2)] md:min-w-[calc(100%/3)] p-4 transition-transform duration-300 hover:scale-105 cursor-pointer"
-              onClick={() => router.push(property.url)}
+              onClick={() => router.push(`/properties/${property._id}`)}
             >
               <div className="bg-white rounded-lg shadow-lg overflow-hidden relative group transition-all duration-300 hover:shadow-2xl">
                 {/* Property Image */}
@@ -77,16 +77,6 @@ const FeaturedPropertiesSlider = ({ data }: FeaturedPropertiesSliderProps) => {
                     height={250}
                     className="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-300"
                   />
-                  {property.featured && (
-                    <div className="absolute top-4 left-4 bg-yellow-500 text-white text-xs px-2 py-1 rounded shadow">
-                      Featured
-                    </div>
-                  )}
-                  {property.newProperty && (
-                    <div className="absolute top-4 right-4 bg-green-500 text-white text-xs px-2 py-1 rounded shadow">
-                      New
-                    </div>
-                  )}
                 </div>
 
                 {/* Property Details */}
@@ -101,12 +91,14 @@ const FeaturedPropertiesSlider = ({ data }: FeaturedPropertiesSliderProps) => {
 
                     {/* Additional Info */}
                     <div className="flex items-center justify-between text-gray-600 text-sm mb-2">
-                    <p className="flex items-center gap-1">
-                      <Home className="text-orange-soda" size={16} />
-                      {property.configuration} {property.propertyType}
-                    </p>
-                  </div>
-
+                      <p className="flex items-center gap-1">
+                        <Home className="text-orange-soda" size={16} />
+                        {property.configuration
+                          .map((config) => config.split(" ")[0]) // Extract only the numbers or "4+" part
+                          .join(", ")}{" "} BHK 
+                        {" "+property.propertyType}
+                      </p>
+                    </div>
 
                   <p className="text-xl font-bold text-green-600 mb-2">
                     {property.price === "Price on request"
