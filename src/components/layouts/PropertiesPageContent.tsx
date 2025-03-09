@@ -1,6 +1,6 @@
 "use client";
 
-import { DisplayProperties, LoaderLayout, DynamicCarousel } from "@/components";
+import { DisplayProperties, LoaderLayout, DynamicCarousel, GetInTouchForm } from "@/components";
 import { PropertiesPageContentProps, Property } from "@/types";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -158,6 +158,7 @@ const PropertiesPageContent = ({
                 <NewPropertiesSlider data={newProperties as Property[]} />
               </div>
             )}
+            <GetInTouchForm/>
           </>
         )}
   

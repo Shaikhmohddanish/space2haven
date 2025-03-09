@@ -1,9 +1,10 @@
-import { IoLocationOutline, IoBedOutline, IoCalendarOutline, IoChevronForward, IoChevronBack } from "react-icons/io5";
+import { IoCalendarOutline, IoChevronForward, IoChevronBack } from "react-icons/io5";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Property } from "@/types";
 import { formatPrice } from "@/utils/formatPrice";
+import { Home, MapPin } from "lucide-react";
 
 
 // ✅ Custom Next Button
@@ -91,16 +92,19 @@ const NewPropertiesSlider = ({ data }: { data: Property[] }) => {
                 <div className="p-4">
                   <h2 className="text-lg font-semibold mb-2 truncate">{property.title}</h2>
                   <p className="text-sm text-gray-500 mb-2 flex items-center gap-1">
-                    <IoLocationOutline className="text-orange-soda" />
-                    {property.location}, {property.address.city}, {property.address.state}
+                  <MapPin className="text-orange-soda" size={16} />
+                  {property.location}, {property.address.city}, {property.address.state}
                   </p>
                   <p className="text-xl font-bold text-home mb-2">
                     ₹ {formatPrice(property.price) || "N/A"}
                   </p>
                   <ul className="flex items-center text-gray-600 text-sm gap-4 mb-4">
                     <li className="flex items-center gap-1">
-                      <IoBedOutline className="text-orange-soda" />
-                      {property.configuration.join(", ")}
+                      <Home className="text-orange-soda" size={16} />
+                                        {property.configuration
+                                          .map((config) => config.split(" ")[0])
+                                          .join(", ")}{" "}
+                                        BHK {" " + property.propertyType}
                     </li>
                     <li className="flex items-center gap-1">
                       <IoCalendarOutline className="text-orange-soda" />
