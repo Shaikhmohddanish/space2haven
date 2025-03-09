@@ -24,6 +24,7 @@ const PropertySchema = new Schema({
         state: { type: String },
     },
     area: { type: String, required: true },
+    areaUnit: { type: String, required: true },
     yearBuilt: { type: Number, required: true },
     features: { type: [String] },
     recommend: { type: Boolean, default: false },
@@ -33,7 +34,7 @@ const PropertySchema = new Schema({
     featured: { type: Boolean, default: false },
     newProperty: { type: Boolean, default: false },
 }, 
-    { timestamps: true, versionKey: false }  // ✅ Remove __v field for clean data
+    { timestamps: true, versionKey: false }
 );
 
 const PropertyModel = models.property_db || model("property_db", PropertySchema);

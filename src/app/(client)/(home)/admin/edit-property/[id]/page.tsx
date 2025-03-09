@@ -56,6 +56,7 @@ const EditProperty: React.FC = () => {
     address: { city: "", state: "" },
     propertyType: "",
     area: "",
+    areaUnit: "",
     yearBuilt: new Date().getFullYear(),
     features: [],
     recommend: false,
@@ -265,17 +266,54 @@ const handleMultiSelectChange = (name: keyof PropertyFormValues, value: string |
             </div>
           ))}
         </div>
+       
+
         <div className="col-span-full">
-          <label className="block font-medium mb-1">Images (up to 10, max 500 KB each)</label>
-          <input
-            type="file"
-            name="images"
-            multiple
-            accept=".jpg, .jpeg, .png, .webp, .avif"
-            onChange={handleChange}
-            className="input-class w-full"
+  <label className="block font-medium mb-1">Images (up to 10, max 500 KB each)</label>
+  <input
+    type="file"
+    name="images"
+    multiple
+    accept=".jpg, .jpeg, .png, .webp, .avif"
+    onChange={(e) => {
+      const files = e.target.files;
+      if (files) {
+        const selectedFiles = Array.from(files);
+        const validFiles = selectedFiles.filter((file) => file.size <= 500 * 1024); // 500 KB size limit
+
+        if (selectedFiles.length > 10) {
+          alert("You can only upload up to 10 files.");
+          return;
+        }
+
+        if (validFiles.length < selectedFiles.length) {
+          alert("Some files exceed the 500 KB size limit and were excluded.");
+        }
+
+        setFormData((prevData) => ({
+          ...prevData,
+          images: validFiles.slice(0, 10), // Limit to 10 valid files
+        }));
+      }
+    }}
+    className="input-class w-full"
+  />
+
+  {/* Image Previews */}
+  {formData.images.length > 0 && (
+    <div className="mt-2 grid grid-cols-2 sm:grid-cols-4 gap-2">
+      {formData.images.map((file, index) => (
+        <div key={index} className="relative">
+          <img
+            src={URL.createObjectURL(file)}
+            alt={`Preview ${index + 1}`}
+            className="w-full h-20 object-cover rounded-md shadow-sm"
           />
         </div>
+      ))}
+    </div>
+  )}
+</div>
         
         <label className="block font-medium mb-1">Configuration (BHK)</label>
         <div className="flex flex-wrap gap-2">
@@ -373,17 +411,32 @@ const handleMultiSelectChange = (name: keyof PropertyFormValues, value: string |
 
           </div>
 
-          <div>
+          <div className="mb-4">
             <label className="block font-medium mb-1">Area</label>
             <input
-              type="text"
+              type="number"
               name="area"
               value={formData.area}
               onChange={handleChange}
               required
               className="input-class w-full"
-              placeholder="1000 sq.ft"
+              placeholder="368"
             />
+          </div>
+
+          <div className="mb-4">
+            <label className="block font-medium mb-1">Area Unit</label>
+            <select
+              name="areaUnit"
+              value={formData.areaUnit || "sq.ft"}
+              onChange={(e) => setFormData({ ...formData, areaUnit: e.target.value })}
+              className="input-class w-full"
+            >
+              <option value="sq.ft">sq.ft</option>
+              <option value="sq.m">sq.m</option>
+              <option value="acre">acre</option>
+              <option value="hectare">hectare</option>
+            </select>
           </div>
           <div>
             <label className="block font-medium mb-1">Year Built</label>

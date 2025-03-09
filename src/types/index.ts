@@ -66,6 +66,7 @@ export interface PropertyCardProps {
     propertyType: string;
     area: string;
     yearBuilt: number;
+    areaUnit: string;
     features: string[];
     recommend: boolean;
     possession: string;
@@ -86,6 +87,7 @@ export interface Property {
   features: string[];
   yearBuilt: number;
   area: string;
+  areaUnit: string[];
   location: string;
   possession: string;
   developer:string;

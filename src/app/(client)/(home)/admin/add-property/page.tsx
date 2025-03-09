@@ -60,6 +60,7 @@ const AddProperty: React.FC = () => {
     },
     propertyType: '',
     area: '',
+    areaUnit: '',
     yearBuilt: new Date().getFullYear(),
     features: [],
     recommend: false,
@@ -422,18 +423,34 @@ const AddProperty: React.FC = () => {
 
           </div>
 
-          <div>
+          <div className="mb-4">
             <label className="block font-medium mb-1">Area</label>
             <input
-              type="text"
+              type="number"
               name="area"
               value={formData.area}
               onChange={handleChange}
               required
               className="input-class w-full"
-              placeholder="1000 sq.ft"
+              placeholder="368"
             />
           </div>
+
+          <div className="mb-4">
+            <label className="block font-medium mb-1">Area Unit</label>
+            <select
+              name="areaUnit"
+              value={formData.areaUnit || "sq.ft"}
+              onChange={(e) => setFormData({ ...formData, areaUnit: e.target.value })}
+              className="input-class w-full"
+            >
+              <option value="sq.ft">sq.ft</option>
+              <option value="sq.m">sq.m</option>
+              <option value="acre">acre</option>
+              <option value="hectare">hectare</option>
+            </select>
+          </div>
+
           <div>
             <label className="block font-medium mb-1">Year Built</label>
             <input
@@ -445,6 +462,9 @@ const AddProperty: React.FC = () => {
               className="input-class w-full"
             />
           </div>
+
+          
+
         </div>
 
         {/* Price, Possession, Features - Now in One Row */}
