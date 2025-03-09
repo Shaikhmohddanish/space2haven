@@ -76,7 +76,7 @@ const NewPropertiesSlider = ({ data }: { data: Property[] }) => {
   }
 
   return (
-    <div className="w-full">
+    <div className="relative w-full my-6">
       <Slider {...sliderSettings}>
         {uniqueData.map((property) => (
           <div key={property._id} className="px-2">
