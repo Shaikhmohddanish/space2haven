@@ -11,9 +11,8 @@ const Home = () => {
       <WhoWeAre/>
       <Services data={services} title="Our Services"/>
       <PropertyPane contentType="home-interior" />
-      <PropertyPane contentType="home-properties" />
-      <GetInTouchForm />
       <CityProjects/>
+      <GetInTouchForm />
       <NewProjects/>
     </section>
   )

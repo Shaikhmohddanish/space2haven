@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Property } from "@/types";
-import { ChevronLeft, ChevronRight, MapPin, Home, CalendarDays, Star } from "lucide-react";
+import { ChevronLeft, ChevronRight, MapPin, Home, CalendarDays } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useSwipeable } from "react-swipeable";
@@ -9,7 +9,6 @@ import { formatPrice } from "@/utils/formatPrice";
 interface FeaturedPropertiesSliderProps {
   data: Property[];
 }
-
 
 const FeaturedPropertiesSlider = ({ data }: FeaturedPropertiesSliderProps) => {
   const router = useRouter();
@@ -66,7 +65,7 @@ const FeaturedPropertiesSlider = ({ data }: FeaturedPropertiesSliderProps) => {
             <div
               key={property._id}
               className="min-w-full sm:min-w-[calc(100%/2)] md:min-w-[calc(100%/3)] p-4 transition-transform duration-300 hover:scale-105 cursor-pointer"
-              onClick={() => router.push(`/properties/${property._id}`)}
+              onClick={() => router.push(property.url)}
             >
               <div className="bg-white rounded-lg shadow-lg overflow-hidden relative group transition-all duration-300 hover:shadow-2xl">
                 {/* Property Image */}
@@ -97,28 +96,27 @@ const FeaturedPropertiesSlider = ({ data }: FeaturedPropertiesSliderProps) => {
                   </h2>
                   <p className="text-sm text-gray-500 mb-2 flex items-center gap-1">
                     <MapPin className="text-orange-soda" size={16} />
-                    {property.location}, {property.address.city}, {property.address.state}
-                  </p>
-                  <p className="text-xl font-bold text-green-600 mb-2">
-                    ₹ {formatPrice(property.price) || "N/A"}
+                    {property.address.city}, {property.address.state}
                   </p>
 
-                  {/* Additional Info */}
-                  <div className="flex items-center justify-between text-gray-600 text-sm mb-2">
+                    {/* Additional Info */}
+                    <div className="flex items-center justify-between text-gray-600 text-sm mb-2">
                     <p className="flex items-center gap-1">
                       <Home className="text-orange-soda" size={16} />
-                      {property.configuration.join(", ")}
-                    </p>
-                    <p className="flex items-center gap-1">
-                      <CalendarDays className="text-orange-soda" size={16} />
-                      {property.possession}
+                      {property.configuration} {property.propertyType}
                     </p>
                   </div>
 
-                  {/* Property Type */}
-                  <p className="text-xs text-white bg-blue-500 inline-block px-2 py-1 rounded-full">
-                    {property.propertyType}
+
+                  <p className="text-xl font-bold text-green-600 mb-2">
+                    {property.price === "Price on request"
+                      ? "Price on request"
+                      : `₹ ${formatPrice(property.price)}`}
                   </p>
+
+                
+
+                  
                 </div>
               </div>
             </div>

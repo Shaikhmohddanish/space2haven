@@ -22,6 +22,15 @@ const CityProjects: React.FC = () => {
   const [cityData, setCityData] = useState<CityProjects[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // 🖼️ Define images from the public/images directory
+  const projectImages = [
+    "/images/project1.jpeg",
+    "/images/project2.jpeg",
+    "/images/project3.jpeg",
+    "/images/project4.jpeg",
+    "/images/project5.jpeg",
+  ];
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -31,7 +40,7 @@ const CityProjects: React.FC = () => {
         // Group properties by city and count them
         const cityMap = new Map<string, { count: number; image: string }>();
 
-        data.forEach((property) => {
+        data.forEach((property, index) => {
           const city = property.address.city || "Unknown";
           if (cityMap.has(city)) {
             cityMap.set(city, {
@@ -39,9 +48,11 @@ const CityProjects: React.FC = () => {
               image: cityMap.get(city)!.image || property.images[0] || "",
             });
           } else {
+            // 🟢 Assign round-robin image from projectImages array
+            const imageIndex = index % projectImages.length;
             cityMap.set(city, {
               count: 1,
-              image: property.images[0] || "",
+              image: projectImages[imageIndex],
             });
           }
         });
@@ -68,34 +79,35 @@ const CityProjects: React.FC = () => {
   }
 
   return (
-    <section className="w-full bg-white py-10">
-      <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold mb-6">
-          <span className="text-gray-600">Choose</span> <span className="text-black">Your City</span>
-        </h2>
+<section
+      className="w-full bg-[url(/images/pattern.png)] bg-teal-300 bg-cover bg-center px-6 md:px-12 py-4 md:py-6 relative z-10"
+    >      <div className="container mx-auto px-4">
+        {/* Header */}
+      <div className="flex-center gap-4 flex-col mb-4">
+        <h1 className={`header-class text-black`}>Choose Your City</h1>
+        <hr className={`bg-black`} />
+      </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {cityData.map((city, index) => (
-            <div
+            <a
               key={index}
-              className="bg-white rounded-lg shadow-md overflow-hidden transition-transform transform hover:scale-105"
+              href={`/properties?search=${city.city.toLowerCase()}`}
+              className="block bg-white rounded-lg shadow-md overflow-hidden transition-transform transform hover:scale-105"
             >
-              <div className="flex items-center">
+              <div className="relative">
                 <img
                   src={city.image}
                   alt={city.city}
-                  className="w-20 h-20 object-cover rounded-l-lg"
+                  className="w-full h-48 object-cover"
                 />
-                <div className="p-4">
-                  <h3 className="text-lg font-semibold text-gray-800">{city.city}</h3>
-                  <a
-                    href={`/properties/${city.city.toLowerCase()}`}
-                    className="text-blue-500 hover:underline"
-                  >
-                    {city.count} Projects
-                  </a>
+                <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
+                  <div className="text-center text-white">
+                    <h3 className="text-lg font-semibold">{city.city}</h3>
+                    <p className="text-sm">{city.count} Projects</p>
+                  </div>
                 </div>
               </div>
-            </div>
+            </a>
           ))}
         </div>
       </div>
