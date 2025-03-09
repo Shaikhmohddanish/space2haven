@@ -194,7 +194,7 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property, recommended
                   <h2 className="text-lg font-semibold mb-2">{config.bhkType}</h2>
                   <p><span className="font-bold">Carpet Area:</span> {config.carpetArea || "N/A"}</p>
                   <p><span className="font-bold">Builtup Area:</span> {config.builtupArea || "On Request"}</p>
-                  <p><span className="font-bold">Price:</span> ₹ {config.price || "N/A"}</p>
+                  <p><span className="font-bold">Price:</span> ₹ {formatPrice(config.price) || "N/A"}</p>
                 </div>
               ))}
             </div>
