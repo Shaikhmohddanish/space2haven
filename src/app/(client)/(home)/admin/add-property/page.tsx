@@ -592,10 +592,11 @@ const AddProperty: React.FC = () => {
     {formData.configurations.map((config: Configuration, index: number) => (
         <div key={index} className="border-b pb-2 mb-2">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-2">
+
+                {/* 🟢 BHK Type Dropdown */}
                 <div>
                     <label className="block font-medium mb-1">BHK Type</label>
-                    <input
-                        type="text"
+                    <select
                         value={config.bhkType}
                         onChange={(e) => {
                             const newConfigs = [...formData.configurations];
@@ -603,49 +604,96 @@ const AddProperty: React.FC = () => {
                             setFormData({ ...formData, configurations: newConfigs });
                         }}
                         className="input-class w-full"
-                        placeholder="E.g., 1 BHK"
-                    />
+                    >
+                        <option value="">Select BHK</option>
+                        {[1, 2, 3, 4, 5].map((bhk) => (
+                            <option key={bhk} value={`${bhk} BHK`}>
+                                {bhk} BHK
+                            </option>
+                        ))}
+                    </select>
                 </div>
+
+                {/* 🟢 Carpet Area with Unit */}
                 <div>
                     <label className="block font-medium mb-1">Carpet Area</label>
-                    <input
-                        type="text"
-                        value={config.carpetArea}
-                        onChange={(e) => {
-                            const newConfigs = [...formData.configurations];
-                            newConfigs[index].carpetArea = e.target.value;
-                            setFormData({ ...formData, configurations: newConfigs });
-                        }}
-                        className="input-class w-full"
-                        placeholder="E.g., 338 Sq.ft"
-                    />
+                    <div className="flex gap-2">
+                        <input
+                            type="number"
+                            step="0.01"
+                            value={config.carpetArea || ""}
+                            onChange={(e) => {
+                                const newConfigs = [...formData.configurations];
+                                newConfigs[index].carpetArea = e.target.value;
+                                setFormData({ ...formData, configurations: newConfigs });
+                            }}
+                            className="input-class w-full"
+                            placeholder="E.g., 338"
+                        />
+                        <select
+                            value={config.carpetAreaUnit || "sq.ft"}
+                            onChange={(e) => {
+                                const newConfigs = [...formData.configurations];
+                                newConfigs[index].carpetAreaUnit = e.target.value;
+                                setFormData({ ...formData, configurations: newConfigs });
+                            }}
+                            className="input-class"
+                        >
+                            <option value="sq.ft">sq.ft</option>
+                            <option value="sq.m">sq.m</option>
+                            <option value="acre">acre</option>
+                            <option value="hectare">hectare</option>
+                        </select>
+                    </div>
                 </div>
+
+                {/* 🟢 Built-up Area with Unit */}
                 <div>
                     <label className="block font-medium mb-1">Built-up Area</label>
-                    <input
-                        type="text"
-                        value={config.builtupArea}
-                        onChange={(e) => {
-                            const newConfigs = [...formData.configurations];
-                            newConfigs[index].builtupArea = e.target.value;
-                            setFormData({ ...formData, configurations: newConfigs });
-                        }}
-                        className="input-class w-full"
-                        placeholder="E.g., On Request"
-                    />
+                    <div className="flex gap-2">
+                        <input
+                            type="number"
+                            step="0.01"
+                            value={config.builtupArea || ""}
+                            onChange={(e) => {
+                                const newConfigs = [...formData.configurations];
+                                newConfigs[index].builtupArea = e.target.value;
+                                setFormData({ ...formData, configurations: newConfigs });
+                            }}
+                            className="input-class w-full"
+                            placeholder="E.g., 500"
+                        />
+                        <select
+                            value={config.builtupAreaUnit || "sq.ft"}
+                            onChange={(e) => {
+                                const newConfigs = [...formData.configurations];
+                                newConfigs[index].builtupAreaUnit = e.target.value;
+                                setFormData({ ...formData, configurations: newConfigs });
+                            }}
+                            className="input-class"
+                        >
+                            <option value="sq.ft">sq.ft</option>
+                            <option value="sq.m">sq.m</option>
+                            <option value="acre">acre</option>
+                            <option value="hectare">hectare</option>
+                        </select>
+                    </div>
                 </div>
+
+                {/* 🟢 Price Input */}
                 <div>
                     <label className="block font-medium mb-1">Price</label>
                     <input
-                        type="text"
-                        value={config.price}
+                        type="number"
+                        step="0.01"
+                        value={config.price || ""}
                         onChange={(e) => {
                             const newConfigs = [...formData.configurations];
                             newConfigs[index].price = e.target.value;
                             setFormData({ ...formData, configurations: newConfigs });
                         }}
                         className="input-class w-full"
-                        placeholder="E.g., INR 26.0 Lacs"
+                        placeholder="E.g., 2600000"
                     />
                 </div>
             </div>
@@ -653,7 +701,7 @@ const AddProperty: React.FC = () => {
                 type="button"
                 className="text-red-500 text-sm"
                 onClick={() => {
-                  const newConfigs = formData.configurations.filter((_: Configuration, i: number) => i !== index);
+                    const newConfigs = formData.configurations.filter((_, i) => i !== index);
                     setFormData({ ...formData, configurations: newConfigs });
                 }}
             >
@@ -670,7 +718,7 @@ const AddProperty: React.FC = () => {
                 ...formData,
                 configurations: [
                     ...formData.configurations,
-                    { bhkType: '', carpetArea: '', builtupArea: '', price: '' },
+                    { bhkType: '', carpetArea: '', carpetAreaUnit: 'sq.ft', builtupArea: '', builtupAreaUnit: 'sq.ft', price: '' },
                 ],
             });
         }}
@@ -678,6 +726,7 @@ const AddProperty: React.FC = () => {
         + Add Configuration
     </button>
 </div>
+
 
       {/* Submit Button */}
       <button type="submit" className="btn-class w-full flex justify-center" disabled={loading}>

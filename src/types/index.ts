@@ -2,6 +2,8 @@ export interface Configuration {
   bhkType: string;
   carpetArea: string;
   builtupArea: string;
+  carpetAreaUnit: string;
+  builtupAreaUnit: string;
   price: string;
 }
 
