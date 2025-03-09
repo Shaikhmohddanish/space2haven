@@ -39,6 +39,11 @@ const MobileNav = () => {
             logo: <Calculator size={20} />,
         },
         {
+            route: "/loan-eligibility",
+            label: "Loan Eligibility Calculator",
+            logo: <Calculator size={20} />,
+        },
+        {
             route: "/about",
             label: "About",
             logo: <Info size={20} />,
