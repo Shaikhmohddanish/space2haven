@@ -38,7 +38,7 @@ const PropertyPane: React.FC<PropertyPaneProps> = ({ contentType }) => {
 
   return (
     <section
-      className={`section-general-class bg-[url(/images/pattern.png)] ${contentType === "home-properties"
+      className={`section-general-class ${contentType === "home-properties"
         ? "bg-home" :
         contentType === "home-interior" || contentType === "interior"
           ? "bg-transparent" :

@@ -12,11 +12,8 @@ const Services = ({
 }: ServiceSectionProps) => {
   return (
     <section
-    className="w-full bg-[url(/images/pattern.png)] bg-home bg-cover bg-center px-6 md:px-12 py-4 md:py-6"
+    className="w-full bg-home bg-cover bg-center px-6 md:px-12 py-4 md:py-6"
     >
-      {/* Background Pattern */}
-      <Pattern />
-
       {/* Section Content */}
       <div className="relative z-10 flex flex-col items-center gap-0 w-full">
       

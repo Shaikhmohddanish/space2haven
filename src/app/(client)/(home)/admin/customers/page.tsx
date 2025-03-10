@@ -59,7 +59,7 @@ const Customers = () => {
   }, []);
 
   if (!adminDetails) {
-    return (<section className="min-h-screen py-24 px-4 bg-sand-soft flex-center flex-col bg-[url(/images/pattern.png)]">
+    return (<section className="min-h-screen py-24 px-4 bg-sand-soft flex-center flex-col">
       <h1 className="text-home header-class table-style text-center">
         Access Denied..!
       </h1>
@@ -68,7 +68,7 @@ const Customers = () => {
 
   if (error) {
     return (
-      <section className="min-h-screen py-24 px-4 bg-sand-soft flex-center flex-col bg-[url(/images/pattern.png)]">
+      <section className="min-h-screen py-24 px-4 bg-sand-soft flex-center flex-col">
         <h1 className="text-home header-class table-style text-center">
           {error}
         </h1>
@@ -78,7 +78,7 @@ const Customers = () => {
 
   if (!customerData || customerData.length === 0) {
     return (
-      <section className="min-h-screen py-24 px-4 bg-sand-soft flex-center flex-col bg-[url(/images/pattern.png)]">
+      <section className="min-h-screen py-24 px-4 bg-sand-soft flex-center flex-col">
         <h1 className="text-home header-class table-style text-center">
           No customers found!
         </h1>
@@ -88,7 +88,7 @@ const Customers = () => {
 
 
   return (
-    <section className="min-h-screen py-24 px-4 bg-sand-soft flex items-center flex-col bg-[url(/images/pattern.png)]">
+    <section className="min-h-screen py-24 px-4 bg-sand-soft flex items-center flex-col">
       <div className="table-style">
         {loading ? <Loader /> :
           <Table>

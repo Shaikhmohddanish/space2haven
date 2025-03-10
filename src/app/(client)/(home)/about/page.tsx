@@ -4,7 +4,7 @@ import { privacyData } from '@/constants';
 const About = () => {
 
   return (
-    <section className="flex-center min-h-screen flex-col pt-20 bg-sand-soft bg-[url(/images/pattern.png)]">
+    <section className="flex-center min-h-screen flex-col pt-20 bg-sand-soft">
        <div className="container mx-auto max-w-6xl px-6 py-12">
       {/* Title */}
       <h1 className="text-3xl font-bold mb-4 text-center text-home">{privacyData.title}</h1>

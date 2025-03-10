@@ -84,7 +84,7 @@ const CityProjects: React.FC = () => {
   const tilesToShow = showAll || window.innerWidth >= 1024 ? cityData : cityData.slice(0, 4);
 
   return (
-    <section className="w-full bg-[url(/images/pattern.png)] bg-teal-300 bg-cover bg-center px-6 md:px-12 py-4 md:py-6 relative z-10">
+    <section className="w-full bg-teal-300 bg-cover bg-center px-6 md:px-12 py-4 md:py-6 relative z-10">
       <div className="container mx-auto px-4 max-w-7xl">
         {/* Header */}
         <div className="flex-center gap-4 flex-col mb-4">

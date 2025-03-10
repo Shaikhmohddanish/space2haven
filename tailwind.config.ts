@@ -31,6 +31,8 @@ const config: Config = {
 				},
 				home: "#800020",
 				interior: "#006A67",
+				lightGray: "#f8f8f8",
+				darkBrown: '#2D2B2A',  // Dark Brown Close to Black
 				grey: {
 					1: "#31363F"
 				},

@@ -83,7 +83,7 @@ const PropertyById = () => {
     } = propertyData;
 
     return (
-        <section className="min-h-screen w-full flex-center flex-col py-20 px-4 bg-[url('/images/pattern.png')]">
+        <section className="min-h-screen w-full flex-center flex-col py-20 px-4 ">
             {loading ? (
                 <LoaderLayout loaderType="single" />
             ) : (

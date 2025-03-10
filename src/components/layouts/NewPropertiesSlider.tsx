@@ -78,7 +78,7 @@ const NewPropertiesSlider = ({ data }: { data: Property[] }) => {
     {uniqueData.map((property) => (
       <div key={property._id} className="px-2">
         <a href={`/properties/${property._id}`} className="block">
-          <div className="bg-white rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105">
+          <div className="lightGray rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105">
             <div className="relative w-full h-56 overflow-hidden">
               <img
                 src={property.images?.[0] || "/default-image.webp"}
@@ -110,7 +110,7 @@ const NewPropertiesSlider = ({ data }: { data: Property[] }) => {
               {/* Price and Possession Date on the Same Line */}
               <div className="flex justify-between items-center mb-2">
                 {/* Price */}
-                <p className="text-xl font-bold text-green-600">
+                <p className="text-xl font-bold">
                   ₹ {formatPrice(property.price) || "N/A"}
                 </p>
 

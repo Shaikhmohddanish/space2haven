@@ -65,7 +65,7 @@ const AllProperties = () => {
   
 
   return (
-    <section className="min-h-screen py-24 px-4 bg-sand-soft flex-center flex-col bg-[url(/images/pattern.png)]">
+    <section className="min-h-screen py-24 px-4 bg-sand-soft flex-center flex-col">
       <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-home text-center">
         All Properties
       </h1>

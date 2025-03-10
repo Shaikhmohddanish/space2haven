@@ -5,7 +5,7 @@ import { menuBarOptions } from "@/constants";
 
 const Footer = () => {
   return (
-    <section className="min-h-[50vh] bg-gray-800 text-sand-soft2 py-8 bg-[url(/images/pattern.png)]">
+    <section className="min-h-[50vh] bg-gray-800 text-sand-soft2 py-8">
       <div className="container mx-auto py-8 px-4 md:px-8 lg:px-16 relative">
         <div className="flex flex-col md:flex-row justify-between gap-8">
           {/* Logo Section */}

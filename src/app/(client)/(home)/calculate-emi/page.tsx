@@ -26,7 +26,7 @@ const EMICalculator: React.FC = () => {
   };
 
   return (
-    <section className="min-h-screen section-general-class bg-sand-soft bg-[url('/images/pattern.png')]">
+    <section className="min-h-screen section-general-class bg-sand-soft ">
       <div className="h-full w-full max-w-xl p-4 bg-white shadow-md rounded-md mt-10">
         <h1 className="text-2xl font-bold text-center mb-6 text-home">
           EMI Calculator

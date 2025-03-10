@@ -58,7 +58,7 @@ const Dashboard = () => {
   };
 
   return (
-    <section className="min-h-screen py-24 px-4 bg-sand-soft flex-center flex-col bg-[url(/images/pattern.png)]">
+    <section className="min-h-screen py-24 px-4 bg-sand-soft flex-center flex-col">
       {adminDetails ? (
         <>
           <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-home text-center">
@@ -72,7 +72,7 @@ const Dashboard = () => {
               <Link
                 href={link}
                 key={index}
-                className={`${color} hover:${hover} transition duration-200 dashboard-card flex-center text-center p-4 rounded-lg text-sand-soft font-bold bg-[url(/images/pattern.png)]`}
+                className={`${color} hover:${hover} transition duration-200 dashboard-card flex-center text-center p-4 rounded-lg text-sand-soft font-bold`}
               >
                 {title}
               </Link>

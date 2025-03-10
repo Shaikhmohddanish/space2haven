@@ -2,7 +2,7 @@ import Image from "next/image";
 
 const InteriorLayout = () => {
     return (
-        <section className="section-general-class bg-[url(/images/pattern.png)]">
+        <section className="section-general-class">
             <div className="flex flex-col-reverse lg:flex-row items-center gap-8 lg:gap-12 mb-6 lg:mb-10">
                 {/* Text Section */}
                 <div className="flex flex-col items-center gap-8">

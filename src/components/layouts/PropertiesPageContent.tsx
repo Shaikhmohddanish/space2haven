@@ -8,7 +8,7 @@ import { usePathname } from "next/navigation";
 import FeaturedPropertiesSlider from "./FeaturedPropertiesSlider";
 import NewPropertiesSlider from "./NewPropertiesSlider";
 import { IoChevronBack, IoChevronForward } from "react-icons/io5";
-import NewProjects from "./NewProjects";
+import DeveloperSlider from "./DeveloperSlider";
 
 const PropertiesPageContent = ({
   search,
@@ -134,40 +134,34 @@ const PropertiesPageContent = ({
   const newProperties = Array.from(new Set(data.filter((property) => property.newProperty)));
 
   return (
-    <section className="min-h-screen w-full flex justify-center items-start flex-col md:flex-row px-4 md:px-10 bg-[url(/images/pattern.png)]">
+    <section className="min-h-screen w-full flex justify-center items-start flex-col md:flex-row px-4 md:px-10">
       <main className="flex flex-col w-full h-full p-4 md:p-6 gap-4">
         {/* ✅ Show Sliders Only If Search is Empty */}
         {!search && (
           <>
+          
             {featuredProperties.length > 0 && (
               <div className="w-full my-6">
-                <h1 className="text-2xl font-semibold mb-4 text-home">Featured Properties</h1>
-                <NewProjects data={featuredProperties as Property[]} />
-              </div>
-            )}
-
-            {featuredProperties.length > 0 && (
-              <div className="w-full my-6">
-                <h1 className="text-2xl font-semibold mb-4 text-home">Featured Properties</h1>
+                <h1 className="text-2xl font-semibold mb-4 darkBrown">Featured Properties</h1>
                 <FeaturedPropertiesSlider data={featuredProperties as Property[]} />
               </div>
             )}
   
             {recommendedProperties.length > 0 && (
               <div className="w-full my-6">
-                <h1 className="text-2xl font-semibold mb-4 text-home">Recommended Properties</h1>
+                <h1 className="text-2xl font-semibold mb-4 darkBrown">Recommended Properties</h1>
                 <NewPropertiesSlider data={recommendedProperties as Property[]} />
               </div>
             )}
   
             {newProperties.length > 0 && (
               <div className="w-full my-6">
-                <h1 className="text-2xl font-semibold mb-4 text-home">New Properties</h1>
+                <h1 className="text-2xl font-semibold mb-4 darkBrown">New Properties</h1>
                 <NewPropertiesSlider data={newProperties as Property[]} />
               </div>
             )}
 
-            
+            <DeveloperSlider/>
             <GetInTouchForm/>
           </>
         )}
@@ -178,7 +172,7 @@ const PropertiesPageContent = ({
             {/* Show heading only if properties are found */}
             {filteredData.length > 0 ? (
               <>
-                <h1 className="text-2xl font-semibold text-center my-4 text-home">
+                <h1 className="text-2xl font-semibold text-center my-4 darkBrown">
                   Discover Your Dream Property with Us
                 </h1>
   
@@ -223,7 +217,7 @@ const PropertiesPageContent = ({
               </>
             ) : (
               // Show "No properties found" if search is active but no results
-              <h1 className="text-2xl font-semibold text-center my-4 text-home">
+              <h1 className="text-2xl font-semibold text-center my-4 darkBrown">
                 No properties found. Please try a different search.
                 </h1>
             )}

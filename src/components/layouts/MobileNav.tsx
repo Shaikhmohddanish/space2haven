@@ -80,7 +80,7 @@ const MobileNav = () => {
                     <Menu size={20} />
                 </SheetTrigger>
                 <SheetContent
-                    className={`border-none px-0 pb-0 ${pathname==="/interior" ?  "bg-interior"  : "bg-home"} bg-[url(/images/pattern.png)]`}
+                    className={`border-none px-0 pb-0 ${pathname==="/interior" ?  "bg-interior"  : "bg-home"}`}
                 >
                     <Link href="/" className="flex items-center gap-2 px-4 pb-4">
                         <Image

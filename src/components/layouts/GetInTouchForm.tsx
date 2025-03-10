@@ -3,10 +3,10 @@ import DialogForm from "./DialogForm"
 
 const GetInTouchForm = ({ pageType }: { pageType?: string }) => {
   return (
-    <section className="get-in-touch relative overflow-hidden min-h-screen bg-[url('/images/pattern.png')]">
+    <section className="get-in-touch relative overflow-hidden min-h-screen ">
       {/* Section Heading */}
-      <h1 className={`${pageType === "interior" ? "text-interior" : "text-home"} header-class`}>Get in Touch</h1>
-      <hr className={pageType === "interior" ? "bg-interior" : "bg-home"} />
+      <h1 className={`${pageType === "interior" ? "darkBrown" : "darkBrown"} header-class`}>Get in Touch</h1>
+      <hr className={pageType === "interior" ? "darkBrown" : "darkBrown"} />
 
       {/* Main Content */}
       <div className="w-full flex flex-col lg:flex-row items-stretch gap-4">

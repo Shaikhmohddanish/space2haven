@@ -316,10 +316,10 @@ export const contentStyles = {
         descriptionColor: "text-gray-500",
     },
     "home-interior": {
-        title: "Interior Design Gallery",
+        title: "Interiors for Every Budget",
         titleColor: "text-home",
         hrColor: "bg-interior-highlight",
-        description: "Experience the perfect blend of style and functionality.",
+        description: "Let’s design your dream spaces with style and efficiency.",
         descriptionColor: "text-grey-2",
     },
     // 🆕 Added "who-we-are" Configuration
