@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation";
 import FeaturedPropertiesSlider from "./FeaturedPropertiesSlider";
 import NewPropertiesSlider from "./NewPropertiesSlider";
 import { IoChevronBack, IoChevronForward } from "react-icons/io5";
+import NewProjects from "./NewProjects";
 
 const PropertiesPageContent = ({
   search,
@@ -141,6 +142,13 @@ const PropertiesPageContent = ({
             {featuredProperties.length > 0 && (
               <div className="w-full my-6">
                 <h1 className="text-2xl font-semibold mb-4 text-home">Featured Properties</h1>
+                <NewProjects data={featuredProperties as Property[]} />
+              </div>
+            )}
+
+            {featuredProperties.length > 0 && (
+              <div className="w-full my-6">
+                <h1 className="text-2xl font-semibold mb-4 text-home">Featured Properties</h1>
                 <FeaturedPropertiesSlider data={featuredProperties as Property[]} />
               </div>
             )}
@@ -158,6 +166,8 @@ const PropertiesPageContent = ({
                 <NewPropertiesSlider data={newProperties as Property[]} />
               </div>
             )}
+
+            
             <GetInTouchForm/>
           </>
         )}
