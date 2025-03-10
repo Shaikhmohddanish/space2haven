@@ -470,22 +470,6 @@ const handleMultiSelectChange = (name: keyof PropertyFormValues, value: string |
               className="input-class w-full"
             />
           </div>
-        </div>
-
-        <div className="col-span-full grid grid-cols-1 md:grid-cols-3 gap-4">
-          {/* Price Input */}
-          <div>
-            <label className="block font-medium mb-1">Price</label>
-            <input
-              type="number"
-              name="price"
-              value={formData.price}
-              onChange={handleChange}
-              required
-              className="input-class w-full"
-            />
-          </div>
-          
 
           {/* Possession Dropdown */}
           <div>
@@ -506,20 +490,35 @@ const handleMultiSelectChange = (name: keyof PropertyFormValues, value: string |
             </select>
           </div>
 
-          {/* Possession Date Picker - Show only if possession is not "ready" */}
-          {formData.possession !== "ready" && formData.possession !== "" && (
-              <div className="mt-2">
-                  <label className="block font-medium mb-1">Possession Date</label>
-                  <input
-                      type="date"
-                      name="possessionDate"
-                      value={formData.possessionDate || "To be announced"}
-                      onChange={(e) => setFormData({ ...formData, possessionDate: e.target.value })}
-                      required
-                      className="input-class w-full"
-                  />
-              </div>
-          )}
+          <div className="mt-2">
+              <label className="block font-medium mb-1">Possession Date</label>
+              <input
+                  type="date"
+                  name="possessionDate"
+                  value={formData.possessionDate || "To be announced"}
+                  onChange={(e) => setFormData({ ...formData, possessionDate: e.target.value })}
+                  required
+                  className="input-class w-full"
+              />
+          </div>
+        </div>
+
+        <div className="col-span-full grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Price Input */}
+          <div>
+            <label className="block font-medium mb-1">Price</label>
+            <input
+              type="number"
+              name="price"
+              value={formData.price}
+              onChange={handleChange}
+              required
+              className="input-class w-full"
+            />
+          </div>
+          
+
+          
 
           {/* Features Multi-Select Dropdown */}
           <div className="relative">
