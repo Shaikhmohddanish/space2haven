@@ -191,6 +191,10 @@ const AddProperty: React.FC = () => {
     form.append("configurations", JSON.stringify(formData.configurations));
 }
 
+if (formData.areaUnit) {
+  form.append("areaUnit", formData.areaUnit);
+}
+
     if (formData.developer) {
         form.append("developer", formData.developer.trim());
     }

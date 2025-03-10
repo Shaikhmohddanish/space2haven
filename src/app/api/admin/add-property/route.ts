@@ -21,17 +21,17 @@ const processFormData = async (req: Request): Promise<any> => {
                 propertyData[parentKey] = propertyData[parentKey] || {};
                 propertyData[parentKey][childKey] = value.toString().trim();
             }
+        } else if (key === "configurations") {
+            try {
+                propertyData.configurations = JSON.parse(value.toString().trim());
+            } catch (err) {
+                console.error("❌ Failed to parse configurations:", err);
+                propertyData.configurations = [];  // Fallback to empty array if parsing fails
+            }
         } else {
             propertyData[key] = value.toString().trim();
         }
-
-        if (typeof propertyData.configuration === "string") {
-            try {
-                propertyData.configuration = JSON.parse(propertyData.configuration);
-            } catch {
-                propertyData.configuration = [];
-            }
-        }
+        
     }
 
     console.log("✅ Uploaded Image URLs:", propertyData.images);
