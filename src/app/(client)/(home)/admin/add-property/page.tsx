@@ -303,7 +303,6 @@ if (formData.areaUnit) {
             name="url"
             value={formData.url}
             onChange={handleChange}
-            required
             className="input-class w-full"
             placeholder="Paste google map location url..."
           />
@@ -438,7 +437,7 @@ if (formData.areaUnit) {
           <div className="mb-4">
             <label className="block font-medium mb-1">Area</label>
             <input
-              type="number"
+              type="text"
               name="area"
               value={formData.area}
               onChange={handleChange}
