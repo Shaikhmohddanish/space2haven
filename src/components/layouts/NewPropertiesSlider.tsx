@@ -74,63 +74,61 @@ const NewPropertiesSlider = ({ data }: { data: Property[] }) => {
       : "w-full"
   }`}
 >
-      <Slider {...sliderSettings}>
-        {uniqueData.map((property) => (
-          <div key={property._id} className="px-2">
-            <a href={`/properties/${property._id}`} className="block">
-              <div className="bg-white rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105">
-                <div className="relative w-full h-56 overflow-hidden">
-                  <img
-                    src={property.images?.[0] || "/default-image.webp"}
-                    alt={property.title}
-                    className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
-                  />
-                  {/* Recommended Label - Show only if property.recommend is true */}
-{property.recommend && (
-    <div className="absolute top-4 right-4 bg-yellow-500 text-black text-xs px-2 py-1 rounded">
-        {"Recommended"}
-    </div>
-)}
+  <Slider {...sliderSettings}>
+    {uniqueData.map((property) => (
+      <div key={property._id} className="px-2">
+        <a href={`/properties/${property._id}`} className="block">
+          <div className="bg-white rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105">
+            <div className="relative w-full h-56 overflow-hidden">
+              <img
+                src={property.images?.[0] || "/default-image.webp"}
+                alt={property.title}
+                className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
+              />
 
-{/* New Label - Show only if property.newProperty is true */}
-{property.newProperty && (
-    <div className="absolute top-4 left-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-xs px-2 py-1 rounded">
-        {"New"}
-    </div>
-)}
-
-
-
+              {/* Recommended Label - Show only if property.recommend is true */}
+              {property.recommend && (
+                <div className="absolute top-4 left-4 bg-yellow-500 text-black text-xs px-2 py-1 rounded">
+                  {"Recommended"}
                 </div>
-                <div className="p-4">
-                  <h2 className="text-lg font-semibold mb-2 truncate">{property.title}</h2>
-                  <p className="text-sm text-gray-500 mb-2 flex items-center gap-1">
-                  <MapPin className="text-orange-soda" size={16} />
-                  {property.location}, {property.address.city}, {property.address.state}
-                  </p>
-                  <p className="text-xl font-bold text-home mb-2">
-                    ₹ {formatPrice(property.price) || "N/A"}
-                  </p>
-                  <ul className="flex items-center text-gray-600 text-sm gap-4 mb-4">
-                    <li className="flex items-center gap-1">
-                      <Home className="text-orange-soda" size={16} />
-                                        {property.configuration
-                                          .map((config) => config.split(" ")[0])
-                                          .join(", ")}{" "}
-                                        BHK {" " + property.propertyType}
-                    </li>
-                    {property.possessionDate && (<li className="flex items-center gap-1">
-                      <IoCalendarOutline className="text-orange-soda" />
-                      {property.possessionDate}
-                    </li>)}
-                  </ul>
+              )}
+
+              {/* New Label - Show only if property.newProperty is true */}
+              {property.newProperty && (
+                <div className="absolute top-4 right-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-xs px-2 py-1 rounded">
+                  {"New"}
                 </div>
+              )}
+            </div>
+            <div className="p-4">
+              {/* Property Title */}
+              <h2 className="text-lg font-semibold mb-1 truncate">{property.title}</h2>
+
+              {/* Property Heading */}
+              <h3 className="text-sm text-gray-600 mb-2 truncate">{property.propertyHeading}</h3>
+
+              {/* Price and Possession Date on the Same Line */}
+              <div className="flex justify-between items-center mb-2">
+                {/* Price */}
+                <p className="text-xl font-bold text-green-600">
+                  ₹ {formatPrice(property.price) || "N/A"}
+                </p>
+
+                {/* Possession Date (if available) */}
+                {property.possessionDate && (
+                  <p className="text-sm text-gray-500 flex items-center gap-1">
+                    <IoCalendarOutline className="text-orange-soda" />
+                    {property.possessionDate}
+                  </p>
+                )}
               </div>
-            </a>
+            </div>
           </div>
-        ))}
-      </Slider>
-    </div>
+        </a>
+      </div>
+    ))}
+  </Slider>
+</div>
   );
 };
 
