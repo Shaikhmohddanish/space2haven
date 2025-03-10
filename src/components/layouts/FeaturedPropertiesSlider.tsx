@@ -58,7 +58,7 @@ const FeaturedPropertiesSlider = ({ data }: FeaturedPropertiesSliderProps) => {
               />
             </a>
             <div className="absolute top-4 left-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-xs px-2 py-1 rounded">
-    {"Featured"}
+    {"Top Selling Project"}
 </div>
 
 
