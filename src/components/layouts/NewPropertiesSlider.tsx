@@ -85,9 +85,22 @@ const NewPropertiesSlider = ({ data }: { data: Property[] }) => {
                     alt={property.title}
                     className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
                   />
-                  <div className="absolute top-4 right-4 bg-orange-soda text-white text-xs px-2 py-1 rounded">
-                    {property.propertyType}
-                  </div>
+                  {/* Recommended Label - Show only if property.recommend is true */}
+{property.recommend && (
+    <div className="absolute top-4 right-4 bg-yellow-500 text-black text-xs px-2 py-1 rounded">
+        {"Recommended"}
+    </div>
+)}
+
+{/* New Label - Show only if property.newProperty is true */}
+{property.newProperty && (
+    <div className="absolute top-4 left-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-xs px-2 py-1 rounded">
+        {"New"}
+    </div>
+)}
+
+
+
                 </div>
                 <div className="p-4">
                   <h2 className="text-lg font-semibold mb-2 truncate">{property.title}</h2>

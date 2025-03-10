@@ -17,7 +17,8 @@ const DisplayProperties = ({ data }: { data: Property[] }) => {
         configurations,
         features, 
         location, 
-        possession, 
+        possession,
+        possessionDate, 
         developer,
         recommend,
         url,
@@ -32,6 +33,7 @@ const DisplayProperties = ({ data }: { data: Property[] }) => {
           features={Array.isArray(features) ? features : []} // ✅ Ensure features is always an array
           configuration={Array.isArray(configuration) ? configuration : []} // ✅ Ensure configuration is always an array
           possession={possession || "N/A"} // ✅ Handle missing possession
+          possessionDate={possessionDate || "To be announced"}
           developer={developer || "N/A"}
           propertyType={propertyType || "N/A"} // ✅ Handle missing property type
           tag={propertyType || "N/A"}

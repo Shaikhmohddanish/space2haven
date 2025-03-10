@@ -98,7 +98,7 @@ const HalfBanner = ({
 
         {/* Search Bar */}
         <div id="search-bar" className="relative w-full max-w-lg mx-auto">
-          <div className="flex items-center border border-gray-300 rounded-full overflow-hidden shadow-md bg-white relative z-20">
+          <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden shadow-md bg-white relative z-20">
             <input
               type="text"
               placeholder="Search by Locality, Project, or Developer..."
@@ -115,7 +115,7 @@ const HalfBanner = ({
             <button
               type="button"
               onClick={handleSearchRedirect}
-              className="w-[15%] h-12 flex items-center justify-center bg-gray-800 hover:bg-gray-700 text-white border-l border-gray-300"
+              className="w-[15%] h-12 flex items-center justify-center bg-white text-black border-l border-gray-300"
             >
               <SearchIcon />
             </button>

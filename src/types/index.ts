@@ -25,6 +25,7 @@ export interface Property {
   description: string;
   recommend:boolean;
   possession:string;
+  possessionDate: string;
   developer:string;
   url:string;
   featured:boolean;
@@ -42,6 +43,7 @@ export interface PropertyCardProps {
   configuration: string[]; // Updated from string to string[]
   location: string;
   possession?: string; // Optional field for possession
+  possessionDate?: string;
   developer?:string;
   propertyType?: string; // Optional field for property type
   recommend?: boolean; // Changed true | false to boolean (simplified)
@@ -71,6 +73,7 @@ export interface PropertyCardProps {
     features: string[];
     recommend: boolean;
     possession: string;
+    possessionDate: string;
     developer:string;
     url:string;
     featured: boolean;
@@ -91,6 +94,7 @@ export interface Property {
   areaUnit: string;
   location: string;
   possession: string;
+  possessionDate: string;
   developer:string;
   url:string;
   featured: boolean;

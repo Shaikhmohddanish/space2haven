@@ -7,6 +7,22 @@ import { cityOptions } from "@/constants";
 import { useToast } from "@/hooks/use-toast";
 import { Configuration, PropertyFormValues } from "@/types";
 
+function extractGoogleMapsPbParam(iframeString:string) {
+  // Extract the URL from the iframe string
+  const urlMatch = iframeString.match(/src="([^"]+)"/);
+  if (urlMatch && urlMatch[1]) {
+      const url = urlMatch[1];
+      const pbMatch = url.match(/[?&]pb=([^&#]*)/);
+      if (pbMatch && pbMatch[1]) {
+          return pbMatch[1];
+      } else {
+          return '';
+      }
+  } else {
+      return '';
+  }
+}
+
 const uploadImagesToCloudinary = async (files: File[]): Promise<string[]> => {
   try {
       const uploadPromises = files.map(async (file) => {
@@ -61,6 +77,7 @@ const EditProperty: React.FC = () => {
     features: [],
     recommend: false,
     possession: "",
+    possessionDate: "To be announced",
     developer: "",
     url:"",
     featured: false,
@@ -153,7 +170,7 @@ const handleMultiSelectChange = (name: keyof PropertyFormValues, value: string |
 
     Object.keys(formData).forEach((key) => {
         const value = formData[key as keyof PropertyFormValues];
-        if (key !== "images" && value !== undefined) {
+        if (key !== "images" && value !== undefined && key !== "url") {
             form.append(key, typeof value === "string" ? value.trim() : JSON.stringify(value));
         }
     });
@@ -163,6 +180,10 @@ const handleMultiSelectChange = (name: keyof PropertyFormValues, value: string |
         allImageUrls.forEach((url) => form.append("images", url));
     } else {
         console.error("❌ No images uploaded or images array is empty!");
+    }
+
+    if(formData.url){
+      form.append("url",extractGoogleMapsPbParam(formData.url.trim()));
     }
 
     try {        
@@ -484,6 +505,21 @@ const handleMultiSelectChange = (name: keyof PropertyFormValues, value: string |
               <option value="after_3_years">After 3 Years</option>
             </select>
           </div>
+
+          {/* Possession Date Picker - Show only if possession is not "ready" */}
+          {formData.possession !== "ready" && formData.possession !== "" && (
+              <div className="mt-2">
+                  <label className="block font-medium mb-1">Possession Date</label>
+                  <input
+                      type="date"
+                      name="possessionDate"
+                      value={formData.possessionDate || "To be announced"}
+                      onChange={(e) => setFormData({ ...formData, possessionDate: e.target.value })}
+                      required
+                      className="input-class w-full"
+                  />
+              </div>
+          )}
 
           {/* Features Multi-Select Dropdown */}
           <div className="relative">

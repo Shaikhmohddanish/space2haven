@@ -8,6 +8,21 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
+function extractGoogleMapsPbParam(iframeString:string) {
+  // Extract the URL from the iframe string
+  const urlMatch = iframeString.match(/src="([^"]+)"/);
+  if (urlMatch && urlMatch[1]) {
+      const url = urlMatch[1];
+      const pbMatch = url.match(/[?&]pb=([^&#]*)/);
+      if (pbMatch && pbMatch[1]) {
+          return pbMatch[1];
+      } else {
+          return '';
+      }
+  } else {
+      return '';
+  }
+}
 const uploadImagesToCloudinary = async (files: File[]): Promise<string[]> => {
   try {
       const uploadPromises = files.map(async (file) => {
@@ -65,6 +80,7 @@ const AddProperty: React.FC = () => {
     features: [],
     recommend: false,
     possession: '',
+    possessionDate: 'To be announced',
     developer: '',
     url: '',
     featured: false,
@@ -186,6 +202,10 @@ const AddProperty: React.FC = () => {
         form.append("possession", formData.possession.trim());
     }
 
+    if(formData.possessionDate){
+      form.append("possessionDate", JSON.stringify(formData.possession).trim());
+  }
+
    
   if (Array.isArray(formData.configurations) && formData.configurations.length > 0) {
     form.append("configurations", JSON.stringify(formData.configurations));
@@ -200,7 +220,7 @@ if (formData.areaUnit) {
     }
 
     if(formData.url){
-      form.append("url",formData.url.trim());
+      form.append("url",extractGoogleMapsPbParam(formData.url.trim()));
     }
 
     // ✅ Address fields
@@ -474,6 +494,21 @@ if (formData.areaUnit) {
               className="input-class w-full"
             />
           </div>
+
+          {/* Possession Date Picker - Show only if possession is not "ready" */}
+          {formData.possession !== "ready" && formData.possession !== "" && (
+              <div className="mt-2">
+                  <label className="block font-medium mb-1">Possession Date</label>
+                  <input
+                      type="date"
+                      name="possessionDate"
+                      value={formData.possessionDate || ""}
+                      onChange={(e) => setFormData({ ...formData, possessionDate: e.target.value })}
+                      required
+                      className="input-class w-full"
+                  />
+              </div>
+          )}
           
 
           {/* Possession Dropdown */}

@@ -43,6 +43,9 @@ const FeaturedPropertiesSlider = ({ data }: FeaturedPropertiesSliderProps) => {
     >
       {data.map((property, index) => (
         <SplideSlide key={index}>
+         
+
+
           <div
             className="border rounded-lg overflow-hidden shadow-md bg-white transition-transform hover:scale-105 cursor-pointer"
             onClick={() => router.push(`/properties/${property._id}`)}
@@ -54,6 +57,11 @@ const FeaturedPropertiesSlider = ({ data }: FeaturedPropertiesSliderProps) => {
                 className="w-full h-48 object-cover"
               />
             </a>
+            <div className="absolute top-4 left-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-xs px-2 py-1 rounded">
+    {"Featured"}
+</div>
+
+
             <div className="p-4">
               <h3 className="text-lg font-semibold text-gray-800 truncate">
                 {property.title}
