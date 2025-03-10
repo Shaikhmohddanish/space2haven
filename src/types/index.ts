@@ -9,6 +9,7 @@ export interface Configuration {
 
 export interface Property {
   title: string;
+  propertyHeading: string;
   propertyType: string;
   price: string;
   images: string[];
@@ -56,6 +57,7 @@ export interface PropertyCardProps {
 
   export interface PropertyFormValues {
     title: string;
+    propertyHeading: string;
     images: File[];
     configuration: string[]; // 🔥 Change from string to string[]
     configurations: Configuration[];  // New: For detailed configurations

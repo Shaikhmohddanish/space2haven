@@ -63,6 +63,7 @@ const EditProperty: React.FC = () => {
   const [existingImages, setExistingImages] = useState<string[]>([]);
   const [formData, setFormData] = useState<PropertyFormValues>({
     title: "",
+    propertyHeading: "",
     images: [],
     configuration: [],
     configurations: [],  // New: For detailed configurations
@@ -231,6 +232,18 @@ const handleMultiSelectChange = (name: keyof PropertyFormValues, value: string |
             onChange={handleChange}
             className="input-class w-full"
             placeholder="Name of property..."
+          />
+        </div>
+        
+        <div className="col-span-full">
+          <label className="block font-medium mb-1">Property Heading</label>
+          <input
+            type="text"
+            name="propertyHeading"
+            value={formData.propertyHeading}
+            onChange={handleChange}
+            className="input-class w-full"
+            placeholder="Heading of property..."
           />
         </div>
 

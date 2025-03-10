@@ -63,6 +63,7 @@ const AddProperty: React.FC = () => {
 
   const [formData, setFormData] = useState<PropertyFormValues>({
     title: '',
+    propertyHeading: '',
     images: [],
     configuration: [], // 🔥 Ensure it's an array
     configurations: [],  // New: For detailed configurations
@@ -280,6 +281,18 @@ if (formData.areaUnit) {
             required
             className="input-class w-full"
             placeholder="Name of property..."
+          />
+        </div>
+
+        <div className="col-span-full">
+          <label className="block font-medium mb-1">Property Heading</label>
+          <input
+            type="text"
+            name="propertyHeading"
+            value={formData.propertyHeading}
+            onChange={handleChange}
+            className="input-class w-full"
+            placeholder="Heading of property..."
           />
         </div>
 
