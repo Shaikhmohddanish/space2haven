@@ -32,6 +32,7 @@ interface Property {
   yearBuilt: number;
   features: string[];
   possession: string; // ✅ ADDED THIS FIELD
+  possessionDate: string; // ✅ ADDED THIS FIELD
   developer: string;
   featured: boolean;
   newProperty: boolean;
