@@ -60,7 +60,7 @@ const AddProperty: React.FC = () => {
     },
     propertyType: '',
     area: '',
-    areaUnit: '',
+    areaUnit: 'sq.ft',
     yearBuilt: new Date().getFullYear(),
     features: [],
     recommend: false,
