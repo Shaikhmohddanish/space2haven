@@ -71,6 +71,7 @@ interface Property {
   yearBuilt: number;
   features: string[];
   possession: string;
+  possessionDate: string;
   developer: string;
   url:string;
   featured: boolean;
@@ -111,6 +112,7 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property, recommended
     price,
     propertyType,
     possession,
+    possessionDate,
     developer,
     featured,
     newProperty,
@@ -153,14 +155,14 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property, recommended
           </h2>
 
           <h1 className="font-bold text-xl">
-            <span className="font-bold">Price:</span> ₹ {formatPrice(price) || "N/A"}
+            <span className="font-bold">Onwards Price:</span> ₹ {formatPrice(price) || "N/A"}
           </h1>
 
           <h2 className="md:text-lg font-semibold">
             <span className="font-bold">Property Type:</span> {propertyType || "N/A"}
           </h2>
           <h2 className="md:text-lg font-semibold">
-          <span className="font-bold">Possession:</span> {possession ? possession.replace(/_/g, " ") : "N/A"}
+          <span className="font-bold">PossessionDate:</span> {possessionDate ? possession : "To be announced"}
           </h2>
         </div>
 
