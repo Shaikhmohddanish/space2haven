@@ -211,27 +211,16 @@ if (formData.areaUnit) {
         }
     });
 
-    console.log("FORM DATA " + JSON.stringify(formData));  // ✅ Debugging step
 
     // ✅ Multi-Select Configuration (BHK)
     if (Array.isArray(formData.configuration) && formData.configuration.length > 0) {
         form.append("configuration", JSON.stringify(formData.configuration));  // 🔥 Convert to JSON string
-    } else {
-        console.warn("⚠️ No configurations selected.");
     }
 
     // ✅ Multi-Select Features
     if (Array.isArray(formData.features) && formData.features.length > 0) {
         form.append("features", JSON.stringify(formData.features));  // 🔥 Convert to JSON string
-    } else {
-        console.warn("⚠️ No features selected.");
-    }
-
-    // ✅ Debugging: Check FormData
-    console.log("🔍 FORM DATA ENTRIES:");
-    for (let pair of form.entries()) {
-        console.log(pair[0], pair[1]);
-    }
+    } 
 
     // ✅ Step 3: Submit form data to backend
     try {
@@ -242,7 +231,6 @@ if (formData.areaUnit) {
         toast({ description: response?.data?.msg });
         router.push("/properties");
     } catch (error: any) {
-        console.error("❌ Axios Error:", error.response);
         toast({
             description: error?.response?.data?.error || "Failed to add property",
         });
@@ -447,6 +435,7 @@ if (formData.areaUnit) {
               value={formData.areaUnit || "sq.ft"}
               onChange={(e) => setFormData({ ...formData, areaUnit: e.target.value })}
               className="input-class w-full"
+              required
             >
               <option value="sq.ft">sq.ft</option>
               <option value="sq.m">sq.m</option>

@@ -25,8 +25,13 @@ const processFormData = async (req: Request): Promise<any> => {
             try {
                 propertyData.configurations = JSON.parse(value.toString().trim());
             } catch (err) {
-                console.error("❌ Failed to parse configurations:", err);
                 propertyData.configurations = [];  // Fallback to empty array if parsing fails
+            }
+        }else if (key === "configuration") {
+            try {
+                propertyData.configuration = JSON.parse(value.toString().trim());
+            } catch (err) {
+                propertyData.configuration = [];  // Fallback to empty array if parsing fails
             }
         } else {
             propertyData[key] = value.toString().trim();
