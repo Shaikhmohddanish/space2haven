@@ -119,10 +119,10 @@ const NewPropertiesSlider = ({ data }: { data: Property[] }) => {
                                           .join(", ")}{" "}
                                         BHK {" " + property.propertyType}
                     </li>
-                    <li className="flex items-center gap-1">
+                    {property.possessionDate && (<li className="flex items-center gap-1">
                       <IoCalendarOutline className="text-orange-soda" />
-                      {property.possession}
-                    </li>
+                      {property.possessionDate}
+                    </li>)}
                   </ul>
                 </div>
               </div>

@@ -162,7 +162,7 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property, recommended
             <span className="font-bold">Property Type:</span> {propertyType || "N/A"}
           </h2>
           <h2 className="md:text-lg font-semibold">
-          <span className="font-bold">PossessionDate:</span> {possessionDate ? possession : "To be announced"}
+          <span className="font-bold">PossessionDate:</span> {possessionDate ? possessionDate : "To be announced"}
           </h2>
         </div>
 
