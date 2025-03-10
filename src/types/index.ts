@@ -15,6 +15,7 @@ export interface Property {
   bhk: string
   features: string[];
   yearBuilt: number;
+  areaUnit: string;
   area: string;
   address: {
     city: string;
@@ -87,7 +88,7 @@ export interface Property {
   features: string[];
   yearBuilt: number;
   area: string;
-  areaUnit: string[];
+  areaUnit: string;
   location: string;
   possession: string;
   developer:string;
