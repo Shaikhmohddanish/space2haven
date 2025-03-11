@@ -1,6 +1,6 @@
 "use client";
 
-import { DisplayProperties, LoaderLayout, DynamicCarousel, GetInTouchForm } from "@/components";
+import { DisplayProperties, LoaderLayout, DynamicCarousel, GetInTouchForm, Services } from "@/components";
 import { PropertiesPageContentProps, Property } from "@/types";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -9,6 +9,8 @@ import FeaturedPropertiesSlider from "./FeaturedPropertiesSlider";
 import NewPropertiesSlider from "./NewPropertiesSlider";
 import { IoChevronBack, IoChevronForward } from "react-icons/io5";
 import DeveloperSlider from "./DeveloperSlider";
+import { tipsAndGuide } from "@/constants";
+import TipsAndGuide from "./TipsAndGuide";
 
 const PropertiesPageContent = ({
   search,
@@ -163,6 +165,8 @@ const PropertiesPageContent = ({
 
             <DeveloperSlider/>
             <GetInTouchForm/>
+            <TipsAndGuide data={tipsAndGuide} title="Our Services" subtitle="We're good at our services"/>
+
           </>
         )}
   
@@ -172,7 +176,7 @@ const PropertiesPageContent = ({
             {/* Show heading only if properties are found */}
             {filteredData.length > 0 ? (
               <>
-                <h1 className="text-2xl font-semibold text-center my-4 darkBrown">
+                <h1 className="text-2xl font-semibold text-center darkBrown">
                   Discover Your Dream Property with Us
                 </h1>
   

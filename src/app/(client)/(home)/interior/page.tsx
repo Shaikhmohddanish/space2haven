@@ -1,4 +1,8 @@
 import { HomeBanner, PropertyPane, Services, GetInTouchForm, InteriorLayout } from "@/components"
+import AdvancedImageSlider from "@/components/layouts/AdvancedImageSlider"
+import ComparisonTable from "@/components/layouts/ComparisonTable"
+import FancyImageViewer from "@/components/layouts/FancyImageViewer"
+import ImageSlider from "@/components/layouts/ImageSlider"
 import { services } from "@/constants"
 
 const Interior = () => {
@@ -7,8 +11,11 @@ const Interior = () => {
       <HomeBanner bannerType="interior" />
       <InteriorLayout />
       <PropertyPane contentType="interior-self-intro" />
+      <ImageSlider/>
+      <AdvancedImageSlider/>
+      <FancyImageViewer/>
       <GetInTouchForm pageType={"interior"} />
-      <Services data={services} title="Our Services" bgClassName="bg-gradient-to-b from-interior to-gray-800" />
+      <ComparisonTable/>
     </section>
   )
 }

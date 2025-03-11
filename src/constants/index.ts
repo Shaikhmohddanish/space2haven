@@ -287,6 +287,25 @@ export const services = [
     }
 ];
 
+export const tipsAndGuide = [
+    
+    {
+        imageSrc: "/icons/servicesIcons/emiCalculator.svg",
+        title: "EMI Calculator",
+        url: "/calculate-emi",
+    },
+    {
+        imageSrc: "/icons/servicesIcons/emiCalculator.svg",
+        title: "Loan Eligibility",
+        url: "/loan-eligibility",
+    },
+    {
+        imageSrc: "/icons/servicesIcons/tipsGuide.svg",
+        title: "Tips & Guide",
+        url: "/properties",
+    }
+];
+
 
 
 

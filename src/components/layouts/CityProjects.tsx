@@ -89,7 +89,7 @@ const CityProjects: React.FC = () => {
         {/* Header */}
         <div className="flex-center gap-4 flex-col mb-4">
           <h1 className="text-3xl font-bold text-black">Choose Your City</h1>
-          <hr className="bg-black w-20 h-1 rounded-full" />
+          <hr/>
         </div>
 
         {/* City Tiles */}

@@ -6,6 +6,7 @@ import axios from "axios";
 import { DynamicCarousel } from "..";
 import { interiorDesign } from "@/constants/sampleData";
 import { contentStyles } from "@/constants";
+import ImageSlider from "./ImageSlider";
 
 const PropertyPane: React.FC<PropertyPaneProps> = ({ contentType }) => {
   const [data, setData] = useState<Property[]>([]);
@@ -57,7 +58,6 @@ const PropertyPane: React.FC<PropertyPaneProps> = ({ contentType }) => {
           {description}
         </p>
       </div>
-
       {/* Carousel */}
       <DynamicCarousel
         data={

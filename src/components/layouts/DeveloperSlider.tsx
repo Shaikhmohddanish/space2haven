@@ -33,7 +33,7 @@ const developers = [
 
 const DeveloperSlider: React.FC = () => {
   return (
-    <section className="container mx-auto py-8">
+    <section className="container mx-auto">
       <h2 className="text-2xl md:text-3xl font-bold text-center mb-6 text-darkBrown">
         Top developers under one roof
       </h2>

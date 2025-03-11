@@ -110,7 +110,7 @@ const HalfBanner = ({
               type="filter"
               filters={filters}
               setFilters={setFilters}
-              className="w-[15%] h-12 flex items-center justify-center text-gray-600 hover:text-gray-800 border-l border-gray-300"
+              className="w-[15%] h-12 flex items-center justify-center border-l bg-white"
             />
             <button
               type="button"
