@@ -148,7 +148,7 @@ export interface ServiceItem {
 }
 
 export interface ServiceSectionProps {
-  title: string;
+  title?: string;
   bgClassName?: string;
   subtitle?: string;
   data: ServiceItem[];

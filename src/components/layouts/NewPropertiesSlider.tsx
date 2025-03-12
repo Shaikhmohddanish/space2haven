@@ -1,13 +1,16 @@
+"use client";
+
+import { useState } from "react";
 import { IoCalendarOutline, IoChevronForward, IoChevronBack } from "react-icons/io5";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Property } from "@/types";
 import { formatPrice } from "@/utils/formatPrice";
-import { Home, MapPin } from "lucide-react";
+import GetInTouchPopup from "./GetInTouchPopup";
+import { useRouter } from "next/navigation";
 
-
-// ✅ Custom Next Button
+// ✅ Custom Next Arrow
 const NextArrow = ({ onClick }: { onClick?: () => void }) => (
   <button
     onClick={onClick}
@@ -18,7 +21,7 @@ const NextArrow = ({ onClick }: { onClick?: () => void }) => (
   </button>
 );
 
-// ✅ Custom Previous Button
+// ✅ Custom Previous Arrow
 const PrevArrow = ({ onClick }: { onClick?: () => void }) => (
   <button
     onClick={onClick}
@@ -30,8 +33,11 @@ const PrevArrow = ({ onClick }: { onClick?: () => void }) => (
 );
 
 const NewPropertiesSlider = ({ data }: { data: Property[] }) => {
+  const router = useRouter();
+
   // 🟢 Ensure Unique Properties
-  const uniqueData = Array.from(new Map(data.map(property => [property._id, property])).values());
+  const uniqueData = Array.from(new Map(data.map((property) => [property._id, property])).values());
+  const [selectedProperty, setSelectedProperty] = useState<string | null>(null);
 
   const sliderSettings = {
     dots: false,
@@ -41,21 +47,9 @@ const NewPropertiesSlider = ({ data }: { data: Property[] }) => {
     slidesToScroll: 1,
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
-    centerMode: false,
-    variableWidth: false,
     responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: Math.min(2, uniqueData.length),
-        },
-      },
-      {
-        breakpoint: 768,
-        settings: {
-          slidesToShow: Math.min(1, uniqueData.length),
-        },
-      },
+      { breakpoint: 1024, settings: { slidesToShow: Math.min(2, uniqueData.length) } },
+      { breakpoint: 768, settings: { slidesToShow: 1 } },
     ],
   };
 
@@ -66,69 +60,89 @@ const NewPropertiesSlider = ({ data }: { data: Property[] }) => {
 
   return (
     <div
-  className={`relative my-6 ${
-    uniqueData.length === 1
-      ? "lg:w-[33%] w-full"
-      : uniqueData.length === 2
-      ? "lg:w-[66%] w-full"
-      : "w-full"
-  }`}
->
-  <Slider {...sliderSettings}>
-    {uniqueData.map((property) => (
-      <div key={property._id} className="px-2">
-        <a href={`/properties/${property._id}`} className="block">
-          <div className="lightGray rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105">
-            <div className="relative w-full h-56 overflow-hidden">
-              <img
-                src={property.images?.[0] || "/default-image.webp"}
-                alt={property.title}
-                className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
-              />
+      className={`relative my-6 ${
+        uniqueData.length === 1 ? "lg:w-[33%] w-full" : uniqueData.length === 2 ? "lg:w-[66%] w-full" : "w-full"
+      }`}
+    >
+      <Slider {...sliderSettings}>
+        {uniqueData.map((property) => (
+          <div key={property._id} className="px-2">
+            <div className="lightGray shadow-lg rounded-lg overflow-hidden transition-transform transform hover:scale-105">
+              <div className="relative w-full h-56 overflow-hidden">
+                <img
+                  src={property.images?.[0] || "/default-image.webp"}
+                  alt={property.title}
+                  className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
+                />
 
-              {/* Recommended Label - Show only if property.recommend is true */}
-              {property.recommend && (
-                <div className="absolute top-4 left-4 bg-yellow-500 text-black text-xs px-2 py-1 rounded">
-                  {"Recommended"}
-                </div>
-              )}
-
-              {/* New Label - Show only if property.newProperty is true */}
-              {property.newProperty && (
-                <div className="absolute top-4 right-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-xs px-2 py-1 rounded">
-                  {"New"}
-                </div>
-              )}
-            </div>
-            <div className="p-4">
-              {/* Property Title */}
-              <h2 className="text-lg font-semibold mb-1 truncate">{property.title}</h2>
-
-              {/* Property Heading */}
-              <h3 className="text-sm text-gray-600 mb-2 truncate">{property.propertyHeading}</h3>
-
-              {/* Price and Possession Date on the Same Line */}
-              <div className="flex justify-between items-center mb-2">
-                {/* Price */}
-                <p className="text-xl font-bold">
-                  ₹ {formatPrice(property.price) || "N/A"}
-                </p>
-
-                {/* Possession Date (if available) */}
-                {property.possessionDate && (
-                  <p className="text-sm text-gray-500 flex items-center gap-1">
-                    <IoCalendarOutline className="text-orange-soda" />
-                    {property.possessionDate}
-                  </p>
+                {/* Recommended Label */}
+                {property.recommend && (
+                  <div className="absolute top-4 left-4 bg-yellow-500 text-black text-xs px-2 py-1 rounded">
+                    {"Recommended"}
+                  </div>
                 )}
+
+                {/* New Label */}
+                {property.newProperty && (
+                  <div className="absolute top-4 right-4 bg-gradient-to-r from-green-500 to-green-700 text-white text-xs px-2 py-1 rounded">
+                    {"New"}
+                  </div>
+                )}
+
+                {/* ✅ Constant "View Details" Button at the Bottom Center */}
+                <button
+                  className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/70 text-white px-4 py-2 rounded-md hover:bg-black/80 transition"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    router.push(`/properties/${property._id}`);
+                  }}
+                >
+                  View Details
+                </button>
+              </div>
+
+              <div className="p-4">
+                {/* Property Title */}
+                <h2 className="text-lg font-semibold mb-1 truncate">{property.title}</h2>
+
+                {/* Property Heading */}
+                <h3 className="text-sm text-gray-600 mb-2 truncate">{property.propertyHeading}</h3>
+
+                {/* Price & Possession Date */}
+                <div className="flex justify-between items-center mb-4">
+                  <p className="text-xl font-bold text-green-600">
+                    ₹ {formatPrice(property.price) || "N/A"}
+                  </p>
+                  {property.possessionDate && (
+                    <p className="text-sm text-gray-500 flex items-center gap-1">
+                      <IoCalendarOutline className="text-orange-soda" />
+                      {property.possessionDate}
+                    </p>
+                  )}
+                </div>
+
+                {/* Transparent Get in Touch Button */}
+                <button
+                  className="w-full border border-green-600 text-green-600 py-2 rounded-md font-medium hover:bg-green-600 hover:text-white transition"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setSelectedProperty(property.title);
+                  }}
+                >
+                  Get in Touch
+                </button>
               </div>
             </div>
           </div>
-        </a>
-      </div>
-    ))}
-  </Slider>
-</div>
+        ))}
+      </Slider>
+
+      {/* Show Popup only when a property is selected */}
+      {selectedProperty && (
+        <GetInTouchPopup propertyTitle={selectedProperty} onClose={() => setSelectedProperty(null)} />
+      )}
+    </div>
   );
 };
 

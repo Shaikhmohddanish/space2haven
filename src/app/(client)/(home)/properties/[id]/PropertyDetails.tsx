@@ -128,7 +128,7 @@ const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property, recommended
 
 
   return (
-    <section className="min-h-screen w-full flex-center flex-col py-20 px-4 ">
+    <section className="min-h-screen w-full flex-center flex-col py-20 px-4 bg-[url('/images/pattern.png')]">
       {/* 🏡 Property Image Carousel */}
       <div className="w-full max-w-6xl mb-10">
         {images && images.length > 0 && <DisplayCarousel images={images} />}

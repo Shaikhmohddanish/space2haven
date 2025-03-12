@@ -164,8 +164,10 @@ const PropertiesPageContent = ({
             )}
 
             <DeveloperSlider/>
+            <div className="my-8">
+            <TipsAndGuide data={tipsAndGuide} title="Guides and Calculators"/>
+            </div>
             <GetInTouchForm/>
-            <TipsAndGuide data={tipsAndGuide} title="Our Services" subtitle="We're good at our services"/>
 
           </>
         )}
@@ -184,7 +186,8 @@ const PropertiesPageContent = ({
                   <LoaderLayout />
                 ) : (
                   <>
-                    <DisplayProperties data={displayedData} />
+                    <NewPropertiesSlider data={displayedData as Property[]} />
+
   
                     {/* ✅ Pagination Controls */}
                     <div className="flex justify-center items-center my-6 gap-4">

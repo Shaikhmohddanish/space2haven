@@ -301,7 +301,7 @@ export const tipsAndGuide = [
     },
     {
         imageSrc: "/icons/servicesIcons/tipsGuide.svg",
-        title: "Tips & Guide",
+        title: "Tips & Guides",
         url: "/properties",
     }
 ];
