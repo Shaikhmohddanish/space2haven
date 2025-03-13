@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Search as SearchIcon } from "lucide-react";
 import debounce from "lodash.debounce";
 
-const SearchWithRecommendations = () => {
+const SearchWithRecommendationsComponent = () => {
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get("search") || "";
   const router = useRouter();
@@ -29,7 +29,7 @@ const SearchWithRecommendations = () => {
       if (!searchValue.trim()) return;
 
       setLoading(true);
-      setShowSuggestions(true); // ✅ Show suggestions box even before data arrives
+      setShowSuggestions(true);
 
       try {
         const response = await fetch(`/api/suggestions?query=${encodeURIComponent(searchValue)}`);
@@ -39,12 +39,7 @@ const SearchWithRecommendations = () => {
         }
 
         const data = await response.json();
-
-        if (data.suggestions && data.suggestions.length > 0) {
-          setSuggestions(data.suggestions);
-        } else {
-          setSuggestions([]);
-        }
+        setSuggestions(data.suggestions?.length ? data.suggestions : []);
       } catch (error) {
         console.error("❌ Error fetching suggestions:", error);
         setSuggestions([]);
@@ -77,15 +72,15 @@ const SearchWithRecommendations = () => {
 
   // ✅ Redirect to search results page
   const handleSearchRedirect = () => {
-    setShowFullScreenLoader(true); // ✅ Show full-screen loader
+    setShowFullScreenLoader(true);
     setShowSuggestions(false);
 
     setTimeout(() => {
       setIsSearchTriggered(true);
-      setShowFullScreenLoader(false); // ✅ Hide loader after 1 second
+      setShowFullScreenLoader(false);
 
       if (!search.trim()) {
-        router.push("/properties"); // ✅ Redirect to /properties if search is empty
+        router.push("/properties");
       } else {
         router.push(`/properties?search=${encodeURIComponent(search)}`);
       }
@@ -101,62 +96,68 @@ const SearchWithRecommendations = () => {
         </div>
       )}
 
-          {/* Search Bar */}
-          <div id="search-bar" className="w-[90%] relative max-w-lg mx-auto">
-            <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden shadow-md bg-white relative z-20">
-              <input
-                type="text"
-                placeholder="Search by Locality, Project, or Developer..."
-                value={search}
-                onChange={(e) => handleSearch(e.target.value)}
-                className="w-[85%] h-12 px-2 text-black border-none focus:ring-0 focus:outline-none"
-              />
+      {/* Search Bar */}
+      <div id="search-bar" className="w-[90%] relative max-w-lg mx-auto">
+        <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden shadow-md bg-white relative z-20">
+          <input
+            type="text"
+            placeholder="Search by Locality, Project, or Developer..."
+            value={search}
+            onChange={(e) => handleSearch(e.target.value)}
+            className="w-[85%] h-12 px-2 text-black border-none focus:ring-0 focus:outline-none"
+          />
+          <button
+            type="button"
+            onClick={handleSearchRedirect}
+            className="w-[15%] h-12 flex items-center justify-center bg-white text-black border-l border-gray-300"
+          >
+            <SearchIcon />
+          </button>
+        </div>
+
+        {/* ✅ Suggestions Dropdown (While Typing) */}
+        {showSuggestions && search.length > 1 && (
+          <div className="absolute z-30 bg-white shadow-lg rounded-lg mt-1 max-h-80 overflow-y-auto border border-gray-200 w-full">
+            {/* Close Button */}
+            <div className="flex justify-end p-2">
               <button
-                type="button"
-                onClick={handleSearchRedirect}
-                className="w-[15%] h-12 flex items-center justify-center bg-white text-black border-l border-gray-300"
+                onClick={() => setShowSuggestions(false)}
+                className="text-gray-500 hover:text-red-500 transition duration-200"
               >
-                <SearchIcon />
+                ✕
               </button>
             </div>
 
-            {/* ✅ Suggestions Dropdown (While Typing) */}
-            {showSuggestions && search.length > 1 && (
-              <div className="absolute z-30 bg-white shadow-lg rounded-lg mt-1 max-h-80 overflow-y-auto border border-gray-200 w-full">
-                
-                {/* Close Button */}
-                <div className="flex justify-end p-2">
-                  <button
-                    onClick={() => setShowSuggestions(false)}
-                    className="text-gray-500 hover:text-red-500 transition duration-200"
-                  >
-                    ✕
-                  </button>
+            {/* ✅ Show "Loading..." while fetching */}
+            {loading ? (
+              <div className="text-center text-blue-500 p-3">Loading...</div>
+            ) : suggestions.length > 0 ? (
+              suggestions.map((match, index) => (
+                <div
+                  key={index}
+                  className="p-3 text-black hover:bg-gray-100 cursor-pointer transition-colors"
+                  onClick={() => handleSelectSuggestion(match)}
+                >
+                  {match}
                 </div>
-
-                {/* ✅ Show "Loading..." while fetching */}
-                {loading ? (
-                  <div className="text-center text-blue-500 p-3">Loading...</div>
-                ) : suggestions.length > 0 ? (
-                  suggestions.map((match, index) => (
-                    <div
-                      key={index}
-                      className="p-3 text-black hover:bg-gray-100 cursor-pointer transition-colors"
-                      onClick={() => handleSelectSuggestion(match)}
-                    >
-                      {match}
-                    </div>
-                  ))
-                ) : (
-                  <div className="text-center text-red-500 p-3">
-                    No matching results found.
-                  </div>
-                )}
+              ))
+            ) : (
+              <div className="text-center text-red-500 p-3">
+                No matching results found.
               </div>
             )}
           </div>
+        )}
+      </div>
     </>
   );
 };
+
+// ✅ Wrap inside Suspense to fix the Next.js 15 issue
+const SearchWithRecommendations = () => (
+  <Suspense fallback={<div className="text-center">Loading Search...</div>}>
+    <SearchWithRecommendationsComponent />
+  </Suspense>
+);
 
 export default SearchWithRecommendations;
