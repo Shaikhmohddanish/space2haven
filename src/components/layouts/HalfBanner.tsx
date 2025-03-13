@@ -81,19 +81,24 @@ const HalfBanner = ({
     setShowSuggestions(false);
   };
 
-  // ✅ When clicking the search button, show full-screen loader for 1 second before navigating
   const handleSearchRedirect = () => {
-    if (search.trim()) {
-      setShowFullScreenLoader(true); // ✅ Show full-screen loader
-      setShowSuggestions(false);
+    setShowFullScreenLoader(true); // ✅ Show full-screen loader
+    setShowSuggestions(false);
 
-      setTimeout(() => {
+    setTimeout(() => {
         setIsSearchTriggered(true);
         setShowFullScreenLoader(false); // ✅ Hide loader after 1 second
-        router.push(`/properties?search=${search}`);
-      }, 1000);
-    }
-  };
+
+        if (!search.trim()) {
+            // ✅ If search is empty, remove query param and redirect to /properties
+            router.push("/properties");
+        } else {
+            // ✅ Otherwise, search normally with the entered query
+            router.push(`/properties?search=${encodeURIComponent(search)}`);
+        }
+    }, 1000);
+};
+
 
   return (
     <>

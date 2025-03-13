@@ -43,6 +43,13 @@ const PropertiesPageContent = ({
     }
   }, [searchParams]);
 
+  useEffect(() => {
+    if (!searchParams.get("search")) {
+      setSearchTriggered(false); // ✅ Restore default state when no search query
+    }
+  }, [searchParams]);
+  
+
   // ✅ Fetch Data if Not Cached
   useEffect(() => {
     if (!cachedProperties || cachedProperties.length === 0) {
@@ -127,21 +134,42 @@ const PropertiesPageContent = ({
   const handleNextPage = () => {
     if (page < totalPages) {
       setPage((prev) => prev + 1);
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }, 100); // ✅ Small delay ensures scrolling happens AFTER UI updates
     }
   };
-
+  
   const handlePrevPage = () => {
     if (page > 1) {
       setPage((prev) => prev - 1);
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }, 100);
     }
   };
+
+  useEffect(() => {
+    const searchTermFromURL = searchParams.get("search") || "";
+    if (searchTermFromURL) {
+      setSearchTriggered(true);
+      setFilters((prevFilters) => ({
+        ...prevFilters,
+        search: searchTermFromURL, // ✅ Ensure search persists after refresh
+      }));
+    }
+  }, [searchParams]);
+  
+  
 
   // ✅ Restore missing variables
   const featuredProperties = data.filter((property) => property.featured);
   const recommendedProperties = data.filter((property) => property.recommend);
   const newProperties = Array.from(new Set(data.filter((property) => property.newProperty)));
-
+  const totalResults = filteredData.length;
+  const searchTerm = searchParams.get("search") || ""; // Extract search term
   return (
+    
     <section className="min-h-screen w-full flex justify-center items-start flex-col md:flex-row px-4 md:px-10">
       <main className="flex flex-col w-full h-full p-4 md:p-6 gap-4">
         {/* ✅ Show Sliders Only If Search is Not Triggered */}
@@ -177,8 +205,12 @@ const PropertiesPageContent = ({
         )}
 
         {/* ✅ Show properties only after search is triggered */}
-        {searchTriggered && filteredData.length > 0 && (
+        {searchTriggered && totalResults > 0 && (
           <>
+          <h2 className="text-xl font-semibold text-center mb-4 darkBrown">
+            {totalResults} results - Flats, Apartments for sale in {searchTerm}
+          </h2>
+
           <h1 className="text-2xl font-semibold text-center darkBrown">
                   Discover Your Dream Property with Us
                 </h1>
@@ -210,8 +242,9 @@ const PropertiesPageContent = ({
           </>
         )}
 
+
         {/* ✅ No properties found message */}
-        {searchTriggered && filteredData.length === 0 && (
+        {searchTriggered && totalResults === 0 && (
           <h1 className="text-2xl font-semibold text-center my-4 darkBrown">
             No properties found. Please try a different search.
           </h1>
