@@ -1,4 +1,4 @@
-import { HomeBanner, PropertyPane, Services, GetInTouchForm } from "@/components"
+import { HomeBanner, Services, GetInTouchForm } from "@/components"
 import CityProjects from "@/components/layouts/CityProjects"
 import ImageSlider from "@/components/layouts/ImageSlider"
 import WhoWeAre from "@/components/layouts/WhoWeAre"
