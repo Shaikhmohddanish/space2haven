@@ -46,7 +46,7 @@ const HomeBanner = ({ bannerType }: { bannerType: string }) => {
                 </div>
 
                 {/* ✅ Show Search Bar only on Home Page (NOT Interior Page) */}
-                {bannerType === "main" && <SearchWithRecommendations page={"home"} />}
+                {bannerType === "main" && <SearchWithRecommendations/>}
             </div>
         </section>
     );

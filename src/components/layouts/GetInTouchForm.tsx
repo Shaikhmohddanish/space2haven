@@ -3,7 +3,7 @@ import DialogForm from "./DialogForm"
 
 const GetInTouchForm = ({ pageType }: { pageType?: string }) => {
   return (
-    <section className="relative overflow-hidden mb-8">
+    <section className="relative overflow-hidden mb-8 mx-4 my-4">
       
       <div className="flex-center gap-2 flex-col mb-6">
       <h1 className={`header-class text-black`}>  Get in Touch
