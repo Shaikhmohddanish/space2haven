@@ -1,6 +1,6 @@
 "use client";
 
-import { DisplayProperties, LoaderLayout, DynamicCarousel, GetInTouchForm, Services } from "@/components";
+import { GetInTouchForm } from "@/components";
 import { PropertiesPageContentProps, Property } from "@/types";
 import axios from "axios";
 import { useEffect, useState } from "react";
