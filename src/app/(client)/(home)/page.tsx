@@ -11,7 +11,6 @@ const Home = () => {
       <WhoWeAre/>
       <Services data={services} title="Our Services" subtitle="We're good at our services"/>
       <ImageSlider />
-      <CityProjects/>
       <GetInTouchForm />
     </section>
   )
