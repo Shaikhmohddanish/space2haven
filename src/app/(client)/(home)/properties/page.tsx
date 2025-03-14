@@ -7,8 +7,10 @@ import dynamic from "next/dynamic";
 import { useParams, usePathname } from "next/navigation";
 import axios from "axios";
 import PropertyDetails from "./[id]/PropertyDetails"; // ✅ Import Property Details Component
+import LZString from "lz-string"; // ✅ Import compression library
 
 const HalfBanner = dynamic(() => import("@/components/layouts/HalfBanner"), { ssr: false });
+
 export interface Configuration {
   bhkType: string;
   carpetArea: string;
@@ -17,6 +19,7 @@ export interface Configuration {
   builtupAreaUnit: string;
   price: string;
 }
+
 interface Property {
   _id: string;
   title: string;
@@ -24,19 +27,19 @@ interface Property {
   price: string;
   propertyType: string;
   configuration: string[];
-  configurations: Configuration[];  // ✅ New: For detailed configurations
+  configurations: Configuration[];
   description: string;
   location: string;
   area: string;
-  areaUnit:string;
+  areaUnit: string;
   yearBuilt: number;
   features: string[];
-  possession: string; // ✅ ADDED THIS FIELD
-  possessionDate: string; // ✅ ADDED THIS FIELD
+  possession: string;
+  possessionDate: string;
   developer: string;
   featured: boolean;
   newProperty: boolean;
-  url:string;
+  url: string;
   address: {
     city: string;
     state: string;
@@ -44,15 +47,15 @@ interface Property {
   updatedAt: string;
 }
 
+// ✅ Cache Constants
+const CACHE_KEY = "cachedProperties";
 
 const PropertiesPage = () => {
   const params = useParams();
   const pathname = usePathname();
 
   // ✅ Extract Property ID from URL
-  const propertyId = params?.id || pathname.split("/").pop(); // Use either method
-
-  // ✅ Validate `propertyId` - It must be 24 characters (MongoDB ObjectId)
+  const propertyId = params?.id || pathname.split("/").pop();
   const isValidPropertyId = propertyId && propertyId.length === 24;
 
   // ✅ State for Search & Filters
@@ -64,7 +67,7 @@ const PropertiesPage = () => {
     propertyType: [],
     configuration: [],
     developer: "",
-    possession: ""
+    possession: "",
   });
 
   // ✅ State for Property Details Page
@@ -73,33 +76,45 @@ const PropertiesPage = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  // ✅ Fetch property details only if `propertyId` is valid
+  // ✅ Check Cache First Before Fetching from API
   useEffect(() => {
     if (!isValidPropertyId) return;
 
     const fetchProperty = async () => {
-      try {
-        setLoading(true);
-        console.log("🔍 Fetching property details for:", propertyId);
+      setLoading(true);
+      console.log("🔍 Checking cache for property:", propertyId);
 
+      try {
+        // ✅ Try retrieving the full properties list from cache
+        const cachedDataStr = localStorage.getItem(CACHE_KEY);
+        if (cachedDataStr) {
+          const decompressedData = LZString.decompress(cachedDataStr);
+          if (decompressedData) {
+            const cachedProperties: Property[] = JSON.parse(decompressedData);
+            const cachedProperty = cachedProperties.find((p) => p._id === propertyId);
+
+            if (cachedProperty) {
+              console.log("✅ Property found in cache:", cachedProperty);
+              setProperty(cachedProperty);
+              setLoading(false);
+              return; // Exit early since we found it in cache
+            }
+          }
+        }
+
+        // ✅ If not found in cache, fetch from API (DO NOT UPDATE CACHE)
+        console.log("🔄 Property not in cache, fetching from API...");
         const response = await axios.get(`/api/properties?id=${propertyId}`);
 
         if (!response.data.matchingData) {
           throw new Error("Property not found.");
         }
 
-        console.log("🏡 Property Data:", response.data);
-        // ✅ Ensure possession exists in the mapped data
-        const propertyData = {
-          ...response.data.matchingData,
-          possession: response.data.matchingData.possession || "N/A", // ✅ Fallback if missing
-          developer : response.data.matchingData.developer || "N/A",
-        };
-
+        console.log("🏡 Property Data from API:", response.data);
         setProperty(response.data.matchingData);
         setRecommended(response.data.recommendedData || []);
-      } catch (error) {
-        console.error("❌ Error fetching property:", error);
+      } catch (err) {
+        console.error("❌ Error fetching property:", err);
         setError("Failed to load property details.");
       } finally {
         setLoading(false);
@@ -122,16 +137,16 @@ const PropertiesPage = () => {
           <p className="text-center text-gray-500 text-xl">Property not found.</p>
         )}
       </div>
-    );    
+    );
   }
 
   // ✅ Otherwise, show the **Property Listings Grid**
   return (
     <>
       <Suspense fallback={<LoaderLayout />}>
-      <HalfBanner search={search} setSearch={setSearch} filters={filters} setFilters={setFilters} />
-      <PropertiesPageContent search={search} filters={filters} setFilters={setFilters} />
-    </Suspense>
+        <HalfBanner search={search} setSearch={setSearch} filters={filters} setFilters={setFilters} />
+        <PropertiesPageContent search={search} filters={filters} setFilters={setFilters} />
+      </Suspense>
     </>
   );
 };
