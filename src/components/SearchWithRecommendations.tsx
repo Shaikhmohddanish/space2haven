@@ -1,14 +1,19 @@
 "use client";
 
-import { useState, useCallback, useEffect, Suspense } from "react";
+import { useState, useContext, useCallback, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import { createPortal } from "react-dom";
 import { Search as SearchIcon } from "lucide-react";
 import debounce from "lodash.debounce";
+import { PropertyCacheContext } from "@/components/layouts/PropertyCacheContext";
+import { Property } from "./layouts/CityProjects";
 
 const SearchWithRecommendationsComponent = () => {
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get("search") || "";
   const router = useRouter();
+  
+  const { properties } = useContext(PropertyCacheContext); // ✅ Access cached properties globally
 
   const [search, setSearch] = useState(searchQuery);
   const [suggestions, setSuggestions] = useState<string[]>([]);
@@ -16,6 +21,7 @@ const SearchWithRecommendationsComponent = () => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isSearchTriggered, setIsSearchTriggered] = useState(false);
   const [showFullScreenLoader, setShowFullScreenLoader] = useState(false);
+  const [searchBarPosition, setSearchBarPosition] = useState({ top: 0, left: 0, width: 0 });
 
   useEffect(() => {
     if (searchQuery) {
@@ -23,32 +29,76 @@ const SearchWithRecommendationsComponent = () => {
     }
   }, [searchQuery]);
 
-  // ✅ Fetch Suggestions (Debounced)
-  const fetchSuggestions = useCallback(
-    debounce(async (searchValue: string) => {
-      if (!searchValue.trim()) return;
+  // ✅ Fetch Suggestions (Debounced) - Uses Cached Data First
+const fetchSuggestions = useCallback(
+  debounce(async (searchValue: string) => {
+    if (!searchValue.trim()) return;
 
-      setLoading(true);
-      setShowSuggestions(true);
+    setLoading(true);
+    setShowSuggestions(true);
 
-      try {
-        const response = await fetch(`/api/suggestions?query=${encodeURIComponent(searchValue)}`);
+    try {
+      if (properties.length > 0) {
+        console.log("✅ Using cached properties from context");
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
+        // ✅ Filter properties locally for suggestions
+        const suggestionsSet = new Set<string>();
+        properties.forEach((property: Property) => {
+          const values = [property.title, property.developer, property.location, property.address?.city];
+          values.forEach((value) => {
+            if (value && value.toLowerCase().includes(searchValue.toLowerCase())) {
+              suggestionsSet.add(value);
+            }
+          });
+        });
+
+        // ✅ Convert Set to Array & Prioritize Exact Matches First
+        let suggestionsArray = Array.from(suggestionsSet);
+
+        suggestionsArray.sort((a, b) => {
+          const lowerQuery = searchValue.toLowerCase();
+          const aLower = a.toLowerCase();
+          const bLower = b.toLowerCase();
+
+          // ✅ Exact matches first
+          if (aLower === lowerQuery) return -1;
+          if (bLower === lowerQuery) return 1;
+
+          // ✅ Titles that start with query come before ones that contain it
+          if (aLower.startsWith(lowerQuery) && !bLower.startsWith(lowerQuery)) return -1;
+          if (bLower.startsWith(lowerQuery) && !aLower.startsWith(lowerQuery)) return 1;
+
+          // ✅ Otherwise, maintain natural order
+          return 0;
+        });
+
+        if (suggestionsArray.length > 0) {
+          setSuggestions(suggestionsArray);
+          setLoading(false);
+          return;
         }
-
-        const data = await response.json();
-        setSuggestions(data.suggestions?.length ? data.suggestions : []);
-      } catch (error) {
-        console.error("❌ Error fetching suggestions:", error);
-        setSuggestions([]);
-      } finally {
-        setLoading(false);
       }
-    }, 500),
-    []
-  );
+
+      // ✅ If no cached results, hit the API
+      console.log("🔄 No cached results, hitting API...");
+      const response = await fetch(`/api/suggestions?query=${encodeURIComponent(searchValue)}`);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setSuggestions(data.suggestions?.length ? data.suggestions : []);
+    } catch (error) {
+      console.error("❌ Error fetching suggestions:", error);
+      setSuggestions([]);
+    } finally {
+      setLoading(false);
+    }
+  }, 500),
+  [properties] // ✅ Dependency array to prevent stale cache usage
+);
+
 
   // ✅ Handle input change (Triggers Suggestions but NOT Properties)
   const handleSearch = (value: string) => {
@@ -87,6 +137,30 @@ const SearchWithRecommendationsComponent = () => {
     }, 1000);
   };
 
+  // ✅ Position Update Effect
+  useEffect(() => {
+    const updatePosition = () => {
+      const searchBar = document.getElementById("search-bar");
+      if (searchBar) {
+        const rect = searchBar.getBoundingClientRect();
+        setSearchBarPosition({
+          top: rect.bottom + window.scrollY,
+          left: rect.left + window.scrollX,
+          width: rect.width,
+        });
+      }
+    };
+
+    updatePosition();
+    window.addEventListener("resize", updatePosition);
+    window.addEventListener("scroll", updatePosition, true);
+
+    return () => {
+      window.removeEventListener("resize", updatePosition);
+      window.removeEventListener("scroll", updatePosition, true);
+    };
+  }, [search]);
+
   return (
     <>
       {/* ✅ Full-Screen Loader Overlay */}
@@ -114,10 +188,20 @@ const SearchWithRecommendationsComponent = () => {
             <SearchIcon />
           </button>
         </div>
+      </div>
 
-        {/* ✅ Suggestions Dropdown (While Typing) */}
-        {showSuggestions && search.length > 1 && (
-          <div className="absolute z-30 bg-white shadow-lg rounded-lg mt-1 max-h-80 overflow-y-auto border border-gray-200 w-full">
+      {/* ✅ Suggestions Dropdown (Using createPortal) */}
+      {showSuggestions && search.length > 1 &&
+        createPortal(
+          <div
+            className="absolute z-50 bg-white shadow-lg rounded-lg border border-gray-200 max-h-80 overflow-y-auto"
+            style={{
+              position: "absolute",
+              top: searchBarPosition.top + "px",
+              left: searchBarPosition.left + "px",
+              width: searchBarPosition.width + "px",
+            }}
+          >
             {/* Close Button */}
             <div className="flex justify-end p-2">
               <button
@@ -142,13 +226,11 @@ const SearchWithRecommendationsComponent = () => {
                 </div>
               ))
             ) : (
-              <div className="text-center text-red-500 p-3">
-                No matching results found.
-              </div>
+              <div className="text-center text-red-500 p-3">No matching results found.</div>
             )}
-          </div>
+          </div>,
+          document.body
         )}
-      </div>
     </>
   );
 };

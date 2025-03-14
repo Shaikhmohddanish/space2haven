@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useContext } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Search as SearchIcon } from "lucide-react";
 import DialogBox from "./DialogBox";
 import { FilterProps, Property } from "@/types";
 import debounce from "lodash.debounce";
+import { PropertyCacheContext } from "@/components/layouts/PropertyCacheContext";
 
 const HalfBanner = ({
   search,
@@ -16,6 +17,8 @@ const HalfBanner = ({
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get("search") || "";
   const router = useRouter();
+  
+  const { properties } = useContext(PropertyCacheContext); // ✅ Access cached properties globally
 
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
@@ -29,37 +32,76 @@ const HalfBanner = ({
     }
   }, [searchQuery]);
 
-  // ✅ Fetch suggestions from API (Debounced)
-  const fetchSuggestions = useCallback(
-    debounce(async (searchValue: string) => {
-      if (!searchValue.trim()) return;
-  
-      setLoading(true);
-      setShowSuggestions(true); // ✅ Show suggestions box even before data arrives
+  // ✅ Fetch Suggestions (Debounced) - Uses Cached Data First
+const fetchSuggestions = useCallback(
+  debounce(async (searchValue: string) => {
+    if (!searchValue.trim()) return;
 
-      try {
-        const response = await fetch(`/api/suggestions?query=${encodeURIComponent(searchValue)}`);
-  
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
+    setLoading(true);
+    setShowSuggestions(true);
+
+    try {
+      if (properties.length > 0) {
+        console.log("✅ Using cached properties from context");
+
+        // ✅ Filter properties locally for suggestions
+        const suggestionsSet = new Set<string>();
+        properties.forEach((property: Property) => {
+          const values = [property.title, property.developer, property.location, property.address?.city];
+          values.forEach((value) => {
+            if (value && value.toLowerCase().includes(searchValue.toLowerCase())) {
+              suggestionsSet.add(value);
+            }
+          });
+        });
+
+        // ✅ Convert Set to Array & Prioritize Exact Matches First
+        let suggestionsArray = Array.from(suggestionsSet);
+
+        suggestionsArray.sort((a, b) => {
+          const lowerQuery = searchValue.toLowerCase();
+          const aLower = a.toLowerCase();
+          const bLower = b.toLowerCase();
+
+          // ✅ Exact matches first
+          if (aLower === lowerQuery) return -1;
+          if (bLower === lowerQuery) return 1;
+
+          // ✅ Titles that start with query come before ones that contain it
+          if (aLower.startsWith(lowerQuery) && !bLower.startsWith(lowerQuery)) return -1;
+          if (bLower.startsWith(lowerQuery) && !aLower.startsWith(lowerQuery)) return 1;
+
+          // ✅ Otherwise, maintain natural order
+          return 0;
+        });
+
+        if (suggestionsArray.length > 0) {
+          setSuggestions(suggestionsArray);
+          setLoading(false);
+          return;
         }
-  
-        const data = await response.json();
-  
-        if (data.suggestions && data.suggestions.length > 0) {
-          setSuggestions(data.suggestions);
-        } else {
-          setSuggestions([]);
-        }
-      } catch (error) {
-        console.error("❌ Error fetching suggestions:", error);
-        setSuggestions([]);
-      } finally {
-        setLoading(false);
       }
-    }, 500),
-    []
-  );
+
+      // ✅ If no cached results, hit the API
+      console.log("🔄 No cached results, hitting API...");
+      const response = await fetch(`/api/suggestions?query=${encodeURIComponent(searchValue)}`);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setSuggestions(data.suggestions?.length ? data.suggestions : []);
+    } catch (error) {
+      console.error("❌ Error fetching suggestions:", error);
+      setSuggestions([]);
+    } finally {
+      setLoading(false);
+    }
+  }, 500),
+  [properties] // ✅ Dependency array to prevent stale cache usage
+);
+
 
   // ✅ Handle input change (Triggers Suggestions but NOT Properties)
   const handleSearch = (value: string) => {
@@ -81,6 +123,7 @@ const HalfBanner = ({
     setShowSuggestions(false);
   };
 
+  // ✅ Redirect to search results page
   const handleSearchRedirect = () => {
     setShowFullScreenLoader(true); // ✅ Show full-screen loader
     setShowSuggestions(false);
@@ -98,7 +141,6 @@ const HalfBanner = ({
         }
     }, 1000);
 };
-
 
   return (
     <>

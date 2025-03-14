@@ -33,6 +33,7 @@ const PropertiesPageContent = ({
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const [searchTriggered, setSearchTriggered] = useState(!!searchTerm);
+  const [showFullScreenLoader, setShowFullScreenLoader] = useState(false);
 
   const itemsPerPage = 4;
   const dataCache = useRef<Property[] | null>(null); // ✅ Cache API response
@@ -43,6 +44,7 @@ const PropertiesPageContent = ({
       const fetchData = async () => {
         try {
           setLoading(true);
+          setShowFullScreenLoader(true); // ✅ Show full-screen loader
           const response = await axios.get("/api/properties");
           if (!Array.isArray(response.data)) throw new Error("Invalid API response format");
           setData(response.data);
@@ -51,6 +53,7 @@ const PropertiesPageContent = ({
           console.error("🚨 Error fetching properties:", err);
           setError("Failed to load properties. Please try again later.");
         } finally {
+          setShowFullScreenLoader(false); // ✅ Show full-screen loader
           setLoading(false);
         }
       };
@@ -154,9 +157,11 @@ const PropertiesPageContent = ({
   return (
     <section className="min-h-screen w-full flex justify-center items-start flex-col md:flex-row px-4 md:px-10">
       <main className="flex flex-col w-full h-full p-4 md:p-6 gap-4">
-      {loading ? (
-  <div className="text-center text-gray-600">Loading properties...</div>
-) : error ? (
+      {loading && showFullScreenLoader ? (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="w-16 h-16 border-4 border-t-transparent border-white rounded-full animate-spin"></div>
+          </div>
+         ): error ? (
   <div className="text-center text-red-500">{error}</div>
 ) : (
   <>

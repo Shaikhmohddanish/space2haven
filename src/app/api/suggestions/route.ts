@@ -15,14 +15,14 @@ export const GET = async (req: Request) => {
 
     console.log(`🔍 Searching for: "${query}"`);
 
-    // ✅ Strict match only for results that START with the query
+    // ✅ Match results that CONTAIN the query (instead of just STARTING with it)
     const properties = await PropertyModel.find(
       {
         $or: [
-          { title: { $regex: `^${query}`, $options: "i" } },  // Title must start with query
-          { developer: { $regex: `^${query}`, $options: "i" } },  // Developer must start with query
-          { location: { $regex: `^${query}`, $options: "i" } },  // Location must start with query
-          { "address.city": { $regex: `^${query}`, $options: "i" } },  // City must start with query
+          { title: { $regex: `.*${query}.*`, $options: "i" } },  // Title contains query
+          { developer: { $regex: `.*${query}.*`, $options: "i" } },  // Developer contains query
+          { location: { $regex: `.*${query}.*`, $options: "i" } },  // Location contains query
+          { "address.city": { $regex: `.*${query}.*`, $options: "i" } },  // City contains query
         ],
       },
       { title: 1, developer: 1, location: 1, "address.city": 1 } // Fetch only required fields
@@ -35,20 +35,40 @@ export const GET = async (req: Request) => {
 
     console.log(`✅ Found ${properties.length} suggestions.`);
 
-    // ✅ Remove duplicates & return only the relevant results
+    // ✅ Collect Suggestions
     const suggestionsSet = new Set<string>();
 
     properties.forEach((property) => {
       const values = [property.title, property.developer, property.location, property.address?.city];
 
       values.forEach((value) => {
-        if (value && value.toLowerCase().startsWith(query.toLowerCase())) {
+        if (value) {
           suggestionsSet.add(value);
         }
       });
     });
 
-    return NextResponse.json({ suggestions: Array.from(suggestionsSet) }, { status: 200 });
+    // ✅ Convert Set to Array & Prioritize Exact Matches First
+    let suggestionsArray = Array.from(suggestionsSet);
+
+    suggestionsArray.sort((a, b) => {
+      const lowerQuery = query.toLowerCase();
+      const aLower = a.toLowerCase();
+      const bLower = b.toLowerCase();
+
+      // ✅ Exact matches first
+      if (aLower === lowerQuery) return -1;
+      if (bLower === lowerQuery) return 1;
+
+      // ✅ Titles that start with query come before ones that contain it
+      if (aLower.startsWith(lowerQuery) && !bLower.startsWith(lowerQuery)) return -1;
+      if (bLower.startsWith(lowerQuery) && !aLower.startsWith(lowerQuery)) return 1;
+
+      // ✅ Otherwise, maintain natural order
+      return 0;
+    });
+
+    return NextResponse.json({ suggestions: suggestionsArray }, { status: 200 });
 
   } catch (error) {
     console.error("🚨 API Error:", error);
