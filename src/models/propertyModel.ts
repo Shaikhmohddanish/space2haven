@@ -19,6 +19,7 @@ const PropertySchema = new Schema({
         }
     ],
     description: { type: String, required: true },
+    overview: { type: String, required: true },
     location: { type: String, required: true },
     address: {
         city: { type: String },

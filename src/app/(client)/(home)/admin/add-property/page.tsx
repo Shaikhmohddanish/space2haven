@@ -8,21 +8,6 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
-function extractGoogleMapsPbParam(iframeString:string) {
-  // Extract the URL from the iframe string
-  const urlMatch = iframeString.match(/src="([^"]+)"/);
-  if (urlMatch && urlMatch[1]) {
-      const url = urlMatch[1];
-      const pbMatch = url.match(/[?&]pb=([^&#]*)/);
-      if (pbMatch && pbMatch[1]) {
-          return pbMatch[1];
-      } else {
-          return '';
-      }
-  } else {
-      return '';
-  }
-}
 const uploadImagesToCloudinary = async (files: File[]): Promise<string[]> => {
   try {
       const uploadPromises = files.map(async (file) => {
@@ -68,6 +53,7 @@ const AddProperty: React.FC = () => {
     configuration: [], // 🔥 Ensure it's an array
     configurations: [],  // New: For detailed configurations
     description: '',
+    overview: '',
     price: 0,
     location: '',
     address: {
@@ -83,7 +69,6 @@ const AddProperty: React.FC = () => {
     possession: '',
     possessionDate: 'To be announced',
     developer: '',
-    url: '',
     featured: false,
     newProperty: false,
   });
@@ -220,10 +205,6 @@ if (formData.areaUnit) {
         form.append("developer", formData.developer.trim());
     }
 
-    if(formData.url){
-      form.append("url",extractGoogleMapsPbParam(formData.url.trim()));
-    }
-
     // ✅ Address fields
     Object.keys(formData.address).forEach((addressKey) => {
         const value = formData.address[addressKey as keyof typeof formData.address];
@@ -309,18 +290,6 @@ if (formData.areaUnit) {
           />
         </div>
 
-        <div className="col-span-full">
-          <label className="block font-medium mb-1">Google Map Location</label>
-          <input
-            type="text"
-            name="url"
-            value={formData.url}
-            onChange={handleChange}
-            className="input-class w-full"
-            placeholder="Paste google map location url..."
-          />
-        </div>
-
         {/* Images */}
 <div className="col-span-full">
   <label className="block font-medium mb-1">Images (up to 10, max 500 KB each)</label>
@@ -380,6 +349,19 @@ if (formData.areaUnit) {
             required
             className="input-class w-full"
             placeholder="Type description..."
+          />
+        </div>
+
+        {/* Overview */}
+        <div className="col-span-full">
+          <label className="block font-medium mb-1">Overview</label>
+          <textarea
+            name="overview"
+            value={formData.overview}
+            onChange={handleChange}
+            required
+            className="input-class w-full"
+            placeholder="Type overview..."
           />
         </div>
 

@@ -29,6 +29,7 @@ interface Property {
   configuration: string[];
   configurations: Configuration[];
   description: string;
+  overview: string;
   location: string;
   area: string;
   areaUnit: string;
@@ -39,7 +40,6 @@ interface Property {
   developer: string;
   featured: boolean;
   newProperty: boolean;
-  url: string;
   address: {
     city: string;
     state: string;
@@ -49,6 +49,26 @@ interface Property {
 
 // ✅ Cache Constants
 const CACHE_KEY = "cachedProperties";
+const CACHE_EXPIRATION_TIME = 24 * 60 * 60 * 1000; // 1 Day in milliseconds
+
+// ✅ Function to Get Cached Data
+const getCachedData = () => {
+  const now = Date.now();
+  const cachedData = localStorage.getItem(CACHE_KEY);
+  const cachedTimestamp = localStorage.getItem(`${CACHE_KEY}_timestamp`);
+
+  if (cachedData && cachedTimestamp) {
+    if (now - parseInt(cachedTimestamp, 10) < CACHE_EXPIRATION_TIME) {
+      console.log("✅ Using cached data");
+      return JSON.parse(LZString.decompress(cachedData));
+    } else {
+      console.log("🛑 Cache expired, fetching fresh data...");
+      localStorage.removeItem(CACHE_KEY);
+      localStorage.removeItem(`${CACHE_KEY}_timestamp`);
+    }
+  }
+  return null;
+};
 
 const PropertiesPage = () => {
   const params = useParams();
@@ -86,20 +106,16 @@ const PropertiesPage = () => {
 
       try {
         // ✅ Try retrieving the full properties list from cache
-        const cachedDataStr = localStorage.getItem(CACHE_KEY);
-        if (cachedDataStr) {
-          const decompressedData = LZString.decompress(cachedDataStr);
-          if (decompressedData) {
-            const cachedProperties: Property[] = JSON.parse(decompressedData);
-            const cachedProperty = cachedProperties.find((p) => p._id === propertyId);
-
+        const cachedData: Property[] = getCachedData();
+        
+        if (cachedData) {
+          const cachedProperty = cachedData.find((p) => p._id === propertyId);
             if (cachedProperty) {
               console.log("✅ Property found in cache:", cachedProperty);
               setProperty(cachedProperty);
               setLoading(false);
               return; // Exit early since we found it in cache
             }
-          }
         }
 
         // ✅ If not found in cache, fetch from API (DO NOT UPDATE CACHE)
@@ -130,11 +146,13 @@ const PropertiesPage = () => {
     if (error) return <div className="text-center text-red-500 py-20">{error}</div>;
 
     return (
-      <div className="items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen w-full">
         {property ? (
           <PropertyDetails property={property} recommended={recommended} />
         ) : (
-          <p className="text-center text-gray-500 text-xl">Property not found.</p>
+          <p className="text-xl font-semibold text-gray-600">
+            Property not found.
+          </p>
         )}
       </div>
     );

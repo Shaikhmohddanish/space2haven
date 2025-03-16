@@ -21,7 +21,6 @@ const DisplayProperties = ({ data }: { data: Property[] }) => {
         possessionDate, 
         developer,
         recommend,
-        url,
         featured,
         newProperty,
       }) => (
@@ -39,7 +38,6 @@ const DisplayProperties = ({ data }: { data: Property[] }) => {
           tag={propertyType || "N/A"}
           location={location || "Not specified"} // ✅ Handle missing location
           recommend={recommend ?? false} // ✅ Ensure recommend is always a boolean
-          url={url || "N/A"}
           featured={featured ?? false} 
           newProperty={newProperty ?? false} 
         />

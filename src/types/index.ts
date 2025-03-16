@@ -24,11 +24,11 @@ export interface Property {
   }
   dimensions: string;
   description: string;
+  overview: string;
   recommend:boolean;
   possession:string;
   possessionDate: string;
   developer:string;
-  url:string;
   featured:boolean;
   newProperty:boolean;
   configurations: Configuration[];  // New: For detailed configurations
@@ -48,7 +48,6 @@ export interface PropertyCardProps {
   developer?:string;
   propertyType?: string; // Optional field for property type
   recommend?: boolean; // Changed true | false to boolean (simplified)
-  url?:string;
   featured?: boolean;
   newProperty?: boolean;
 }
@@ -62,6 +61,7 @@ export interface PropertyCardProps {
     configuration: string[]; // 🔥 Change from string to string[]
     configurations: Configuration[];  // New: For detailed configurations
     description: string;
+    overview: string;
     price: number;
     location: string;
     address: {
@@ -77,7 +77,6 @@ export interface PropertyCardProps {
     possession: string;
     possessionDate: string;
     developer:string;
-    url:string;
     featured: boolean;
     newProperty: boolean;
   }
@@ -98,7 +97,6 @@ export interface Property {
   possession: string;
   possessionDate: string;
   developer:string;
-  url:string;
   featured: boolean;
   newProperty: boolean;
 }

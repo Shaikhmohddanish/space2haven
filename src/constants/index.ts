@@ -164,12 +164,6 @@ export const dashboardData = [
         hover: "bg-red-600",
     },
     {
-        link: "/admin/add-interior",
-        title: "Add Interior",
-        color: "bg-blue-500",
-        hover: "bg-blue-600",
-    },
-    {
         link: "/properties",
         title: "All Properties",
         color: "bg-emerald-500",

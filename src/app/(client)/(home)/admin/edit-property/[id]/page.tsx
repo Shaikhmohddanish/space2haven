@@ -7,21 +7,6 @@ import { cityOptions } from "@/constants";
 import { useToast } from "@/hooks/use-toast";
 import { Configuration, PropertyFormValues } from "@/types";
 
-function extractGoogleMapsPbParam(iframeString:string) {
-  // Extract the URL from the iframe string
-  const urlMatch = iframeString.match(/src="([^"]+)"/);
-  if (urlMatch && urlMatch[1]) {
-      const url = urlMatch[1];
-      const pbMatch = url.match(/[?&]pb=([^&#]*)/);
-      if (pbMatch && pbMatch[1]) {
-          return pbMatch[1];
-      } else {
-          return '';
-      }
-  } else {
-      return '';
-  }
-}
 
 const uploadImagesToCloudinary = async (files: File[]): Promise<string[]> => {
   try {
@@ -68,6 +53,7 @@ const EditProperty: React.FC = () => {
     configuration: [],
     configurations: [],  // New: For detailed configurations
     description: "",
+    overview: "",
     price: 0,
     location: "",
     address: { city: "", state: "" },
@@ -80,7 +66,6 @@ const EditProperty: React.FC = () => {
     possession: "",
     possessionDate: "To be announced",
     developer: "",
-    url:"",
     featured: false,
     newProperty: false,
   });
@@ -183,10 +168,6 @@ const handleMultiSelectChange = (name: keyof PropertyFormValues, value: string |
         console.error("❌ No images uploaded or images array is empty!");
     }
 
-    if(formData.url){
-      form.append("url",extractGoogleMapsPbParam(formData.url.trim()));
-    }
-
     try {        
         const response = await axios.put(`/api/admin/update-property/${id}`, form, {
             headers: { "Content-Type": "multipart/form-data" },
@@ -261,18 +242,6 @@ const handleMultiSelectChange = (name: keyof PropertyFormValues, value: string |
         </div>
 
         <div className="col-span-full">
-          <label className="block font-medium mb-1">Google Map Location</label>
-          <input
-            type="text"
-            name="url"
-            value={formData.url}
-            onChange={handleChange}
-            className="input-class w-full"
-            placeholder="Paste Google Map Location URL..."
-          />
-        </div>
-
-        <div className="col-span-full">
           <label className="block font-medium mb-1">Description</label>
           <textarea
             name="description"
@@ -281,6 +250,18 @@ const handleMultiSelectChange = (name: keyof PropertyFormValues, value: string |
             required
             className="input-class w-full"
             placeholder="Type description..."
+          />
+        </div>
+
+        <div className="col-span-full">
+          <label className="block font-medium mb-1">Overview</label>
+          <textarea
+            name="overview"
+            value={formData.overview}
+            onChange={handleChange}
+            required
+            className="input-class w-full"
+            placeholder="Type Overview..."
           />
         </div>
 
