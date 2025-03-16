@@ -202,86 +202,81 @@ export default function PropertyDetails({ property,recommended }: PropertyDetail
     ))}
   </div>
 
-  {/* Mobile Slider + Desktop Grid */}
-  <div className="md:grid md:grid-cols-2 gap-4">
-    
-    {/* Mobile Slider */}
-    <div className="md:hidden overflow-x-auto whitespace-nowrap flex gap-4 p-2">
-      {filteredConfigs.map((cfg, idx) => (
-        <div key={idx} className="min-w-[280px] border rounded-lg shadow p-4 flex-shrink-0 text-center">
-          
-          {/* Image */}
-          <div className="flex justify-center mb-3">
-            <Image 
-              src={`/configuration/${parseInt(cfg.bhkType) > 4 ? "4BHK" : cfg.bhkType.trim().replace(/\s/g, "").replace("4+", "4")}.webp`} 
-              alt={cfg.bhkType}
-              width={100} 
-              height={100} 
-              className="w-36 h-auto object-contain"
-            />
-          </div>
-
-          {/* Text Details (Structured Layout) */}
-          <h3 className="font-semibold text-lg mb-2">{cfg.bhkType}</h3>
-          
-          {/* Two-column layout for Carpet & Built-up Area */}
-          <div className="grid grid-cols-2 gap-2 text-sm">
-            <p className="font-semibold text-gray-700">Carpet Area:</p>
-            <p>{cfg.carpetArea} {cfg.carpetAreaUnit}</p>
-
-            <p className="font-semibold text-gray-700">Built-up Area:</p>
-            <p>{cfg.builtupArea} {cfg.builtupAreaUnit}</p>
-          </div>
-
-          {/* Price - Full Row */}
-          <p className="mt-3 font-semibold text-gray-800 text-lg">
-            Price: ₹{parseInt(cfg.price).toLocaleString()}
-          </p>
+  {/* Desktop Grid (Now 3 or 4 Columns) */}
+  <div className="hidden md:grid md:grid-cols-3 lg:grid-cols-4 gap-6 justify-center">
+    {filteredConfigs.map((cfg, idx) => (
+      <div key={idx} className="border rounded-lg shadow p-6 text-center">
+        
+        {/* Image */}
+        <div className="flex justify-center mb-3">
+          <Image 
+            src={`/configuration/${parseInt(cfg.bhkType) > 4 ? "4BHK" : cfg.bhkType.trim().replace(/\s/g, "").replace("4+", "4")}.webp`} 
+            alt={cfg.bhkType}
+            width={120} 
+            height={120} 
+            className="w-36 h-auto object-contain"
+          />
         </div>
-      ))}
-    </div>
 
-    {/* Desktop Grid */}
-    <div className="hidden md:grid md:grid-cols-2 gap-4">
-      {filteredConfigs.map((cfg, idx) => (
-        <div key={idx} className="border rounded-lg shadow p-6 text-center">
-          
-          {/* Image */}
-          <div className="flex justify-center mb-3">
-            <Image 
-              src={`/configuration/${parseInt(cfg.bhkType) > 4 ? "4BHK" : cfg.bhkType.trim().replace(/\s/g, "").replace("4+", "4")}.webp`} 
-              alt={cfg.bhkType}
-              width={120} 
-              height={120} 
-              className="w-36 h-auto object-contain"
-            />
-          </div>
+        {/* Text Details (Structured Layout) */}
+        <h3 className="font-semibold text-lg mb-2">{cfg.bhkType}</h3>
+        
+        {/* Two-column layout for Carpet & Built-up Area */}
+        <div className="grid grid-cols-2 gap-2 text-sm">
+          <p className="font-semibold text-gray-700">Carpet Area:</p>
+          <p>{cfg.carpetArea} {cfg.carpetAreaUnit}</p>
 
-          {/* Text Details (Structured Layout) */}
-          <h3 className="font-semibold text-lg mb-2">{cfg.bhkType}</h3>
-          
-          {/* Two-column layout for Carpet & Built-up Area */}
-          <div className="grid grid-cols-2 gap-2 text-sm">
-            <p className="font-semibold text-gray-700">Carpet Area:</p>
-            <p>{cfg.carpetArea} {cfg.carpetAreaUnit}</p>
-
-            <p className="font-semibold text-gray-700">Built-up Area:</p>
-            <p>{cfg.builtupArea} {cfg.builtupAreaUnit}</p>
-          </div>
-
-          {/* Price - Full Row */}
-          <p className="mt-3 font-semibold text-gray-800 text-lg">
-            Price: ₹{parseInt(cfg.price).toLocaleString()}
-          </p>
+          <p className="font-semibold text-gray-700">Built-up Area:</p>
+          <p>{cfg.builtupArea} {cfg.builtupAreaUnit}</p>
         </div>
-      ))}
-    </div>
+
+        {/* Price - Full Row */}
+        <p className="mt-3 font-semibold text-gray-800 text-lg">
+          Price: ₹{parseInt(cfg.price).toLocaleString()}
+        </p>
+      </div>
+    ))}
+  </div>
+
+  {/* Mobile Slider */}
+  <div className="md:hidden overflow-x-auto whitespace-nowrap flex gap-4 p-2">
+    {filteredConfigs.map((cfg, idx) => (
+      <div key={idx} className="min-w-[280px] border rounded-lg shadow p-4 flex-shrink-0 text-center">
+        
+        {/* Image */}
+        <div className="flex justify-center mb-3">
+          <Image 
+            src={`/configuration/${parseInt(cfg.bhkType) > 4 ? "4BHK" : cfg.bhkType.trim().replace(/\s/g, "").replace("4+", "4")}.webp`} 
+            alt={cfg.bhkType}
+            width={100} 
+            height={100} 
+            className="w-36 h-auto object-contain"
+          />
+        </div>
+
+        {/* Text Details (Structured Layout) */}
+        <h3 className="font-semibold text-lg mb-2">{cfg.bhkType}</h3>
+        
+        {/* Two-column layout for Carpet & Built-up Area */}
+        <div className="grid grid-cols-2 gap-2 text-sm">
+          <p className="font-semibold text-gray-700">Carpet Area:</p>
+          <p>{cfg.carpetArea} {cfg.carpetAreaUnit}</p>
+
+          <p className="font-semibold text-gray-700">Built-up Area:</p>
+          <p>{cfg.builtupArea} {cfg.builtupAreaUnit}</p>
+        </div>
+
+        {/* Price - Full Row */}
+        <p className="mt-3 font-semibold text-gray-800 text-lg">
+          Price: ₹{parseInt(cfg.price).toLocaleString()}
+        </p>
+      </div>
+    ))}
   </div>
 </div>
 
       {/* Amenities */}
-      {property.features && (
-
+      {property.features && property.features.length > 0 && (
 <div className="w-full">
       <h2 className="text-2xl font-semibold text-orange-500 mb-4">Amenities</h2>
 
@@ -317,7 +312,7 @@ export default function PropertyDetails({ property,recommended }: PropertyDetail
         </div>
       )}
     </div>
-          )}
+     )}
 
 
       {/* About with see more/less */}
