@@ -514,52 +514,65 @@ const handleMultiSelectChange = (name: keyof PropertyFormValues, value: string |
           
 
           
-
           {/* Features Multi-Select Dropdown */}
           <div className="relative">
   <label className="block font-medium mb-1">Features</label>
-  <div className="input-class w-full cursor-pointer bg-white border border-gray-300 rounded-md p-2 flex justify-between items-center"
+  
+  {/* Dropdown Toggle */}
+  <div
+    className="input-class w-full cursor-pointer bg-white border border-gray-300 rounded-md p-2 flex justify-between items-center"
     onClick={() => setShowFeaturesDropdown(!showFeaturesDropdown)}
   >
-    {formData.features.length > 0 ? formData.features.join(", ") : "Select Features"}
+    {formData.features && formData.features.length > 0 ? formData.features.join(", ") : "Select Features"}
     <span className="ml-2">&#9662;</span>
   </div>
 
+  {/* Dropdown List with Scrollbar */}
   {showFeaturesDropdown && (
-    <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg p-2">
+    <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg p-2 
+                    max-h-60 overflow-y-auto">
       {[
-  "24/7 Security & CCTV Surveillance",
-  "Power Backup",
-  "High-Speed Elevators",
-  "Car Parking (Covered & Open)",
-  "Water Supply & Rainwater Harvesting",
-  "Swimming Pool",
-  "Clubhouse",
-  "Gym & Fitness Center",
+  "24x7 Security",
+  "Amphitheatre",
+  "Badminton Court",
+  "Basketball Court",
+  "Cafeteria",
+  "CCTV Security",
+  "Club House",
+  "Community Hall",
+  "Elevator Lift",
+  "Fire Alarm",
+  "Garbage Disposal",
+  "Garden",
+  "Gated Community",
+  "Gym",
   "Indoor Games",
-  "Multipurpose Court",
-  "Kids’ Play Area",
-  "Landscaped Gardens & Green Spaces",
-  "Jogging & Cycling Tracks",
-  "Yoga & Meditation Area",
-  "Elderly Sitting Areas",
-  "Pet-Friendly Zones",
-  "Smart Home Features",
-  "Retail & Convenience Stores",
-  "Multipurpose Hall & Co-Working Spaces",
-  "Cinema/Private Theatre",
-  "EV Charging Stations"
-]
-.map((feature) => (
+  "Jogging Track",
+  "Kid's Area",
+  "Library",
+  "Lounge",
+  "Multipurpose Hall",
+  "Open Gym",
+  "Parking",
+  "Power Backup",
+  "Rainwater Harvesting",
+  "Regular Water Supply",
+  "Senior Citizen Zone",
+  "Sewage Treatment Plant",
+  "Sports Facilities",
+  "Swimming Pool",
+  "Vastu Compliant",
+  "Yoga Meditation Hall"
+].map((feature) => (
         <label key={feature} className="flex items-center gap-2 py-1 px-2 hover:bg-gray-100 cursor-pointer">
           <input
             type="checkbox"
             value={feature}
-            checked={formData.features.includes(feature)}
+            checked={formData.features?.includes(feature) || false} // ✅ Safe Check
             onChange={(e) => {
               const selectedFeatures = e.target.checked
-                ? [...formData.features, feature]
-                : formData.features.filter((item) => item !== feature);
+              ? [...(formData.features || []), feature] // ✅ Ensure it's always an array
+              : formData.features.filter((item) => item !== feature);
               setFormData((prevData) => ({ ...prevData, features: selectedFeatures }));
             }}
           />

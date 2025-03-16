@@ -5,6 +5,8 @@ import "yet-another-react-lightbox/styles.css";
 import { DisplayCarousel, DynamicCarousel } from '@/components';
 import { formatPrice } from '@/utils/formatPrice';
 import GetInTouchPopup from '@/components/layouts/GetInTouchPopup';
+import { IoChevronDown, IoChevronUp } from "react-icons/io5";
+import Image from 'next/image';
 
 export interface Configuration {
   bhkType: string;
@@ -51,7 +53,10 @@ export default function PropertyDetails({ property,recommended }: PropertyDetail
   const [showMore, setShowMore] = useState<boolean>(false);
   const [showMoreOverview, setShowMoreOverview] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<string>("All");
-  
+  const [showAllAmenities, setShowAllAmenities] = useState(false);
+  const maxVisibleAmenities = 6;
+  const shouldShowButton = property.features && property.features.length > maxVisibleAmenities;
+    
   const uniqueBHK = Array.from(new Set(property.configurations.map((c) => c.bhkType)));
   const recommendedInSameCity = recommended.filter(
     (rec) => rec.address.city === property.address.city && rec._id !== property._id
@@ -66,7 +71,7 @@ export default function PropertyDetails({ property,recommended }: PropertyDetail
     <div className="container mx-auto px-4 py-8 space-y-8">
 
       {/* Image Slider with corrected slidesToShow */}
-      <div className="w-full">
+      <div className="w-full my-6">
         {property.images && property.images.length > 0 && <DisplayCarousel images={property.images} />}
       </div>
 
@@ -162,18 +167,7 @@ export default function PropertyDetails({ property,recommended }: PropertyDetail
   })}
 </div>
 
-      {/* About with see more/less */}
-      <div>
-        <h2 className="text-2xl font-semibold"> <span className='text-orange-500'>About</span>  {property.title}</h2>
-        <p className="text-gray-700 whitespace-pre-line">
-          {showMore ? property.description : `${property.description.slice(0,300)}...`}
-          {property.description.length > 300 && (
-            <button onClick={() => setShowMore(!showMore)} className="ml-2 underline text-blue-500">
-              {showMore ? "See less" : "See more"}
-            </button>
-          )}
-        </p>
-      </div>
+      
 
       {/* Overview with see more/less */}
       {property.overview && property.overview.trim() !== "" && (
@@ -192,35 +186,97 @@ export default function PropertyDetails({ property,recommended }: PropertyDetail
 
 
       {/* Configuration Tabs */}
-      <div>
-        <h2 className="text-2xl font-semibold text-orange-500">Configurations</h2>
-        <div className="flex gap-2 my-4">
-          {["All", ...uniqueBHK].map((tab) => (
-            <button key={tab} className={`px-4 py-2 rounded-lg ${activeTab === tab ? 'bg-orange-500 text-white' : 'bg-gray-200'}`} onClick={() => setActiveTab(tab)}>
-              {tab}
-            </button>
-          ))}
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {filteredConfigs.map((cfg, idx) => (
-            <div key={idx} className="border rounded-lg shadow p-4">
-              <h3 className="font-semibold">{cfg.bhkType}</h3>
-              <p><strong>Carpet Area:</strong> {cfg.carpetArea} {cfg.carpetAreaUnit}</p>
-              <p><strong>Built-up Area:</strong> {cfg.builtupArea} {cfg.builtupAreaUnit}</p>
-              <p><strong>Price:</strong> ₹{parseInt(cfg.price).toLocaleString()}</p>
-            </div>
-          ))}
-        </div>
-      </div>
+<div>
+  <h2 className="text-2xl font-semibold text-orange-500">Configurations</h2>
 
-      {/* Amenities */}
-      <div>
-        <h2 className="text-2xl font-semibold text-orange-500">Amenities</h2>
-        <ul className="grid grid-cols-2 md:grid-cols-4 gap-2">
-          {property.features.map((feature, idx) => (
-            <li key={idx}>✔️ {feature}</li>
+  {/* Tab Buttons */}
+  <div className="flex gap-2 my-4 overflow-x-auto whitespace-nowrap">
+    {["All", ...uniqueBHK].map((tab) => (
+      <button 
+        key={tab} 
+        className={`px-4 py-2 rounded-lg flex-shrink-0 ${activeTab === tab ? 'bg-orange-500 text-white' : 'bg-gray-200'}`} 
+        onClick={() => setActiveTab(tab)}
+      >
+        {tab}
+      </button>
+    ))}
+  </div>
+
+  {/* Mobile Slider + Desktop Grid */}
+  <div className="md:grid md:grid-cols-2 gap-4">
+    {/* Mobile Slider */}
+    <div className="md:hidden overflow-x-auto whitespace-nowrap flex gap-4 p-2">
+      {filteredConfigs.map((cfg, idx) => (
+        <div key={idx} className="min-w-[250px] border rounded-lg shadow p-4 flex-shrink-0">
+          <h3 className="font-semibold">{cfg.bhkType}</h3>
+          <p><strong>Carpet Area:</strong> {cfg.carpetArea} {cfg.carpetAreaUnit}</p>
+          <p><strong>Built-up Area:</strong> {cfg.builtupArea} {cfg.builtupAreaUnit}</p>
+          <p><strong>Price:</strong> ₹{parseInt(cfg.price).toLocaleString()}</p>
+        </div>
+      ))}
+    </div>
+
+    {/* Desktop Grid */}
+    <div className="hidden md:grid md:grid-cols-2 gap-4">
+      {filteredConfigs.map((cfg, idx) => (
+        <div key={idx} className="border rounded-lg shadow p-4">
+          <h3 className="font-semibold">{cfg.bhkType}</h3>
+          <p><strong>Carpet Area:</strong> {cfg.carpetArea} {cfg.carpetAreaUnit}</p>
+          <p><strong>Built-up Area:</strong> {cfg.builtupArea} {cfg.builtupAreaUnit}</p>
+          <p><strong>Price:</strong> ₹{parseInt(cfg.price).toLocaleString()}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</div>
+
+<div className="w-full">
+      <h2 className="text-2xl font-semibold text-orange-500 mb-4">Amenities</h2>
+
+      {/* Grid Wrapper - Ensures Proper Alignment */}
+      <ul className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6 place-items-center">
+        {property.features
+          .slice(0, showAllAmenities ? property.features.length : maxVisibleAmenities)
+          .map((feature, idx) => (
+            <li key={idx} className="flex flex-col items-center justify-center text-center">
+              <div className="w-16 h-16 flex items-center justify-center">
+                <Image
+                  src={`/amenities/${feature.replace(/\s+/g, "_")}.png`}
+                  alt={feature}
+                  width={50}
+                  height={50}
+                  className="w-full h-auto"
+                />
+              </div>
+              <span className="text-gray-700 text-sm font-medium mt-2">{feature.replace(/_/g, " ")}</span>
+            </li>
           ))}
-        </ul>
+      </ul>
+
+      {/* Expand/Collapse Button - Positioned Properly */}
+      {shouldShowButton && (
+        <div className="flex justify-center mt-4">
+          <button
+            onClick={() => setShowAllAmenities(!showAllAmenities)}
+            className="p-3 bg-green-500 rounded-full text-white shadow-lg hover:bg-green-600 focus:outline-none transition"
+          >
+            {showAllAmenities ? <IoChevronUp className="text-2xl" /> : <IoChevronDown className="text-2xl" />}
+          </button>
+        </div>
+      )}
+    </div>
+
+      {/* About with see more/less */}
+      <div>
+        <h2 className="text-2xl font-semibold"> <span className='text-orange-500'>About</span>  {property.title}</h2>
+        <p className="text-gray-700 whitespace-pre-line">
+          {showMore ? property.description : `${property.description.slice(0,300)}...`}
+          {property.description.length > 300 && (
+            <button onClick={() => setShowMore(!showMore)} className="ml-2 underline text-blue-500">
+              {showMore ? "See less" : "See more"}
+            </button>
+          )}
+        </p>
       </div>
 
       {/* Location Map */}
