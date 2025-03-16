@@ -33,7 +33,6 @@ const PropertySchema = new Schema({
     possession: { type: String, required: true },
     possessionDate: { type: String, default: "To be announced" },  // 🔥 New: String for possession date
     developer: { type: String, required: true },
-    url: { type: String, required: false },
     featured: { type: Boolean, default: false },
     newProperty: { type: Boolean, default: false },
 }, 

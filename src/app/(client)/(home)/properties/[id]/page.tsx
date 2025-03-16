@@ -76,9 +76,6 @@ const PropertyById = () => {
         description = "No description available.",
         price = "N/A",
         address = { city: "", state: "" },
-        possession = "N/A",
-        developer = "N/A",
-        url="N/A",
         updatedAt
     } = propertyData;
 
