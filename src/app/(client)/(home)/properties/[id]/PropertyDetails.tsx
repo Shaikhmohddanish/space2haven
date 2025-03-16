@@ -279,6 +279,9 @@ export default function PropertyDetails({ property,recommended }: PropertyDetail
   </div>
 </div>
 
+      {/* Amenities */}
+      {property.features && (
+
 <div className="w-full">
       <h2 className="text-2xl font-semibold text-orange-500 mb-4">Amenities</h2>
 
@@ -314,6 +317,8 @@ export default function PropertyDetails({ property,recommended }: PropertyDetail
         </div>
       )}
     </div>
+          )}
+
 
       {/* About with see more/less */}
       <div>
