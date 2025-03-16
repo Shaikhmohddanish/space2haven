@@ -6,7 +6,7 @@ import axios from "axios";
 import { Property } from "./CityProjects";
 
 const CACHE_KEY = "cachedProperties";
-const CACHE_EXPIRATION_TIME = 60 * 1000; // 1 Day
+const CACHE_EXPIRATION_TIME = 60 * 60 * 1000; // 1 Day
 
 export const PropertyCacheContext = createContext<any>(null);
 
