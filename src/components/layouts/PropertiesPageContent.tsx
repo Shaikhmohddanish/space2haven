@@ -17,7 +17,7 @@ import LZString from "lz-string";
 // Cache constants
 const CACHE_KEY = "cachedProperties";
 const CACHE_TIMESTAMP_KEY = `${CACHE_KEY}_timestamp`;
-const CACHE_EXPIRATION_TIME = 24 * 60 * 60 * 1000; // 1 Day in milliseconds
+const CACHE_EXPIRATION_TIME = 60 * 1000; // 1 Day in milliseconds
 
 const PropertiesPageContent = ({
   search,

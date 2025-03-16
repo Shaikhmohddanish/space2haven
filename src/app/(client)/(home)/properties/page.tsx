@@ -49,7 +49,7 @@ interface Property {
 
 // ✅ Cache Constants
 const CACHE_KEY = "cachedProperties";
-const CACHE_EXPIRATION_TIME = 24 * 60 * 60 * 1000; // 1 Day in milliseconds
+const CACHE_EXPIRATION_TIME = 60 * 1000; // 1 Day in milliseconds
 
 // ✅ Function to Get Cached Data
 const getCachedData = () => {
