@@ -231,6 +231,14 @@ export default function PropertyDetails({ property,recommended }: PropertyDetail
       </p>
       </div>
 
+      {/* City */}
+      <div>
+      <h2 className="text-2xl font-semibold text-orange-500">City</h2>
+      <p className="text-gray-700 whitespace-pre-line">
+        {property.address.city}
+      </p>
+      </div>
+
       {/* Location Map */}
       <div>
         <h2 className="text-2xl font-semibold mb-2 text-orange-500">Location on Map</h2>
