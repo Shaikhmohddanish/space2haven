@@ -328,6 +328,8 @@ const handleMultiSelectChange = (name: keyof PropertyFormValues, value: string |
     </div>
   )}
 </div>
+
+
         
         <label className="block font-medium mb-1">Configuration (BHK)</label>
         <div className="flex flex-wrap gap-2">

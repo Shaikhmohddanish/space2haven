@@ -369,32 +369,36 @@ if (formData.areaUnit) {
 
         {/* Configuration Dropdown */}
         <label className="block font-medium mb-1">Configuration (BHK)</label>
-        <div className="flex flex-wrap gap-2">
-  {["1 BHK", "2 BHK", "3 BHK", "4+ BHK"].map((bhk) => (
-    <label key={bhk} className="flex items-center gap-2">
-      <input
-        type="checkbox"
-        value={bhk}
-        checked={formData.configuration.includes(bhk)}
-        onChange={(e) => {
-          setFormData((prevData) => ({
-            ...prevData,
-            configuration: e.target.checked
-              ? [...prevData.configuration, bhk] // ✅ Add new selection
-              : prevData.configuration.filter((item) => item !== bhk) // ✅ Remove if unchecked
-          }));
-        }}
-      />
-      {bhk}
-    </label>
-  ))}
-</div>
+        <div className="flex flex-wrap gap-3">
+          {["1 BHK", "2 BHK", "3 BHK", "4+ BHK"].map((bhk) => (
+            <label key={bhk} className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                value={bhk}
+                checked={formData.configuration.includes(bhk)}
+                onChange={(e) => {
+                  setFormData((prevData) => ({
+                    ...prevData,
+                    configuration: e.target.checked
+                      ? [...prevData.configuration, bhk] // ✅ Add selection
+                      : prevData.configuration.filter((item) => item !== bhk) // ✅ Remove if unchecked
+                  }));
+                }}
+                className="accent-orange-500 w-5 h-5 cursor-pointer"
+                aria-label={`Select ${bhk}`}
+              />
+              <span className="text-gray-700">{bhk}</span>
+            </label>
+          ))}
+        </div>
 
 
+        
 
         {/* Location, Address Details */}
-        <div className="col-span-full grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
+        <div className="col-span-full grid grid-cols-1 gap-4 md:grid-cols-3">
+          {/* Location Input - Full Width */}
+          <div className="md:col-span-3">
             <label className="block font-medium mb-1">Location</label>
             <input
               type="text"
@@ -406,8 +410,17 @@ if (formData.areaUnit) {
             />
           </div>
 
-          <CityNState cityValue={formData.address.city} stateValue={formData.address.state} handleChange={handleChange} locations={locations} />
+          {/* City & State Inputs - Split into Two Equal Parts */}
+          <div className="md:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <CityNState 
+              cityValue={formData.address.city} 
+              stateValue={formData.address.state} 
+              handleChange={handleChange} 
+              locations={locations} 
+            />
+          </div>
         </div>
+
 
         {/* Property Type and Additional Info */}
         <div className="col-span-full grid grid-cols-1 md:grid-cols-3 gap-4">
