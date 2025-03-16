@@ -49,6 +49,7 @@ interface PropertyDetailsProps {
 
 export default function PropertyDetails({ property,recommended }: PropertyDetailsProps) {
   const [showMore, setShowMore] = useState<boolean>(false);
+  const [showMoreOverview, setShowMoreOverview] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<string>("All");
   
   const uniqueBHK = Array.from(new Set(property.configurations.map((c) => c.bhkType)));
@@ -65,11 +66,11 @@ export default function PropertyDetails({ property,recommended }: PropertyDetail
     <div className="container mx-auto px-4 py-8 space-y-8">
 
       {/* Image Slider with corrected slidesToShow */}
-      <div className="w-full max-w-6xl mb-10">
+      <div className="w-full">
         {property.images && property.images.length > 0 && <DisplayCarousel images={property.images} />}
       </div>
 
-      <div className="w-full max-w-6xl mb-10 flex justify-between items-center flex-wrap gap-4">
+      <div className="w-full flex justify-between items-center flex-wrap gap-4">
 
   {/* Left side: Property Title & Price */}
   <div className="flex-1 min-w-[200px]">
@@ -94,7 +95,7 @@ export default function PropertyDetails({ property,recommended }: PropertyDetail
 </div>
 
 {/* Div visible only on big screens (desktop/tablet) */}
-<div className="hidden md:grid bg-white shadow rounded-lg border my-6 py-6 px-4 grid-cols-5 gap-4 text-center items-center">
+<div className="hidden md:grid bg-white shadow rounded-lg border w-full my-6 py-6 grid-cols-5 gap-4 text-center items-center">
 
   <div className="border-r border-gray-300">
     <p className="text-sm text-gray-500">Configurations</p>
@@ -179,10 +180,10 @@ export default function PropertyDetails({ property,recommended }: PropertyDetail
       <div>
         <h2 className="text-2xl font-semibold"><span className='text-orange-500'>Overview</span> of {property.title}</h2>
         <p className="text-gray-700 whitespace-pre-line">
-          {showMore ? property.overview : `${property.overview.slice(0,300)}...`}
+          {showMoreOverview ? property.overview : `${property.overview.slice(0,300)}...`}
           {property.overview.length > 300 && (
-            <button onClick={() => setShowMore(!showMore)} className="ml-2 underline text-blue-500">
-              {showMore ? "See less" : "See more"}
+            <button onClick={() => setShowMoreOverview(!showMoreOverview)} className="ml-2 underline text-blue-500">
+              {showMoreOverview ? "See less" : "See more"}
             </button>
           )}
         </p>
