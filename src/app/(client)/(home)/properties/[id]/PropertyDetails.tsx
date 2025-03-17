@@ -223,12 +223,23 @@ export default function PropertyDetails({ property,recommended }: PropertyDetail
         
         {/* Two-column layout for Carpet & Built-up Area */}
         <div className="grid grid-cols-2 gap-2 text-sm">
-          <p className="font-semibold text-gray-700">Carpet Area:</p>
-          <p>{cfg.carpetArea} {cfg.carpetAreaUnit}</p>
+  {/* ✅ Carpet Area Handling */}
+  <p className="font-semibold text-gray-700">Carpet Area:</p>
+  {cfg.carpetArea && cfg.carpetArea.toLowerCase() !== "on request" ? (
+    <p>{cfg.carpetArea} {cfg.carpetAreaUnit}</p>
+  ) : (
+    <p>{cfg.carpetArea}</p>
+  )}
 
-          <p className="font-semibold text-gray-700">Built-up Area:</p>
-          <p>{cfg.builtupArea} {cfg.builtupAreaUnit}</p>
-        </div>
+  {/* ✅ Built-up Area Handling */}
+  <p className="font-semibold text-gray-700">Built-up Area:</p>
+  {cfg.builtupArea && cfg.builtupArea.toLowerCase() !== "on request" ? (
+    <p>{cfg.builtupArea} {cfg.builtupAreaUnit}</p>
+  ) : (
+    <p>{cfg.builtupArea}</p>
+  )}
+</div>
+
 
         {/* Price - Full Row */}
         <p className="mt-3 font-semibold text-gray-800 text-lg">
