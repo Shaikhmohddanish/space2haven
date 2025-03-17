@@ -232,7 +232,7 @@ export default function PropertyDetails({ property,recommended }: PropertyDetail
 
         {/* Price - Full Row */}
         <p className="mt-3 font-semibold text-gray-800 text-lg">
-          Price: ₹{parseInt(cfg.price).toLocaleString()}
+          Price: ₹{cfg.price}
         </p>
       </div>
     ))}
