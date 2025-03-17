@@ -44,6 +44,24 @@ const PropertiesPageContent = ({
 
   const itemsPerPage = 4;
   const dataCache = useRef<Property[] | null>(null); // Cache API response
+  const getPossessionCategory = (possessionDate: string): string => {
+    if (!possessionDate) return "";
+
+    const possessionDateObj = new Date(possessionDate);
+    const currentDate = new Date();
+
+    let yearsLeft = possessionDateObj.getFullYear() - currentDate.getFullYear();
+    let monthsLeft = (possessionDateObj.getMonth() - currentDate.getMonth()) + (yearsLeft * 12);
+
+    // ✅ If possession is in the past, it's ready to move
+    if (monthsLeft <= 0) return "ready";
+
+    // ✅ Categorize based on remaining months
+    if (monthsLeft <= 12) return "1_year";
+    if (monthsLeft <= 24) return "2_years";
+    if (monthsLeft <= 36) return "3_years";
+    return "after_3_years";
+};
 
   // ✅ Fetch Data: Check localStorage cache first, if not present then call API
   useEffect(() => {
@@ -131,7 +149,9 @@ const PropertiesPageContent = ({
     }
 
     if (filters.possession) {
-      searchData = searchData.filter((property) => property.possession === filters.possession);
+      searchData = searchData.filter((property) =>
+        getPossessionCategory(property.possessionDate) === filters.possession
+      );
     }
 
     if (filters.developer) {
