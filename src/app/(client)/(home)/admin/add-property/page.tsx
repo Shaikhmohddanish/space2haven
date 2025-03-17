@@ -341,14 +341,14 @@ if (formData.areaUnit) {
 
         {/* Description */}
         <div className="col-span-full">
-          <label className="block font-medium mb-1">Description</label>
+          <label className="block font-medium mb-1">About</label>
           <textarea
             name="description"
             value={formData.description}
             onChange={handleChange}
             required
             className="input-class w-full"
-            placeholder="Type description..."
+            placeholder="Type About..."
           />
         </div>
 
@@ -689,8 +689,7 @@ if (formData.areaUnit) {
                     <label className="block font-medium mb-1">Carpet Area</label>
                     <div className="flex gap-2">
                         <input
-                            type="number"
-                            step="0.01"
+                            type="text"
                             value={config.carpetArea || ""}
                             onChange={(e) => {
                                 const newConfigs = [...formData.configurations];
@@ -722,8 +721,7 @@ if (formData.areaUnit) {
                     <label className="block font-medium mb-1">Built-up Area</label>
                     <div className="flex gap-2">
                         <input
-                            type="number"
-                            step="0.01"
+                            type="text"
                             value={config.builtupArea || ""}
                             onChange={(e) => {
                                 const newConfigs = [...formData.configurations];
@@ -754,8 +752,7 @@ if (formData.areaUnit) {
                 <div>
                     <label className="block font-medium mb-1">Price</label>
                     <input
-                        type="number"
-                        step="0.01"
+                        type="text"
                         value={config.price || ""}
                         onChange={(e) => {
                             const newConfigs = [...formData.configurations];

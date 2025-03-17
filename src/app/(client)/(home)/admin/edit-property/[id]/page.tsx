@@ -242,14 +242,14 @@ const handleMultiSelectChange = (name: keyof PropertyFormValues, value: string |
         </div>
 
         <div className="col-span-full">
-          <label className="block font-medium mb-1">Description</label>
+          <label className="block font-medium mb-1">About</label>
           <textarea
             name="description"
             value={formData.description}
             onChange={handleChange}
             required
             className="input-class w-full"
-            placeholder="Type description..."
+            placeholder="Type About..."
           />
         </div>
 
@@ -661,8 +661,7 @@ const handleMultiSelectChange = (name: keyof PropertyFormValues, value: string |
                     <label className="block font-medium mb-1">Carpet Area</label>
                     <div className="flex gap-2">
                         <input
-                            type="number"
-                            step="0.01"
+                            type="text"
                             value={config.carpetArea || ""}
                             onChange={(e) => {
                                 const newConfigs = [...formData.configurations];
@@ -694,8 +693,7 @@ const handleMultiSelectChange = (name: keyof PropertyFormValues, value: string |
                     <label className="block font-medium mb-1">Built-up Area</label>
                     <div className="flex gap-2">
                         <input
-                            type="number"
-                            step="0.01"
+                            type="text"
                             value={config.builtupArea || ""}
                             onChange={(e) => {
                                 const newConfigs = [...formData.configurations];
@@ -726,8 +724,7 @@ const handleMultiSelectChange = (name: keyof PropertyFormValues, value: string |
                 <div>
                     <label className="block font-medium mb-1">Price</label>
                     <input
-                        type="number"
-                        step="0.01"
+                        type="text"
                         value={config.price || ""}
                         onChange={(e) => {
                             const newConfigs = [...formData.configurations];

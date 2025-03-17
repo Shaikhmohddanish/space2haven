@@ -52,7 +52,7 @@ interface CityProjects {
 
 // ✅ Cache Settings
 const CACHE_KEY = "cachedProperties";
-const CACHE_EXPIRATION_TIME = 60 * 60 * 1000; // 1 Day in milliseconds
+const CACHE_EXPIRATION_TIME = 60 * 1000; // 1 Day in milliseconds
 
 const CityProjects: React.FC = () => {
   const [properties, setProperties] = useState<Property[]>([]);
