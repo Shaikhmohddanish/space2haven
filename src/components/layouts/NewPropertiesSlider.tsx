@@ -111,7 +111,7 @@ const NewPropertiesSlider = ({ data }: { data: Property[] }) => {
                 {/* Price & Possession Date */}
                 <div className="flex justify-between items-center mb-4">
                   <p className="text-xl font-bold text-green-600">
-                    ₹ {formatPrice(property.price) || "N/A"}
+                    ₹ {formatPrice(property.price) || "N/A"} On Wards
                   </p>
                   {property.possessionDate && (
                     <p className="text-sm text-gray-500 flex items-center gap-1">
