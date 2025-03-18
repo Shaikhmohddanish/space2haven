@@ -109,12 +109,14 @@ const PropertiesPage = () => {
       try {
         // ✅ Try retrieving the full properties list from cache
         const cachedData: Property[] = getCachedData();
-        
+        const recommendedProperties: Property[] = cachedData.filter(property => property.recommend === true);
+
         if (cachedData) {
           const cachedProperty = cachedData.find((p) => p._id === propertyId);
             if (cachedProperty) {
               console.log("✅ Property found in cache:", cachedProperty);
               setProperty(cachedProperty);
+              setRecommended(recommendedProperties || []);
               setLoading(false);
               return; // Exit early since we found it in cache
             }
