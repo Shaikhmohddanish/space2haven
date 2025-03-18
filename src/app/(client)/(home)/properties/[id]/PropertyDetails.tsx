@@ -380,7 +380,6 @@ export default function PropertyDetails({ property,recommended }: PropertyDetail
         {/* 🏘️ Recommended Properties (Slider) */}
       {recommendedInSameCity.length > 0 && (
         <>
-          <hr className="my-8 w-full max-w-4xl" />
           <div className="w-full max-w-6xl">
             <h1 className="text-2xl font-semibold mb-4 text-home">Recommended Properties in {property.address.city}</h1>
             <NewPropertiesSlider data={recommendedInSameCity as Property[]} />
