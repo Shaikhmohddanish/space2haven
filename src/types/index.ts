@@ -13,7 +13,6 @@ export interface Property {
   propertyType: string;
   price: string;
   images: string[];
-  bhk: string
   features: string[];
   yearBuilt: number;
   areaUnit: string;
@@ -22,7 +21,6 @@ export interface Property {
     city: string;
     state: string;
   }
-  dimensions: string;
   description: string;
   overview: string;
   recommend:boolean;

@@ -23,6 +23,8 @@ export interface Configuration {
 interface Property {
   _id: string;
   title: string;
+  propertyHeading: string;
+  recommend:boolean;
   images: string[];
   price: string;
   propertyType: string;

@@ -7,6 +7,7 @@ import { formatPrice } from '@/utils/formatPrice';
 import GetInTouchPopup from '@/components/layouts/GetInTouchPopup';
 import { IoChevronDown, IoChevronUp } from "react-icons/io5";
 import Image from 'next/image';
+import NewPropertiesSlider from '@/components/layouts/NewPropertiesSlider';
 
 export interface Configuration {
   bhkType: string;
@@ -20,6 +21,8 @@ export interface Configuration {
 interface Property {
   _id: string;
   title: string;
+  propertyHeading: string;
+  recommend:boolean;
   images: string[];
   price: string;
   propertyType: string;
@@ -380,7 +383,7 @@ export default function PropertyDetails({ property,recommended }: PropertyDetail
           <hr className="my-8 w-full max-w-4xl" />
           <div className="w-full max-w-6xl">
             <h1 className="text-2xl font-semibold mb-4 text-home">Recommended Properties in {property.address.city}</h1>
-            <DynamicCarousel data={recommendedInSameCity as Property[]} loading={false} type="home-properties" />
+            <NewPropertiesSlider data={recommendedInSameCity as Property[]} />
           </div>
         </>
       )}
