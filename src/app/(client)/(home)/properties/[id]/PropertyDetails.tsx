@@ -69,7 +69,8 @@ export default function PropertyDetails({ property,recommended }: PropertyDetail
       ? property.configurations
       : property.configurations.filter((cfg) => cfg.bhkType === activeTab);
   const [selectedProperty, setSelectedProperty] = useState<string | null>(null);
-
+  console.log(recommendedInSameCity);
+  
   return (
     <div className="container mx-auto px-4 py-8 space-y-8">
 
