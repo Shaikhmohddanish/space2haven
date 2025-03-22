@@ -60,10 +60,9 @@ const EditProperty: React.FC = () => {
     propertyType: "",
     area: "",
     areaUnit: "",
-    yearBuilt: new Date().getFullYear(),
+    perSqftRate: '',
     features: [],
     recommend: false,
-    possession: "",
     possessionDate: "To be announced",
     developer: "",
     featured: false,
@@ -242,18 +241,6 @@ const handleMultiSelectChange = (name: keyof PropertyFormValues, value: string |
         </div>
 
         <div className="col-span-full">
-          <label className="block font-medium mb-1">About</label>
-          <textarea
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            required
-            className="input-class w-full"
-            placeholder="Type About..."
-          />
-        </div>
-
-        <div className="col-span-full">
           <label className="block font-medium mb-1">Overview</label>
           <textarea
             name="overview"
@@ -264,6 +251,20 @@ const handleMultiSelectChange = (name: keyof PropertyFormValues, value: string |
             placeholder="Type Overview..."
           />
         </div>
+
+        <div className="col-span-full">
+          <label className="block font-medium mb-1">About Developer</label>
+          <textarea
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+            required
+            className="input-class w-full"
+            placeholder="Type About Developer..."
+          />
+        </div>
+
+        
 
         {/* Manage Existing Images */}
         <div className="flex flex-wrap gap-2">
@@ -333,7 +334,7 @@ const handleMultiSelectChange = (name: keyof PropertyFormValues, value: string |
         
         <label className="block font-medium mb-1">Configuration (BHK)</label>
         <div className="flex flex-wrap gap-2">
-  {["1 BHK", "2 BHK", "3 BHK", "4+ BHK"].map((bhk) => (
+  {["1 BHK","1.5 BHK", "2 BHK","2.5 BHK", "3 BHK","3.5 BHK", "4+ BHK"].map((bhk) => (
     <label key={bhk} className="flex items-center gap-2">
       <input
         type="checkbox"
@@ -455,34 +456,15 @@ const handleMultiSelectChange = (name: keyof PropertyFormValues, value: string |
             </select>
           </div>
           <div>
-            <label className="block font-medium mb-1">Year Built</label>
+            <label className="block font-medium mb-1">Per SQFT Rate</label>
             <input
-              type="number"
-              name="yearBuilt"
-              value={formData.yearBuilt}
+              type="text"
+              name="perSqftRate"
+              value={formData.perSqftRate}
               onChange={handleChange}
               required
               className="input-class w-full"
             />
-          </div>
-
-          {/* Possession Dropdown */}
-          <div>
-            <label className="block font-medium mb-1">Possession</label>
-            <select
-              name="possession"
-              value={formData.possession}
-              onChange={handleChange}
-              required
-              className="input-class w-full"
-            >
-              <option value="">Select Possession</option>
-              <option value="ready">Ready to Move</option>
-              <option value="1_year">In 1 Year</option>
-              <option value="2_years">In 2 Years</option>
-              <option value="3_years">In 3 Years</option>
-              <option value="after_3_years">After 3 Years</option>
-            </select>
           </div>
 
           <div className="mt-2">
@@ -496,9 +478,7 @@ const handleMultiSelectChange = (name: keyof PropertyFormValues, value: string |
                   className="input-class w-full"
               />
           </div>
-        </div>
 
-        <div className="col-span-full grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Price Input */}
           <div>
             <label className="block font-medium mb-1">Price</label>
@@ -511,6 +491,10 @@ const handleMultiSelectChange = (name: keyof PropertyFormValues, value: string |
               className="input-class w-full"
             />
           </div>
+        </div>
+
+        <div className="col-span-full grid grid-cols-1 md:grid-cols-3 gap-4">
+          
           
 
           

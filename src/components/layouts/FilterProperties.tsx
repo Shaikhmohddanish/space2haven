@@ -139,7 +139,7 @@ const FilterProperties = ({
       <div className="mb-4">
         <p className="mb-2 font-medium text-gray-600">Configuration (BHK)</p>
         <div className="flex flex-wrap gap-2">
-          {["1 BHK", "2 BHK", "3 BHK", "4+ BHK"].map((option) => (
+          {["1 BHK","1.5 BHK", "2 BHK","2.5 BHK", "3 BHK","3.5 BHK", "4+ BHK"].map((option) => (
             <label key={option} className="flex items-center gap-2">
               <input
                 type="checkbox"

@@ -63,10 +63,9 @@ const AddProperty: React.FC = () => {
     propertyType: '',
     area: '',
     areaUnit: 'sq.ft',
-    yearBuilt: new Date().getFullYear(),
+    perSqftRate: '',
     features: [],
     recommend: false,
-    possession: '',
     possessionDate: 'To be announced',
     developer: '',
     featured: false,
@@ -183,13 +182,8 @@ const AddProperty: React.FC = () => {
         console.error("❌ No images uploaded or images array is empty!");
     }
 
-    // ✅ Ensure `possession` and `developer` are sent properly
-    if (formData.possession) {
-        form.append("possession", formData.possession.trim());
-    }
-
     if(formData.possessionDate){
-      form.append("possessionDate", JSON.stringify(formData.possession).trim());
+      form.append("possessionDate", JSON.stringify(formData.possessionDate).trim());
   }
 
    
@@ -338,20 +332,6 @@ if (formData.areaUnit) {
   )}
 </div>
 
-
-        {/* Description */}
-        <div className="col-span-full">
-          <label className="block font-medium mb-1">About</label>
-          <textarea
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            required
-            className="input-class w-full"
-            placeholder="Type About..."
-          />
-        </div>
-
         {/* Overview */}
         <div className="col-span-full">
           <label className="block font-medium mb-1">Overview</label>
@@ -365,12 +345,27 @@ if (formData.areaUnit) {
           />
         </div>
 
+        {/* Description */}
+        <div className="col-span-full">
+          <label className="block font-medium mb-1">About Developer</label>
+          <textarea
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+            required
+            className="input-class w-full"
+            placeholder="Type About Developer..."
+          />
+        </div>
+
+        
+
         
 
         {/* Configuration Dropdown */}
         <label className="block font-medium mb-1">Configuration (BHK)</label>
         <div className="flex flex-wrap gap-3">
-          {["1 BHK", "2 BHK", "3 BHK", "4+ BHK"].map((bhk) => (
+          {["1 BHK","1.5 BHK", "2 BHK","2.5 BHK", "3 BHK","3.5 BHK", "4+ BHK"].map((bhk) => (
             <label key={bhk} className="flex items-center gap-2 cursor-pointer">
               <input
                 type="checkbox"
@@ -472,34 +467,15 @@ if (formData.areaUnit) {
           </div>
 
           <div>
-            <label className="block font-medium mb-1">Year Built</label>
+            <label className="block font-medium mb-1">Per SQFT Rate</label>
             <input
-              type="number"
-              name="yearBuilt"
-              value={formData.yearBuilt}
+              type="text"
+              name="perSqftRate"
+              value={formData.perSqftRate}
               onChange={handleChange}
               required
               className="input-class w-full"
             />
-          </div>
-
-          {/* Possession Dropdown */}
-          <div>
-            <label className="block font-medium mb-1">Possession</label>
-            <select
-              name="possession"
-              value={formData.possession}
-              onChange={handleChange}
-              required
-              className="input-class w-full"
-            >
-              <option value="">Select Possession</option>
-              <option value="ready">Ready to Move</option>
-              <option value="1_year">In 1 Year</option>
-              <option value="2_years">In 2 Years</option>
-              <option value="3_years">In 3 Years</option>
-              <option value="after_3_years">After 3 Years</option>
-            </select>
           </div>
 
           <div className="mt-2">
@@ -513,11 +489,7 @@ if (formData.areaUnit) {
                   className="input-class w-full"
               />
           </div>
-          
-        </div>
 
-        {/* Price, Possession, Features - Now in One Row */}
-        <div className="col-span-full grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Price Input */}
           <div>
             <label className="block font-medium mb-1">Price</label>
@@ -531,6 +503,12 @@ if (formData.areaUnit) {
             />
           </div>
 
+          
+        </div>
+
+        {/* Price, Possession, Features - Now in One Row */}
+        <div className="col-span-full grid grid-cols-1 md:grid-cols-3 gap-4">
+          
           
         
           
@@ -591,7 +569,7 @@ if (formData.areaUnit) {
           <input
             type="checkbox"
             value={feature}
-            checked={formData.features?.includes(feature) || false} // ✅ Safe Check
+            checked={Array.isArray(formData.features) && formData.features.includes(feature)} // ✅ Safe Check
             onChange={(e) => {
               const selectedFeatures = e.target.checked
               ? [...(formData.features || []), feature] // ✅ Ensure it's always an array

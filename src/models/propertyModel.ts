@@ -27,10 +27,9 @@ const PropertySchema = new Schema({
     },
     area: { type: String, required: true },
     areaUnit: { type: String, required: true },
-    yearBuilt: { type: Number, required: true },
+    perSqftRate: { type: String, required: true },
     features: { type: [String] },
     recommend: { type: Boolean, default: false },
-    possession: { type: String, required: true },
     possessionDate: { type: String, default: "To be announced" },  // 🔥 New: String for possession date
     developer: { type: String, required: true },
     featured: { type: Boolean, default: false },

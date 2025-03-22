@@ -33,9 +33,8 @@ interface Property {
   location: string;
   area: string;
   areaUnit: string;
-  yearBuilt: number;
   features: string[];
-  possession: string;
+  perSqftRate: string;
   possessionDate: string;
   developer: string;
   featured: boolean;
@@ -134,7 +133,7 @@ export default function PropertyDetails({ property,recommended }: PropertyDetail
   <p className="text-sm text-gray-500">Min. Price per {property.areaUnit}</p>
   <p className="font-semibold">
     {property.price && property.area ? (
-      `INR ${(parseFloat(property.price) / parseFloat(property.area)).toFixed(2)} per ${property.areaUnit || 'sq.m'}`
+      `INR ${property.perSqftRate ?property.perSqftRate:(parseFloat(property.price) / parseFloat(property.area)).toFixed(2)} per ${property.areaUnit || 'sq.m'}`
     ) : "N/A"}
   </p>
 </div>

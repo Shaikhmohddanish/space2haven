@@ -14,7 +14,7 @@ export interface Property {
   price: string;
   images: string[];
   features: string[];
-  yearBuilt: number;
+  perSqftRate: string;
   areaUnit: string;
   area: string;
   address: {
@@ -24,7 +24,6 @@ export interface Property {
   description: string;
   overview: string;
   recommend:boolean;
-  possession:string;
   possessionDate: string;
   developer:string;
   featured:boolean;
@@ -41,7 +40,6 @@ export interface PropertyCardProps {
   tag: string;
   configuration: string[]; // Updated from string to string[]
   location: string;
-  possession?: string; // Optional field for possession
   possessionDate?: string;
   developer?:string;
   propertyType?: string; // Optional field for property type
@@ -68,11 +66,10 @@ export interface PropertyCardProps {
     };
     propertyType: string;
     area: string;
-    yearBuilt: number;
+    perSqftRate: string;
     areaUnit: string;
     features: string[];
     recommend: boolean;
-    possession: string;
     possessionDate: string;
     developer:string;
     featured: boolean;
@@ -88,11 +85,10 @@ export interface Property {
   configuration: string[],
   configurations: Configuration[];  // New: For detailed configurations
   features: string[];
-  yearBuilt: number;
+  perSqftRate: string;
   area: string;
   areaUnit: string;
   location: string;
-  possession: string;
   possessionDate: string;
   developer:string;
   featured: boolean;
