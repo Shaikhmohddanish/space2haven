@@ -109,9 +109,9 @@ const PropertiesPage = () => {
       try {
         // ✅ Try retrieving the full properties list from cache
         const cachedData: Property[] = getCachedData();
-        const recommendedProperties: Property[] = cachedData?.filter(property => property.recommend) || [];
 
         if (cachedData) {
+          const recommendedProperties: Property[] = cachedData?.filter(property => property.recommend) || [];
           const cachedProperty = cachedData.find((p) => p._id === propertyId);
             if (cachedProperty) {
               console.log("✅ Property found in cache:", cachedProperty);
