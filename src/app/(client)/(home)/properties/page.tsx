@@ -112,7 +112,7 @@ const PropertiesPage = () => {
 
         if (cachedData) {
           const recommendedProperties: Property[] = cachedData?.filter(property => property.recommend) || [];
-          const cachedProperty = cachedData.find((p) => p._id === propertyId);
+          const cachedProperty = cachedData?.find((p) => p._id === propertyId);
             if (cachedProperty) {
               console.log("✅ Property found in cache:", cachedProperty);
               setProperty(cachedProperty);

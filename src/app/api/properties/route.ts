@@ -29,12 +29,21 @@ export const GET = async (req: Request) => {
 
       if (matchingData && !Array.isArray(matchingData) && matchingData.features?.length) {
         try {
-            if (typeof matchingData.features[0] === "string") {
-                matchingData.features = JSON.parse(matchingData.features[0]);  // 🔥 Fix for stringified array issue
+          if (
+            Array.isArray(matchingData.features) &&
+            matchingData.features.length === 1 &&
+            typeof matchingData.features[0] === "string" &&
+            matchingData.features[0].startsWith("[")
+          ) {
+            const parsed = JSON.parse(matchingData.features[0]);
+            if (Array.isArray(parsed)) {
+              matchingData.features = parsed;
             }
+          }
         } catch (error) {
-            console.error("Error parsing features:", error);
+          console.error("❌ Error parsing features:", error);
         }
+        
     }
     
 
