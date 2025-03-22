@@ -130,13 +130,18 @@ export default function PropertyDetails({ property,recommended }: PropertyDetail
 </div>
 
 <div>
-  <p className="text-sm text-gray-500">Min. Price per {property.areaUnit}</p>
+  <p className="text-sm text-gray-500">
+    Min. Price per {property.areaUnit || "sq.ft"}
+  </p>
   <p className="font-semibold">
-    {property.price && property.area ? (
-      `INR ${property.perSqftRate ?property.perSqftRate:(parseFloat(property.price) / parseFloat(property.area)).toFixed(2)} per ${property.areaUnit || 'sq.m'}`
-    ) : "N/A"}
+    {property.perSqftRate
+      ? `INR ${property.perSqftRate} per ${property.areaUnit || "sq.ft"}`
+      : property.price && property.area
+      ? `INR ${(parseFloat(property.price) / parseFloat(property.area)).toFixed(2)} per ${property.areaUnit || "sq.ft"}`
+      : "N/A"}
   </p>
 </div>
+
 
   
 </div>
@@ -152,7 +157,13 @@ export default function PropertyDetails({ property,recommended }: PropertyDetail
         ? `${property.area} ${property.areaUnit || "sq.m"}` 
         : "N/A" 
     },
-        { label: `Min. Price per ${property.areaUnit || "sq.m"}.`, value: `INR ${(parseInt(property.price) / parseInt(property.area)).toFixed(2)} per ${property.areaUnit || "sq.m"}.` }
+    {
+      label: `Min. Price per ${property.areaUnit || "sq.m"}.`,
+      value:
+        property.price && property.area
+          ? `INR ${(parseFloat(property.perSqftRate || (parseInt(property.price) / parseInt(property.area)).toFixed(2)))} per ${property.areaUnit || "sq.m"}`
+          : "N/A"
+    }    
   ].map((item, idx, arr) => {
     const isLastOddItem = arr.length % 2 !== 0 && idx === arr.length - 1;
     const borderRight = idx % 2 === 0 && !isLastOddItem;
