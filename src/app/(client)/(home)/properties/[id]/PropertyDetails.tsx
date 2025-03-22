@@ -111,21 +111,11 @@ export default function PropertyDetails({ property,recommended }: PropertyDetail
   </div>
 
   <div className="border-r border-gray-300">
-  <p className="text-sm text-gray-500">Possession Date</p>
-  <p className="font-semibold">
-    {(() => {
-      try {
-        return new Date(property.possessionDate).toLocaleString('default', {
-          month: 'short',
-          year: 'numeric',
-        });
-      } catch {
-        return "To be announced";
-      }
-    })()}
-  </p>
-</div>
-
+    <p className="text-sm text-gray-500">Possession Date</p>
+    <p className="font-semibold">
+      {property.possessionDate}
+    </p>
+  </div>
 
   <div className="border-r border-gray-300">
     <p className="text-sm text-gray-500">Built-up Area</p>
@@ -301,7 +291,7 @@ export default function PropertyDetails({ property,recommended }: PropertyDetail
 
         {/* Price - Full Row */}
         <p className="mt-3 font-semibold text-gray-800 text-lg">
-          Price: {cfg.price}
+          Price: ₹{cfg.price}
         </p>
       </div>
     ))}
