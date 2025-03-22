@@ -17,7 +17,6 @@ const DisplayProperties = ({ data }: { data: Property[] }) => {
         configurations,
         features, 
         location, 
-        possession,
         possessionDate, 
         developer,
         recommend,
