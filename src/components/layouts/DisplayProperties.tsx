@@ -31,7 +31,6 @@ const DisplayProperties = ({ data }: { data: Property[] }) => {
           price={price || "N/A"} // ✅ Handle missing price
           features={Array.isArray(features) ? features : []} // ✅ Ensure features is always an array
           configuration={Array.isArray(configuration) ? configuration : []} // ✅ Ensure configuration is always an array
-          possession={possession || "N/A"} // ✅ Handle missing possession
           possessionDate={possessionDate || "To be announced"}
           developer={developer || "N/A"}
           propertyType={propertyType || "N/A"} // ✅ Handle missing property type
