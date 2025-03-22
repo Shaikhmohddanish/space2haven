@@ -35,7 +35,7 @@ interface Property {
   location: string;
   area: string;
   areaUnit: string;
-  yearBuilt: number;
+  perSqftRate: string;
   features: string[];
   possession: string;
   possessionDate: string;
