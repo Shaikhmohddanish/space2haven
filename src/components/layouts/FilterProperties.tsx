@@ -13,6 +13,23 @@ interface FiltersState {
   state: string;   // 🟢 Added missing property
 }
 
+const convertToIndianCurrencyWords = (num: string | number): string => {
+  const n = parseInt(num.toString(), 10);
+  if (isNaN(n)) return "";
+
+  const formatter = new Intl.NumberFormat("en-IN", {
+    style: "currency",
+    currency: "INR",
+    maximumFractionDigits: 0,
+  });
+
+  if (n >= 10000000) return `${Math.floor(n / 10000000)} Crore Rupees`;
+  if (n >= 100000) return `${Math.floor(n / 100000)} Lakh Rupees`;
+  if (n >= 1000) return `${Math.floor(n / 1000)} Thousand Rupees`;
+  return formatter.format(n);
+};
+
+
 const FilterProperties = ({
   setFilters,
   filters,
@@ -207,24 +224,39 @@ const FilterProperties = ({
       <div className="mb-4">
         <p className="mb-2 font-medium text-gray-600">Budget</p>
         <div className="grid grid-cols-2 gap-4">
-          <input
-            type="number"
-            name="budget.min"
-            placeholder="Min Budget"
-            value={localFilters.budget?.min || ""}
-            onChange={handleInputChange}
-            className="p-3 border rounded-md focus:ring focus:outline-none w-full"
-          />
-          <input
-            type="number"
-            name="budget.max"
-            placeholder="Max Budget"
-            value={localFilters.budget?.max || ""}
-            onChange={handleInputChange}
-            className="p-3 border rounded-md focus:ring focus:outline-none w-full"
-          />
+          <div>
+            <input
+              type="number"
+              name="budget.min"
+              placeholder="Min Budget"
+              value={localFilters.budget?.min || ""}
+              onChange={handleInputChange}
+              className="p-3 border rounded-md focus:ring focus:outline-none w-full"
+            />
+            {localFilters.budget?.min && (
+              <p className="text-xs text-gray-500 mt-1">
+                {convertToIndianCurrencyWords(localFilters.budget.min)}
+              </p>
+            )}
+          </div>
+          <div>
+            <input
+              type="number"
+              name="budget.max"
+              placeholder="Max Budget"
+              value={localFilters.budget?.max || ""}
+              onChange={handleInputChange}
+              className="p-3 border rounded-md focus:ring focus:outline-none w-full"
+            />
+            {localFilters.budget?.max && (
+              <p className="text-xs text-gray-500 mt-1">
+                {convertToIndianCurrencyWords(localFilters.budget.max)}
+              </p>
+            )}
+          </div>
         </div>
       </div>
+
 
       {/* 🔹 Action Buttons */}
       <div className="flex gap-4">
