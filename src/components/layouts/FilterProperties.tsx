@@ -8,7 +8,6 @@ interface FiltersState {
   budget: { min: string; max: string };
   propertyType: string[];
   possession: string;
-  developer: string;
   city: string;    // 🟢 Added missing property
   state: string;   // 🟢 Added missing property
 }
@@ -62,7 +61,6 @@ const FilterProperties = ({
     budget: filters?.budget || { min: "", max: "" },
     propertyType: Array.isArray(filters?.propertyType) ? filters.propertyType : [],
     possession: filters?.possession || "",
-    developer: filters?.developer || "",
     city: filters?.city || "",       // 🟢 Initialize new field
   state: filters?.state || "",     // 🟢 Initialize new field
   });
@@ -73,7 +71,6 @@ const FilterProperties = ({
       budget: filters?.budget || { min: "", max: "" },
       propertyType: Array.isArray(filters?.propertyType) ? filters.propertyType : [],
       possession: filters?.possession || "",
-      developer: filters?.developer || "",
       city: filters?.city || "",
       state: filters?.state || "",
     });
@@ -137,7 +134,6 @@ const FilterProperties = ({
       budget: { min: "", max: "" },
       propertyType: [],
       possession: "",
-      developer: "",
       city: "",
       state: "",
     };
@@ -206,19 +202,6 @@ const FilterProperties = ({
         <option value="3_years">In 3 Years</option>
         <option value="after_3_years">After 3 Years</option>
       </select>
-
-      {/* 🔹 Developer Input */}
-      <div className="mb-4">
-        <p className="mb-4 font-medium text-gray-600">Developer</p>
-        <input
-          type="text"
-          name="developer"
-          placeholder="Developer name"
-          value={localFilters.developer}
-          onChange={handleInputChange}
-          className="p-3 border rounded-md focus:ring focus:outline-none w-full"
-        />
-      </div>
 
       {/* 🔹 Budget Filter */}
       <div className="mb-4">
