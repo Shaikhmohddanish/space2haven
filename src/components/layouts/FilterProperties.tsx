@@ -13,20 +13,21 @@ interface FiltersState {
 }
 
 const convertToIndianCurrencyWords = (num: string | number): string => {
-  const n = parseInt(num.toString(), 10);
+  const n = parseFloat(num.toString());
   if (isNaN(n)) return "";
 
-  const formatter = new Intl.NumberFormat("en-IN", {
+  if (n >= 1e7) return `${(n / 1e7).toFixed(1)} Crore Rupees`;
+  if (n >= 1e5) return `${(n / 1e5).toFixed(1)} Lakh Rupees`;
+  if (n >= 1e3) return `${(n / 1e3).toFixed(1)} Thousand Rupees`;
+
+  // If less than 1000, return INR format
+  return new Intl.NumberFormat("en-IN", {
     style: "currency",
     currency: "INR",
     maximumFractionDigits: 0,
-  });
-
-  if (n >= 10000000) return `${Math.floor(n / 10000000)} Crore Rupees`;
-  if (n >= 100000) return `${Math.floor(n / 100000)} Lakh Rupees`;
-  if (n >= 1000) return `${Math.floor(n / 1000)} Thousand Rupees`;
-  return formatter.format(n);
+  }).format(n);
 };
+
 
 
 const FilterProperties = ({
