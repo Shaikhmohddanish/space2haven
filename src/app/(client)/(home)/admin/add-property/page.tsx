@@ -111,14 +111,14 @@ const AddProperty: React.FC = () => {
     if (type === "file" && name === "images" && files) {
       // Handle file input
       const selectedFiles = Array.from(files);
-      const validFiles = selectedFiles.filter((file) => file.size <= 500 * 1024); // 500 KB size limit
+      const validFiles = selectedFiles.filter((file) => file.size <= 1024 * 1024); // 1 MB size limit
 
       if (selectedFiles.length > 10) {
         alert("You can only upload up to 10 files.");
       }
 
       if (validFiles.length < selectedFiles.length) {
-        alert("Some files exceed the 500 KB size limit and were excluded.");
+        alert("Some files exceed the 1 MB size limit and were excluded.");
       }
 
       setFormData((prevData) => ({
@@ -286,7 +286,7 @@ if (formData.areaUnit) {
 
         {/* Images */}
 <div className="col-span-full">
-  <label className="block font-medium mb-1">Images (up to 10, max 500 KB each)</label>
+  <label className="block font-medium mb-1">Images (up to 10, max 1 MB each)</label>
   <input
     type="file"
     name="images"
@@ -296,7 +296,7 @@ if (formData.areaUnit) {
       const files = e.target.files;
       if (files) {
         const selectedFiles = Array.from(files);
-        const validFiles = selectedFiles.filter((file) => file.size <= 500 * 1024); // 500 KB size limit
+        const validFiles = selectedFiles.filter((file) => file.size <= 1024 * 1024); // 1 MB size limit
 
         if (selectedFiles.length > 10) {
           alert("You can only upload up to 10 files.");
@@ -304,7 +304,7 @@ if (formData.areaUnit) {
         }
 
         if (validFiles.length < selectedFiles.length) {
-          alert("Some files exceed the 500 KB size limit and were excluded.");
+          alert("Some files exceed the 1 MB size limit and were excluded.");
         }
 
         setFormData((prevData) => ({

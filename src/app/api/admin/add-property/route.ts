@@ -61,7 +61,7 @@ export const POST = async (req: NextRequest) => {
         if (!inputData.images || inputData.images.length === 0) {
             console.error("❌ No images uploaded or images array is empty!");
             return NextResponse.json(
-                { error: "No images uploaded. Ensure files are under 500 KB and in correct format." },
+                { error: "No images uploaded. Ensure files are under 1 MB and in correct format." },
                 { status: 400 }
             );
         }
