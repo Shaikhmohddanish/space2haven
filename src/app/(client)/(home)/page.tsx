@@ -10,7 +10,7 @@ const Home = () => {
     <section className="w-full min-h-screen flex-center flex-col lightGray">
       <HomeBanner bannerType="main" />
       <WhoWeAre/>
-      <Services data={services} title="Our Services" subtitle="We're good at our services"/>
+      {/* <Services data={services} title="Our Services" subtitle="We're good at our services"/> */}
       <InsightsTabs />
       {/* <ImageSlider /> */}
       <CityProjects/>
