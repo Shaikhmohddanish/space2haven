@@ -158,13 +158,8 @@ const FilterProperties = ({
   };
 
   return (
-<div
-  className="p-6 bg-white shadow-lg rounded-lg w-full max-w-3xl text-sm flex flex-col gap-4"
-  style={{
-    maxHeight: 'calc(100vh - 100px)',
-    overflowY: 'auto',
-  }}
->      <h2 className="font-semibold text-center text-gray-700 text-lg">Personalize your space here...</h2>
+<div className="p-6 bg-white shadow-lg rounded-lg w-full max-w-3xl text-sm flex flex-col gap-4">
+    <h2 className="font-semibold text-center text-gray-700 text-lg">Personalize your space here...</h2>
 
       {/* 🔹 Configuration (BHK) Multi-Select */}
       <div className="mb-4">
