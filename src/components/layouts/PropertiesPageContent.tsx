@@ -170,6 +170,21 @@ const PropertiesPageContent = ({
       );
     }
 
+     // 🟢 New Property Filter
+  if (filters.newProperty) {
+    searchData = searchData.filter((property) => property.newProperty === true);
+  }
+
+  // 🔄 Resale Filter
+  if (filters.resale) {
+    searchData = searchData.filter((property) => property.resale === true);
+  }
+
+  // 🔀 Listing Type (Buy or Rent)
+  if (filters.listingType) {
+    searchData = searchData.filter((property) => property.listingType === filters.listingType);
+  }
+
     setFilteredData(searchData);
     setPage(1);
   }, [searchTriggered, searchTerm, filters, data]);

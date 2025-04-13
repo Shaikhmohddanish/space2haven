@@ -28,8 +28,10 @@ export interface Property {
   developer:string;
   featured:boolean;
   newProperty:boolean;
+  resale?: boolean;
+  listingType?: string;
   configurations: Configuration[];  // New: For detailed configurations
-  updatedAt: string
+  updatedAt: string;
 }
 
 export interface PropertyCardProps {
@@ -166,6 +168,9 @@ export interface FilterObject {
     max: string;
   };
   propertyType: string[];
+  newProperty?: boolean;
+  resale?: boolean;
+  listingType?: string;
 }
 
 export interface FilterObject {
@@ -174,6 +179,9 @@ export interface FilterObject {
   budget: { min: string; max: string };
   propertyType: string[];
   developer?:string;
+  newProperty?: boolean;
+  resale?: boolean;
+  listingType?: string;
 }
 
 

@@ -10,6 +10,9 @@ interface FiltersState {
   possession: string;
   city: string;    // 🟢 Added missing property
   state: string;   // 🟢 Added missing property
+  newProperty: boolean;
+  resale: boolean;
+  listingType: 'buy' | 'rent';
 }
 
 const convertToIndianCurrencyWords = (num: string | number): string => {
@@ -63,7 +66,10 @@ const FilterProperties = ({
     propertyType: Array.isArray(filters?.propertyType) ? filters.propertyType : [],
     possession: filters?.possession || "",
     city: filters?.city || "",       // 🟢 Initialize new field
-  state: filters?.state || "",     // 🟢 Initialize new field
+    state: filters?.state || "",     // 🟢 Initialize new field
+    newProperty: filters?.newProperty || false,
+    resale: filters?.resale || false,
+    listingType: filters?.listingType || "buy",
   });
 
   useEffect(() => {
@@ -74,6 +80,9 @@ const FilterProperties = ({
       possession: filters?.possession || "",
       city: filters?.city || "",
       state: filters?.state || "",
+      newProperty: filters?.newProperty || false,
+      resale: filters?.resale || false,
+      listingType: filters?.listingType || "buy",
     });
   }, [filters]);
 
@@ -137,6 +146,9 @@ const FilterProperties = ({
       possession: "",
       city: "",
       state: "",
+      newProperty: false,
+      resale: false,
+      listingType: "buy",
     };
 
     setLocalFilters(resetFilters);
@@ -146,8 +158,13 @@ const FilterProperties = ({
   };
 
   return (
-    <div className="p-6 bg-white shadow-lg rounded-lg w-full max-w-3xl text-sm flex flex-col gap-4">
-      <h2 className="font-semibold text-center text-gray-700 text-lg">Personalize your space here...</h2>
+<div
+  className="p-6 bg-white shadow-lg rounded-lg w-full max-w-3xl text-sm flex flex-col gap-4"
+  style={{
+    maxHeight: 'calc(100vh - 100px)',
+    overflowY: 'auto',
+  }}
+>      <h2 className="font-semibold text-center text-gray-700 text-lg">Personalize your space here...</h2>
 
       {/* 🔹 Configuration (BHK) Multi-Select */}
       <div className="mb-4">
@@ -240,6 +257,88 @@ const FilterProperties = ({
           </div>
         </div>
       </div>
+
+{/* 🔹 Purchase Type & Listing Type Toggles */}
+<div className="mb-4">
+  <p className="font-semibold text-gray-700 text-base mb-2">Purchase Type</p>
+
+  {/* New Projects Toggle */}
+  <div className="flex justify-between items-center mb-4">
+    <div>
+      <p className="font-medium">New Projects</p>
+      <p className="text-xs text-gray-500">
+        Recently added best residential projects from top rated builders.
+      </p>
+    </div>
+    <label className="relative inline-flex items-center cursor-pointer">
+      <input
+        type="checkbox"
+        className="sr-only peer"
+        name="newProperty"
+        checked={localFilters.newProperty}
+        onChange={() =>
+          setLocalFilters({ ...localFilters, newProperty: !localFilters.newProperty })
+        }
+      />
+      <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-indigo-600 transition-all peer-focus:ring-2 peer-focus:ring-indigo-500" />
+      <div className="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-md transform peer-checked:translate-x-full transition-transform" />
+    </label>
+  </div>
+
+  {/* Resale Toggle */}
+  <div className="flex justify-between items-center mb-4">
+    <div>
+      <p className="font-medium">Resale</p>
+      <p className="text-xs text-gray-500">
+        Flats posted by property owners. You can contact owner directly.
+      </p>
+    </div>
+    <label className="relative inline-flex items-center cursor-pointer">
+      <input
+        type="checkbox"
+        className="sr-only peer"
+        name="resale"
+        checked={localFilters.resale}
+        onChange={() =>
+          setLocalFilters({ ...localFilters, resale: !localFilters.resale })
+        }
+      />
+      <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-indigo-600 transition-all peer-focus:ring-2 peer-focus:ring-indigo-500" />
+      <div className="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-md transform peer-checked:translate-x-full transition-transform" />
+    </label>
+  </div>
+
+  {/* Buy or Rent Toggle */}
+  <div className="flex justify-between items-center mt-4">
+    <p className="font-medium">Looking to</p>
+    <div className="flex items-center border rounded-full overflow-hidden">
+      <button
+        type="button"
+        className={`px-4 py-1 text-sm ${
+          localFilters.listingType === "buy"
+            ? "bg-gray-900 text-white"
+            : "bg-white text-gray-700"
+        }`}
+        onClick={() => setLocalFilters({ ...localFilters, listingType: "buy" })}
+      >
+        Buy
+      </button>
+      <button
+        type="button"
+        className={`px-4 py-1 text-sm ${
+          localFilters.listingType === "rent"
+            ? "bg-gray-900 text-white"
+            : "bg-white text-gray-700"
+        }`}
+        onClick={() => setLocalFilters({ ...localFilters, listingType: "rent" })}
+      >
+        Rent
+      </button>
+    </div>
+  </div>
+</div>
+
+
 
 
       {/* 🔹 Action Buttons */}
