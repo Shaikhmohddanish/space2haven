@@ -22,7 +22,7 @@ const DialogBox = ({ type = "contact", filters, setFilters, className }: Extende
       )}>
         {type === "filter" ? <Filter /> : "Get in Touch"}
       </DialogTrigger>
-      <DialogContent className="bg-sand-soft rounded-lg">
+      <DialogContent className="bg-sand-soft rounded-lg py-6 px-4">
         <DialogHeader>
           <DialogTitle>
             {type === "filter" ? "Filter Properties" : "Contact Us"}
