@@ -74,6 +74,8 @@ export interface PropertyCardProps {
     developer:string;
     featured: boolean;
     newProperty: boolean;
+    resale:boolean;
+    listingType: string;
   }
   
 

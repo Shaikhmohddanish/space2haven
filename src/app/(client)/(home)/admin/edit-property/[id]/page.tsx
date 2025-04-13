@@ -67,6 +67,8 @@ const EditProperty: React.FC = () => {
     developer: "",
     featured: false,
     newProperty: false,
+    resale: false,
+    listingType: "buy", // default to "buy"
   });
 
   // ✅ Fetch Property Details
@@ -611,6 +613,51 @@ const handleMultiSelectChange = (name: keyof PropertyFormValues, value: string |
     <label className="font-medium">New Property</label>
   </div>
 </div>
+<div className="col-span-full flex flex-wrap items-center gap-6">
+  {/* Resale Checkbox */}
+  <div className="flex items-center gap-2">
+    <input
+      type="checkbox"
+      name="resale"
+      checked={formData.resale}
+      onChange={() =>
+        setFormData({ ...formData, resale: !formData.resale })
+      }
+      className="accent-orange-500 w-5 h-5"
+    />
+    <label className="font-medium">Resale</label>
+  </div>
+
+  {/* Buy or Rent Toggle Styled */}
+  <div className="flex items-center gap-4">
+    <span className="font-medium">Buy or Rent:</span>
+    <div className="flex items-center border rounded-full overflow-hidden">
+      <button
+        type="button"
+        className={`px-4 py-1 text-sm ${
+          formData.listingType === "buy"
+            ? "bg-orange-500 text-white"
+            : "bg-white text-gray-700"
+        }`}
+        onClick={() => setFormData({ ...formData, listingType: "buy" })}
+      >
+        Buy
+      </button>
+      <button
+        type="button"
+        className={`px-4 py-1 text-sm ${
+          formData.listingType === "rent"
+            ? "bg-orange-500 text-white"
+            : "bg-white text-gray-700"
+        }`}
+        onClick={() => setFormData({ ...formData, listingType: "rent" })}
+      >
+        Rent
+      </button>
+    </div>
+  </div>
+</div>
+
 
 {/* Configurations Section */}
 <div className="col-span-full bg-gray-100 p-4 rounded-md mb-4">
