@@ -148,7 +148,7 @@ const FilterProperties = ({
       state: "",
       newProperty: false,
       resale: false,
-      listingType: "buy",
+      listingType: "",
     };
 
     setLocalFilters(resetFilters);
