@@ -42,6 +42,8 @@ interface Property {
   developer: string;
   featured: boolean;
   newProperty: boolean;
+  resale: boolean;
+  listingType: string;
   address: {
     city: string;
     state: string;
