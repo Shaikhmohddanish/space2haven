@@ -22,6 +22,8 @@ const DisplayProperties = ({ data }: { data: Property[] }) => {
         recommend,
         featured,
         newProperty,
+        resale,
+        listingType,
       }) => (
         <PropertyCard
           key={_id}
@@ -38,6 +40,8 @@ const DisplayProperties = ({ data }: { data: Property[] }) => {
           recommend={recommend ?? false} // ✅ Ensure recommend is always a boolean
           featured={featured ?? false} 
           newProperty={newProperty ?? false} 
+          resale={resale??false}
+          listingType={listingType || "buy"}
         />
       ))}
     </div>
