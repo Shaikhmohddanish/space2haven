@@ -28,8 +28,8 @@ export interface Property {
   developer:string;
   featured:boolean;
   newProperty:boolean;
-  resale?: boolean;
-  listingType?: string;
+  resale: boolean;
+  listingType: string;
   configurations: Configuration[];  // New: For detailed configurations
   updatedAt: string;
 }
@@ -48,6 +48,8 @@ export interface PropertyCardProps {
   recommend?: boolean; // Changed true | false to boolean (simplified)
   featured?: boolean;
   newProperty?: boolean;
+  resale: boolean;
+  listingType: string;
 }
 
 

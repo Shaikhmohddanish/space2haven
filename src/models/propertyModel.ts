@@ -34,6 +34,8 @@ const PropertySchema = new Schema({
     developer: { type: String, required: true },
     featured: { type: Boolean, default: false },
     newProperty: { type: Boolean, default: false },
+    resale: { type: Boolean, default: false },
+    listingType: { type: String, required: true },
 }, 
     { timestamps: true, versionKey: false }
 );
