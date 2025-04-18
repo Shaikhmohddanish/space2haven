@@ -185,7 +185,7 @@ const AddProperty: React.FC = () => {
     }
 
     if(formData.possessionDate){
-      form.append("possessionDate", JSON.stringify(formData.possessionDate).trim());
+      form.append("possessionDate", formData.possessionDate.trim());
   }
 
    
