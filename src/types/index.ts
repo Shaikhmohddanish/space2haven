@@ -48,8 +48,8 @@ export interface PropertyCardProps {
   recommend?: boolean; // Changed true | false to boolean (simplified)
   featured?: boolean;
   newProperty?: boolean;
-  resale: boolean;
-  listingType: string;
+  resale?: boolean;
+  listingType?: string;
 }
 
 
