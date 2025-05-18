@@ -11,65 +11,58 @@ const TABS = ["For Customers", "For Business"];
 const insightsData = {
   customers: [
     {
-      title: "Property Rates & Price Trends",
-      description: "Market rates, analytics & transaction data",
-      imageSrc: "/images/rates-trend.png",
+      title: "Buy or Rent Property",
+      description:
+        "Discover the best properties to buy or rent with verified listings & expert assistance.",
+      imageSrc: "/images/buy-rent.png", // Make sure to provide these images in your project
       bgColor: "bg-yellow-100",
       cta: "Explore Now →",
     },
     {
-      title: "Property Rates Heatmap",
-      description: "Understand city prices with visual maps",
-      imageSrc: "/images/heatmap.png",
+      title: "Sell or Rent Your Property",
+      description:
+        "Get personalized help to sell or rent your property quickly through our expert team.",
+      imageSrc: "/images/sell-rent.png",
       bgColor: "bg-green-100",
       cta: "Explore Now →",
     },
     {
-      title: "Valuation Report",
-      description: "Instant PDF valuation of any property",
-      imageSrc: "/images/valuation.png",
+      title: "Interior Design",
+      description:
+        "Transform your space with expert-designed interiors tailored to your style & budget.",
+      imageSrc: "/images/interior-design.png",
       bgColor: "bg-pink-100",
-      cta: "Explore Now →",
-    },
-    {
-      title: "Project Reviews & Ratings",
-      description: "See what residents say about areas",
-      imageSrc: "/images/reviews.png",
-      bgColor: "bg-orange-100",
       cta: "Explore Now →",
     },
   ],
   business: [
     {
-      title: "Interactive 3D Solutions",
-      description: "Digital twins & immersive experiences",
-      imageSrc: "/images/3d-solutions.png",
+      title: "Sales & Marketing Support",
+      description:
+        "We help real estate developers and channel partners grow with expert sales and marketing support.",
+      imageSrc: "/images/sales-marketing.png",
       bgColor: "bg-purple-100",
       cta: "Explore Now →",
     },
     {
-      title: "Channel Partner Platform",
-      description: "India’s #1 platform for brokers",
-      imageSrc: "/images/partner-app.png",
+      title: "Interior Design",
+      description:
+        "Transforming spaces with personalized, functional, and aesthetic design solutions.",
+      imageSrc: "/images/business-interior.png",
       bgColor: "bg-rose-100",
-      cta: "Get The Free App →",
+      cta: "Explore Now →",
     },
     {
-      title: "Data Intelligence",
-      description: "Accurate, deep real estate analytics",
-      imageSrc: "/images/data-intel.png",
+      title: "Videography",
+      description:
+        "High-quality video production that captures your brand’s story and elevates your presence.",
+      imageSrc: "/images/videography.png",
       bgColor: "bg-blue-100",
-      cta: "Book a Demo →",
-    },
-    {
-      title: "Home Loan Platform",
-      description: "Loan disbursals with top partner banks",
-      imageSrc: "/images/cred-iq.png",
-      bgColor: "bg-indigo-100",
-      cta: "Get a Demo →",
+      cta: "Explore Now →",
     },
   ],
 };
+
 
 const InsightsTabs = () => {
   const [activeTab, setActiveTab] = useState("For Customers");
