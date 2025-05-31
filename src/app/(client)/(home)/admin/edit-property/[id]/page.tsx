@@ -105,10 +105,15 @@ const EditProperty: React.FC = () => {
     if (type === "file" && name === "images" && files) {
       const selectedFiles = Array.from(files);
       const validFiles = selectedFiles.filter((file) => file.size <= 1024 * 1024);
-      setFormData((prevData) => ({
-        ...prevData,
-        images: validFiles.slice(0, 10),
-      }));
+      setFormData((prevData) => {
+        // Append new files to existing ones (in formData.images), up to 10
+        const currentFiles = Array.isArray(prevData.images) ? prevData.images : [];
+        const combinedFiles = [...currentFiles, ...validFiles].slice(0, 10);
+        return {
+          ...prevData,
+          images: combinedFiles,
+        };
+      });
     } else {
       setFormData((prevData) => ({
         ...prevData,
@@ -265,8 +270,6 @@ const handleMultiSelectChange = (name: keyof PropertyFormValues, value: string |
             placeholder="Type About Developer..."
           />
         </div>
-
-        
 
         {/* Manage Existing Images */}
         <div className="flex flex-wrap gap-2">

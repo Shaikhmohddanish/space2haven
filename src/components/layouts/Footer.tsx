@@ -29,14 +29,26 @@ const Footer = () => {
 
           {/* Links Section */}
           <div className="flex flex-col items-center md:items-start lg:flex-row lg:justify-center space-y-4 lg:space-y-0 lg:space-x-8">
-            {menuBarOptions.map(({ option, link }, index) => (
-              <Link 
-                key={index} 
-                href={link}
-                className="text-sm font-semibold border-b-2 duration-500 border-b-transparent hover:border-b-sand-soft text-sand-soft2"
-              >
-                {option}
-              </Link>
+            {menuBarOptions.map(({ option, link, external }, index) => (
+              external ? (
+                <a
+                  key={index}
+                  href={link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm font-semibold border-b-2 duration-500 border-b-transparent hover:border-b-sand-soft text-sand-soft2"
+                >
+                  {option}
+                </a>
+              ) : (
+                <Link
+                  key={index}
+                  href={link}
+                  className="text-sm font-semibold border-b-2 duration-500 border-b-transparent hover:border-b-sand-soft text-sand-soft2"
+                >
+                  {option}
+                </Link>
+              )
             ))}
           </div>
 

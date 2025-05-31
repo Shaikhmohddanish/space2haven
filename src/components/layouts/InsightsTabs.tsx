@@ -48,7 +48,7 @@ const insightsData = {
       title: "Interior Design",
       description:
         "Transforming spaces with personalized, functional, and aesthetic design solutions.",
-      imageSrc: "/images/business-interior.png",
+      imageSrc: "/images/interior-design.png",
       bgColor: "bg-rose-100",
       cta: "Explore Now →",
     },

@@ -36,14 +36,15 @@ const MobileNav = () => {
       logo: <HomeIcon size={20} />,
     },
     {
+      route: "https://interior.space2haven.com",
+      label: "Interior",
+      logo: <Sofa size={20} />,
+      external: true,
+    },
+    {
       route: "/properties",
       label: "Properties",
       logo: <MapPinHouse size={20} />,
-    },
-    {
-      route: "/interior",
-      label: "Interior",
-      logo: <Sofa size={20} />,
     },
     {
       label: "Calculators",
@@ -108,7 +109,7 @@ const MobileNav = () => {
 
           <div className="mobile-menu bg-sand-soft px-4">
             <section className="flex h-full flex-col gap-6 mt-4">
-              {sidebarLinks.map(({ route, logo, label, children }, index) => {
+              {sidebarLinks.map(({ route, logo, label, children, external }, index) => {
                 const isActive = pathname === route;
 
                 // Dropdown link (has children)
@@ -142,6 +143,25 @@ const MobileNav = () => {
                         </div>
                       )}
                     </div>
+                  );
+                }
+
+                // External link
+                if (external) {
+                  return (
+                    <SheetClose asChild key={index}>
+                      <a
+                        href={route}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={cn("menu-link w-full", {
+                          "bg-grey-1 text-sand-soft": isActive,
+                        })}
+                      >
+                        {logo}
+                        <p className="font-semibold">{label}</p>
+                      </a>
+                    </SheetClose>
                   );
                 }
 

@@ -8,6 +8,7 @@ import GetInTouchPopup from '@/components/layouts/GetInTouchPopup';
 import { IoChevronDown, IoChevronUp } from "react-icons/io5";
 import Image from 'next/image';
 import NewPropertiesSlider from '@/components/layouts/NewPropertiesSlider';
+import BannerSlider from '@/components/layouts/banner-slider';
 
 export interface Configuration {
   bhkType: string;
@@ -77,7 +78,22 @@ export default function PropertyDetails({ property,recommended }: PropertyDetail
 
       {/* Image Slider with corrected slidesToShow */}
       <div className="w-full my-6">
-        {property.images && property.images.length > 0 && <DisplayCarousel images={property.images} />}
+        {property.images && property.images.length > 0 && (
+          <BannerSlider
+            banners={property.images.map((img, idx) => ({
+              id: idx + 1,
+              title: property.title,
+              subtitle: property.propertyHeading,
+              description: property.description,
+              image: img,
+              ctaText: 'Enquire',
+              ctaLink: '#get-in-touch',
+              secondaryCtaText: 'View Gallery',
+              secondaryCtaLink: img,
+              align: 'center',
+            }))}
+          />
+        )}
       </div>
 
       <div className="w-full flex justify-between items-center flex-wrap gap-4">
@@ -137,9 +153,9 @@ export default function PropertyDetails({ property,recommended }: PropertyDetail
   </p>
   <p className="font-semibold">
     {property.perSqftRate
-      ? `INR ${property.perSqftRate} per ${property.areaUnit || "sq.ft"}`
+      ? `${property.perSqftRate} per ${property.areaUnit || "sq.ft"}`
       : property.price && property.area
-      ? `INR ${(parseFloat(property.price) / parseFloat(property.area)).toFixed(2)} per ${property.areaUnit || "sq.ft"}`
+      ? `${(parseFloat(property.price) / parseFloat(property.area)).toFixed(2)} per ${property.areaUnit || "sq.ft"}`
       : "N/A"}
   </p>
 </div>
@@ -161,10 +177,14 @@ export default function PropertyDetails({ property,recommended }: PropertyDetail
     },
     {
       label: `Min. Price per ${property.areaUnit || "sq.m"}.`,
-      value:
-        property.price && property.area
-          ? `INR ${(parseFloat(property.perSqftRate || (parseInt(property.price) / parseInt(property.area)).toFixed(2)))} per ${property.areaUnit || "sq.m"}`
-          : "N/A"
+value:
+  property.perSqftRate
+    ? `${property.perSqftRate} per ${property.areaUnit || "sq.ft"}`
+    : property.price && property.area
+    ? `INR ${(parseFloat(property.price) / parseFloat(property.area)).toFixed(2)} per ${property.areaUnit || "sq.ft"}`
+    : "N/A"
+
+
     }    
   ].map((item, idx, arr) => {
     const isLastOddItem = arr.length % 2 !== 0 && idx === arr.length - 1;
@@ -392,12 +412,12 @@ export default function PropertyDetails({ property,recommended }: PropertyDetail
 </div>
         {/* 🏘️ Recommended Properties (Slider) */}
       {recommendedInSameCity.length > 0 && (
-        <>
-          <div className="w-full max-w-6xl">
-            <h1 className="text-2xl font-semibold mb-4 text-home">Recommended Properties in {property.address.city}</h1>
-            <NewPropertiesSlider data={recommendedInSameCity as Property[]} />
-          </div>
-        </>
+        <div className="w-full flex flex-col items-center">
+    <div className="w-full max-w-6xl flex flex-col items-center">
+      <h1 className="text-2xl font-semibold mb-4 text-home text-center">Recommended Properties in {property.address.city}</h1>
+      <NewPropertiesSlider data={recommendedInSameCity as Property[]} />
+    </div>
+  </div>
       )}
     </div>
   );

@@ -42,7 +42,22 @@ const PropertiesPageContent = ({
   const [searchTriggered, setSearchTriggered] = useState(!!searchTerm);
   const [showFullScreenLoader, setShowFullScreenLoader] = useState(false);
 
-  const itemsPerPage = 4;
+  // Responsive items per page: 6 for desktop, 4 for mobile
+  const [itemsPerPage, setItemsPerPage] = useState(6);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setItemsPerPage(4);
+      } else {
+        setItemsPerPage(6);
+      }
+    };
+    handleResize(); // Set on mount
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const dataCache = useRef<Property[] | null>(null); // Cache API response
   const getPossessionCategory = (possessionDate: string): string => {
     if (!possessionDate) return "";
@@ -193,7 +208,7 @@ const PropertiesPageContent = ({
   useEffect(() => {
     const startIndex = (page - 1) * itemsPerPage;
     setDisplayedData(filteredData.slice(startIndex, startIndex + itemsPerPage));
-  }, [filteredData, page]);
+  }, [filteredData, page, itemsPerPage]);
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 

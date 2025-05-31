@@ -7,7 +7,8 @@ export const menuBarOptions = [
     },
     {
         option: "Interior",
-        link: "/interior"
+        link: "https://interior.space2haven.com",
+        external: true
     },
     {
         option: "Properties",

@@ -11,12 +11,13 @@ import cn from "classnames";
 type MenuItem = {
   option: string;
   link?: string;
+  external?: boolean; // Add external property
   children?: { option: string; link: string }[];
 };
 
 const menuBarOptions: MenuItem[] = [
   { option: "Home", link: "/" },
-  { option: "Interior", link: "/interior" },
+  { option: "Interior", link: "https://interior.space2haven.com", external: true }, // Mark as external
   { option: "Properties", link: "/properties" },
   {
     option: "Calculators",
@@ -79,6 +80,25 @@ const MenuBar = () => {
         }
 
         if (item.link) {
+          if (item.external) {
+            return (
+              <a
+                key={index}
+                href={item.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={cn(
+                  "text-sm font-semibold border-b-2 duration-500 hover:border-b-sand-soft",
+                  {
+                    "border-b-sand-soft": pathname === item.link,
+                    "border-b-transparent": pathname !== item.link,
+                  }
+                )}
+              >
+                {item.option}
+              </a>
+            );
+          }
           return (
             <Link
               key={index}
