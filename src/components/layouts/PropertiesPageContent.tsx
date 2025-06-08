@@ -1,13 +1,12 @@
 "use client";
 
-import { GetInTouchForm } from "@/components";
+import GetInTouchForm from "./GetInTouchForm";
 import { PropertiesPageContentProps, Property } from "@/types";
 import axios from "axios";
 import { useEffect, useState, useMemo, useRef } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import FeaturedPropertiesSlider from "./FeaturedPropertiesSlider";
 import NewPropertiesSlider from "./NewPropertiesSlider";
-import { IoChevronBack, IoChevronForward } from "react-icons/io5";
 import DeveloperSlider from "./DeveloperSlider";
 import { tipsAndGuide } from "@/constants";
 import TipsAndGuide from "./TipsAndGuide";
@@ -23,7 +22,7 @@ const PropertiesPageContent = ({
   search,
   filters,
   setFilters,
-  cachedProperties, // You may still pass this as a fallback prop if desired
+  cachedProperties,
 }: PropertiesPageContentProps & { cachedProperties?: Property[] }) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -42,46 +41,36 @@ const PropertiesPageContent = ({
   const [searchTriggered, setSearchTriggered] = useState(!!searchTerm);
   const [showFullScreenLoader, setShowFullScreenLoader] = useState(false);
 
-  // Responsive items per page: 6 for desktop, 4 for mobile
+  // Responsive items per page
   const [itemsPerPage, setItemsPerPage] = useState(6);
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth < 768) {
-        setItemsPerPage(4);
-      } else {
-        setItemsPerPage(6);
-      }
+      setItemsPerPage(window.innerWidth < 768 ? 4 : 6);
     };
-    handleResize(); // Set on mount
+    handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const dataCache = useRef<Property[] | null>(null); // Cache API response
+  const dataCache = useRef<Property[] | null>(null);
+
   const getPossessionCategory = (possessionDate: string): string => {
     if (!possessionDate) return "";
-
     const possessionDateObj = new Date(possessionDate);
     const currentDate = new Date();
-
     let yearsLeft = possessionDateObj.getFullYear() - currentDate.getFullYear();
     let monthsLeft = (possessionDateObj.getMonth() - currentDate.getMonth()) + (yearsLeft * 12);
-
-    // ✅ If possession is in the past, it's ready to move
     if (monthsLeft <= 0) return "ready";
-
-    // ✅ Categorize based on remaining months
     if (monthsLeft <= 12) return "1_year";
     if (monthsLeft <= 24) return "2_years";
     if (monthsLeft <= 36) return "3_years";
     return "after_3_years";
-};
+  };
 
-  // ✅ Fetch Data: Check localStorage cache first, if not present then call API
+  // Fetch Data with localStorage cache
   useEffect(() => {
     const now = Date.now();
-    // First, try to load from localStorage
     const cachedDataStr = localStorage.getItem(CACHE_KEY);
     const cachedTimestampStr = localStorage.getItem(CACHE_TIMESTAMP_KEY);
 
@@ -97,7 +86,7 @@ const PropertiesPageContent = ({
           setData(parsedData);
           dataCache.current = parsedData;
           setLoading(false);
-          return; // Exit useEffect if valid cache is found
+          return;
         }
       } catch (error) {
         console.error("Error parsing cached data:", error);
@@ -106,7 +95,6 @@ const PropertiesPageContent = ({
       }
     }
 
-    // If no valid cache found, fetch fresh data from the API
     const fetchData = async () => {
       try {
         setLoading(true);
@@ -117,8 +105,6 @@ const PropertiesPageContent = ({
         }
         setData(response.data);
         dataCache.current = response.data;
-
-        // Compress and store the data in localStorage along with a timestamp
         localStorage.setItem(CACHE_KEY, LZString.compress(JSON.stringify(response.data)));
         localStorage.setItem(CACHE_TIMESTAMP_KEY, now.toString());
       } catch (err) {
@@ -133,12 +119,11 @@ const PropertiesPageContent = ({
     fetchData();
   }, [cachedProperties]);
 
-  // ✅ Trigger search only when there's a search term
+  // Search and Filter Logic
   useEffect(() => {
     setSearchTriggered(!!searchTerm);
   }, [searchTerm]);
 
-  // ✅ Apply Filters and Search only when searchTriggered is true
   useEffect(() => {
     if (!searchTriggered || !data.length) return;
 
@@ -151,6 +136,7 @@ const PropertiesPageContent = ({
       );
     }
 
+    // Apply filters
     if (filters.configuration.length) {
       searchData = searchData.filter((property) =>
         property.configuration.some((bhk) => filters.configuration.includes(bhk))
@@ -185,26 +171,23 @@ const PropertiesPageContent = ({
       );
     }
 
-     // 🟢 New Property Filter
-  if (filters.newProperty) {
-    searchData = searchData.filter((property) => property.newProperty === true);
-  }
+    if (filters.newProperty) {
+      searchData = searchData.filter((property) => property.newProperty === true);
+    }
 
-  // 🔄 Resale Filter
-  if (filters.resale) {
-    searchData = searchData.filter((property) => property.resale === true);
-  }
+    if (filters.resale) {
+      searchData = searchData.filter((property) => property.resale === true);
+    }
 
-  // 🔀 Listing Type (Buy or Rent)
-  if (filters.listingType) {
-    searchData = searchData.filter((property) => property.listingType === filters.listingType);
-  }
+    if (filters.listingType) {
+      searchData = searchData.filter((property) => property.listingType === filters.listingType);
+    }
 
     setFilteredData(searchData);
     setPage(1);
   }, [searchTriggered, searchTerm, filters, data]);
 
-  // ✅ Memoized paginated data
+  // Update displayed data based on pagination
   useEffect(() => {
     const startIndex = (page - 1) * itemsPerPage;
     setDisplayedData(filteredData.slice(startIndex, startIndex + itemsPerPage));
@@ -215,120 +198,167 @@ const PropertiesPageContent = ({
   const handleNextPage = () => {
     if (page < totalPages) {
       setPage((prev) => prev + 1);
-      setTimeout(() => {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }, 100);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
   const handlePrevPage = () => {
     if (page > 1) {
       setPage((prev) => prev - 1);
-      setTimeout(() => {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }, 100);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
-  // ✅ Memoized featured/recommended/new properties
+  // Memoized property lists
   const featuredProperties = useMemo(() => data.filter((property) => property.featured), [data]);
   const recommendedProperties = useMemo(() => data.filter((property) => property.recommend), [data]);
   const newProperties = useMemo(() => Array.from(new Set(data.filter((property) => property.newProperty))), [data]);
 
   return (
-    <section className="min-h-screen w-full flex justify-center items-start flex-col md:flex-row px-4 md:px-10">
-      <main className="flex flex-col w-full h-full p-4 md:p-6 gap-4">
-        {loading && showFullScreenLoader ? (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="w-16 h-16 border-4 border-t-transparent border-white rounded-full animate-spin"></div>
-          </div>
-        ) : error ? (
-          <div className="text-center text-red-500">{error}</div>
-        ) : (
-          <>
-            {/* ✅ Show when no search is triggered */}
-            {!searchTriggered ? (
-              <>
-                {featuredProperties.length > 0 && (
-                  <div className="w-full my-6">
-                    <h1 className="text-2xl font-semibold mb-4 darkBrown">Featured Properties</h1>
-                    <FeaturedPropertiesSlider data={featuredProperties} />
-                  </div>
-                )}
+    <section className="min-h-screen w-full bg-gray-50">
+      <div className="w-full max-w-[2000px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <main className="flex flex-col gap-8">
+          {loading && showFullScreenLoader ? (
+            <div className="fixed inset-0 bg-white/80 backdrop-blur-sm flex items-center justify-center z-50">
+              <div className="flex flex-col items-center gap-4">
+                <div className="w-16 h-16 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin" />
+                <p className="text-gray-600">Loading properties...</p>
+              </div>
+            </div>
+          ) : error ? (
+            <div className="text-center py-12">
+              <div className="max-w-md mx-auto">
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">Oops! Something went wrong</h3>
+                <p className="text-gray-600 mb-6">{error}</p>
+                <button
+                  onClick={() => window.location.reload()}
+                  className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+                >
+                  Try Again
+                </button>
+              </div>
+            </div>
+          ) : (
+            <>
+              {!searchTriggered ? (
+                <>
+                  {/* Featured Properties */}
+                  {featuredProperties.length > 0 && (
+                    <section>
+                      <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8 px-4">Featured Properties</h2>
+                      <FeaturedPropertiesSlider data={featuredProperties} />
+                    </section>
+                  )}
 
-                {recommendedProperties.length > 0 && (
-                  <div className="w-full my-6">
-                    <h1 className="text-2xl font-semibold mb-4 darkBrown">Recommended Properties</h1>
-                    <NewPropertiesSlider data={recommendedProperties} />
-                  </div>
-                )}
+                  {/* Recommended Properties */}
+                  {recommendedProperties.length > 0 && (
+                    <section>
+                      <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8 px-4">Recommended Properties</h2>
+                      <NewPropertiesSlider data={recommendedProperties} />
+                    </section>
+                  )}
 
-                {newProperties.length > 0 && (
-                  <div className="w-full my-6">
-                    <h1 className="text-2xl font-semibold mb-4 darkBrown">New Properties</h1>
-                    <NewPropertiesSlider data={newProperties} />
-                  </div>
-                )}
+                  {/* New Properties */}
+                  {newProperties.length > 0 && (
+                    <section>
+                      <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8 px-4">New Properties</h2>
+                      <NewPropertiesSlider data={newProperties} />
+                    </section>
+                  )}
 
-                <DeveloperSlider />
-                <div className="my-8">
-                  <TipsAndGuide data={tipsAndGuide} title="Guides and Calculators" />
-                </div>
-                <GetInTouchForm />
-              </>
-            ) : (
-              <>
-                {/* ✅ No results found message */}
-                {filteredData.length === 0 ? (
-                  <div className="text-center text-gray-500 text-xl mt-8">
-                    No properties found. Try adjusting your search filters.
-                  </div>
-                ) : (
-                  <>
-                    {/* ✅ Display search results */}
-                    <h2 className="text-xl font-semibold text-center mb-4 darkBrown">
-                      {filteredData.length} results - Flats, Apartments for sale in {searchTerm}
-                    </h2>
-                    <h1 className="text-2xl font-semibold text-center darkBrown">
-                      Discover Your Dream Property with Us
-                    </h1>
-                    <NewPropertiesGrid data={displayedData} />
+                  {/* Developers Section */}
+                  <section className="py-12">
+                    <DeveloperSlider />
+                  </section>
 
-                    {/* ✅ Pagination Controls */}
-                    {totalPages > 1 && (
-                      <div className="flex justify-center items-center my-6 gap-4">
+                  {/* Tips and Guide */}
+                  <section className="py-12">
+                    <TipsAndGuide data={tipsAndGuide} title="Guides and Calculators" />
+                  </section>
+
+                  {/* Contact Form */}
+                  <section className="py-12">
+                    <GetInTouchForm />
+                  </section>
+                </>
+              ) : (
+                <>
+                  {/* Search Results */}
+                  {filteredData.length === 0 ? (
+                    <div className="text-center py-12">
+                      <div className="max-w-md mx-auto">
+                        <h3 className="text-xl font-semibold text-gray-900 mb-2">No properties found</h3>
+                        <p className="text-gray-600 mb-6">
+                          Try adjusting your search criteria or explore our featured properties below.
+                        </p>
                         <button
-                          onClick={handlePrevPage}
-                          disabled={page === 1}
-                          className={`px-4 py-2 rounded-full border ${
-                            page === 1 ? "text-gray-400 border-gray-300 cursor-not-allowed" : "text-gray-700 border-gray-500 hover:bg-gray-100"
-                          }`}
+                          onClick={() => {
+                            setSearchTriggered(false);
+                          }}
+                          className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
                         >
-                          <IoChevronBack />
-                        </button>
-
-                        <span className="text-gray-600">
-                          Page {page} of {totalPages}
-                        </span>
-
-                        <button
-                          onClick={handleNextPage}
-                          disabled={page === totalPages}
-                          className={`px-4 py-2 rounded-full border ${
-                            page === totalPages ? "text-gray-400 border-gray-300 cursor-not-allowed" : "text-gray-700 border-gray-500 hover:bg-gray-100"
-                          }`}
-                        >
-                          <IoChevronForward />
+                          View All Properties
                         </button>
                       </div>
-                    )}
-                  </>
-                )}
-              </>
-            )}
-          </>
-        )}
-      </main>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="text-center mb-8">
+                        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                          {filteredData.length} Properties Found
+                        </h2>
+                        <p className="text-gray-600">
+                          {searchTerm ? `Showing results for "${searchTerm}"` : "Showing all properties"}
+                        </p>
+                      </div>
+
+                      {/* Properties Grid */}
+                      <NewPropertiesGrid data={displayedData} />
+
+                      {/* Pagination */}
+                      {totalPages > 1 && (
+                        <div className="flex flex-col sm:flex-row justify-center items-center gap-4 py-12">
+                          <button
+                            onClick={handlePrevPage}
+                            disabled={page === 1}
+                            className={`
+                              w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 rounded-lg border text-base font-medium transition-all duration-200
+                              ${page === 1
+                                ? "text-gray-400 border-gray-200 cursor-not-allowed"
+                                : "text-gray-700 border-gray-300 hover:bg-gray-50"
+                              }
+                            `}
+                          >
+                            Previous
+                          </button>
+
+                          <div className="text-sm text-gray-600">
+                            Page {page} of {totalPages}
+                          </div>
+
+                          <button
+                            onClick={handleNextPage}
+                            disabled={page === totalPages}
+                            className={`
+                              w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 rounded-lg border text-base font-medium transition-all duration-200
+                              ${page === totalPages
+                                ? "text-gray-400 border-gray-200 cursor-not-allowed"
+                                : "text-gray-700 border-gray-300 hover:bg-gray-50"
+                              }
+                            `}
+                          >
+                            Next
+                          </button>
+                        </div>
+                      )}
+                    </>
+                  )}
+                </>
+              )}
+            </>
+          )}
+        </main>
+      </div>
     </section>
   );
 };

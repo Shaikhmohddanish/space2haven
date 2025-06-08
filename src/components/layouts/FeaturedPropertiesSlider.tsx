@@ -5,8 +5,9 @@ import { Property } from "@/types";
 import { formatPrice } from "@/utils/formatPrice";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import "@splidejs/react-splide/css";
+import "../../app/styles/slider.css";
 import { useRouter } from "next/navigation";
-import { IoCalendarOutline } from "react-icons/io5";
+import { IoCalendarOutline, IoLocationOutline, IoHomeOutline } from "react-icons/io5";
 import GetInTouchPopup from "./GetInTouchPopup";
 
 interface FeaturedPropertiesSliderProps {
@@ -16,88 +17,107 @@ interface FeaturedPropertiesSliderProps {
 const FeaturedPropertiesSlider = ({ data }: FeaturedPropertiesSliderProps) => {
   const router = useRouter();
   const [selectedProperty, setSelectedProperty] = useState<string | null>(null);
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
 
   return (
     <Splide
       options={{
         perPage: 3,
-        gap: "1rem",
-        arrows: true,
-        pagination: false,
-        padding: "1rem",
+        gap: "2rem",
+        arrows: false,
+        pagination: true,
+        padding: { left: "1rem", right: "1rem" },
         breakpoints: {
-          1024: { perPage: 2, gap: "0.75rem" },
-          768: { perPage: 2, gap: "0.5rem" },
-          480: { perPage: 1, gap: "0.5rem", padding: "0.5rem" },
+          1280: { perPage: 3, gap: "1.5rem" },
+          1024: { perPage: 2, gap: "1.5rem" },
+          768: { perPage: 2, gap: "1rem" },
+          640: { perPage: 1, gap: "1rem", padding: { left: "0.5rem", right: "0.5rem" } },
+        },
+        classes: {
+          arrows: 'splide__arrows custom-arrows',
+          arrow: 'splide__arrow custom-arrow',
+          prev: 'splide__arrow--prev custom-prev',
+          next: 'splide__arrow--next custom-next',
+          pagination: 'splide__pagination custom-pagination',
+          page: 'splide__pagination__page custom-page',
         },
       }}
-      className="w-full"
+      className="w-full py-4"
     >
       {data.map((property) => (
         <SplideSlide key={property._id}>
-          <div className="border rounded-lg overflow-hidden shadow-md bg-white transition-transform hover:scale-105 cursor-pointer">
-            <div className="relative">
-              <a href={`/properties/${property._id}`}>
-                <img
-                  src={property.images?.[0] || "/default-image.webp"}
-                  alt={property.title}
-                  className="w-full h-48 object-cover"
-                />
-              </a>
+          <div 
+            className="group relative rounded-xl overflow-hidden bg-white shadow-lg hover:shadow-xl transition-all duration-300"
+            onMouseEnter={() => setHoveredId(property._id)}
+            onMouseLeave={() => setHoveredId(null)}
+          >
+            {/* Image Container */}
+            <div className="relative aspect-[16/10] overflow-hidden">
+              <img
+                src={property.images?.[0] || "/default-image.webp"}
+                alt={property.title}
+                className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+              />
+              
+              {/* Overlay with gradient */}
+              <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
               {/* Labels */}
-              <div className="absolute top-4 left-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-xs px-2 py-1 rounded">
-                {"Top Selling Project"}
+              <div className="absolute top-4 w-full px-4 flex justify-between items-start">
+                <span className="bg-gradient-to-r from-blue-600 to-purple-600 text-white text-xs font-medium px-3 py-1.5 rounded-full shadow-lg backdrop-blur-sm">
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span>
+                    Top Selling
+                  </span>
+                </span>
+                {property.newProperty && (
+                  <span className="bg-gradient-to-r from-green-600 to-emerald-600 text-white text-xs font-medium px-3 py-1.5 rounded-full shadow-lg backdrop-blur-sm">
+                    <span className="flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span>
+                      New Launch
+                    </span>
+                  </span>
+                )}
               </div>
-              {property.newProperty && (
-                <div className="absolute top-4 right-4 bg-gradient-to-r from-green-500 to-green-700 text-white text-xs px-2 py-1 rounded">
-                  {"New"}
-                </div>
-              )}
-
-              {/* ✅ Constant "View Details" Button at the Bottom Center */}
-              <button
-                className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/70 text-white px-4 py-2 rounded-md hover:bg-black/80 transition"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  router.push(`/properties/${property._id}`);
-                }}
-              >
-                View Details
-              </button>
             </div>
 
-            <div className="p-4">
-              <h2 className="text-lg font-semibold mb-1 truncate">{property.title}</h2>
-              <h3 className="text-sm text-gray-600 mb-2 truncate">{property.propertyHeading}</h3>
+            {/* Content */}
+            <div className="p-6 space-y-6">
+              <h2 className="text-xl font-bold text-gray-900 mb-2 line-clamp-1">{property.title}</h2>
+              <p className="text-gray-600 mb-4 line-clamp-1">{property.propertyHeading}</p>
 
-              {/* Price & Possession Date */}
-              <div className="flex justify-between items-center mb-4">
-                <p className="text-xl font-bold text-green-600">
-                  ₹ {formatPrice(property.price) || "N/A"} <span className="text-gray-500 text-sm"> onwards</span>
-                </p>
+              {/* Property Details */}
+              <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+                <div className="flex items-baseline gap-1.5">
+                  <span className="text-xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">₹{formatPrice(property.price)}</span>
+                  <span className="text-sm text-gray-500 font-medium">onwards</span>
+                </div>
                 {property.possessionDate && (
-                  <p className="text-sm text-gray-500 flex items-center gap-1">
-                    <IoCalendarOutline className="text-orange-soda" />
-                    {property.possessionDate}
-                  </p>
+                  <div className="flex items-center gap-2 text-gray-600">
+                    <IoCalendarOutline className="text-lg text-purple-500" />
+                    <span className="text-sm font-medium">Possession: {property.possessionDate}</span>
+                  </div>
                 )}
               </div>
 
-              {/* Transparent Get in Touch Button */}
-              <button
-                className="w-full border border-green-600 text-green-600 py-2 rounded-md font-medium hover:bg-green-600 hover:text-white transition"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setSelectedProperty(property.title);
-                }}
-              >
-                Get in Touch
-              </button>
+              {/* Price and CTA */}
+              <div className="flex gap-3">
+                <button
+                  className="flex-1 px-4 py-2.5 bg-black text-white rounded-lg font-medium hover:bg-gray-900 transition-all duration-300 hover:shadow-lg hover:scale-[1.02] focus:scale-[0.98]"
+                  onClick={() => router.push(`/properties/${property._id}`)}
+                >
+                  View Details
+                </button>
+                <button
+                  className="flex-1 px-4 py-2.5 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition-all duration-300 hover:shadow-lg hover:scale-[1.02] focus:scale-[0.98]"
+                  onClick={() => setSelectedProperty(property.title)}
+                >
+                  Get in Touch
+                </button>
+              </div>
             </div>
           </div>
 
-          {/* Show Popup if selected */}
           {selectedProperty && (
             <GetInTouchPopup
               propertyTitle={selectedProperty}

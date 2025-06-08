@@ -1,23 +1,20 @@
 "use client";
 
 import Link from "next/link";
-import { Menubar } from "@/components/ui/menubar";
-import { Admin } from "@/types";
 import { usePathname } from "next/navigation";
-import AdminMenu from "./AdminMenu";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import cn from "classnames";
 
 type MenuItem = {
   option: string;
   link?: string;
-  external?: boolean; // Add external property
+  external?: boolean;
   children?: { option: string; link: string }[];
 };
 
 const menuBarOptions: MenuItem[] = [
   { option: "Home", link: "/" },
-  { option: "Interior", link: "https://interior.space2haven.com", external: true }, // Mark as external
+  { option: "Interior", link: "https://interior.space2haven.com", external: true },
   { option: "Properties", link: "/properties" },
   {
     option: "Calculators",
@@ -27,52 +24,124 @@ const menuBarOptions: MenuItem[] = [
     ],
   },
   { option: "About", link: "/about" },
+  {
+    option: "Legal",
+    children: [
+      { option: "Privacy Policy", link: "/privacy-policy" },
+      { option: "Terms & Conditions", link: "/terms" },
+      { option: "Contact Us", link: "/contact" },
+    ],
+  },
 ];
 
 const MenuBar = () => {
   const pathname = usePathname();
-  const [currentAdmin, setCurrentAdmin] = useState<Admin | null>(null);
+  const [currentAdmin, setCurrentAdmin] = useState<any | null>(null);
+  const [activeDropdown, setActiveDropdown] = useState<number | null>(null);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     const adminDetails = localStorage.getItem("adminDetails");
     setCurrentAdmin(adminDetails ? JSON.parse(adminDetails) : null);
   }, []);
 
-  return (
-    <Menubar className="max-md:hidden bg-transparent border-none flex items-center gap-6 relative z-50">
-      {currentAdmin && <AdminMenu />}
+  const handleKeyDown = useCallback((e: React.KeyboardEvent, index: number) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      setActiveDropdown(activeDropdown === index ? null : index);
+    } else if (e.key === 'Escape') {
+      setActiveDropdown(null);
+    }
+  }, [activeDropdown]);
 
+  return (
+    <nav 
+      className="max-md:hidden flex items-center gap-2 relative z-50"
+      role="navigation"
+      aria-label="Main menu"
+    >
       {menuBarOptions.map((item, index) => {
         const isDropdown = Array.isArray(item.children);
+        const isActive = pathname === item.link;
 
         if (isDropdown) {
           return (
             <div key={index} className="relative group">
-              {/* Hover area includes both label and dropdown */}
-              <div className="cursor-pointer text-sm font-semibold border-b-2 border-transparent group-hover:border-sand-soft px-1 py-2">
+              <button
+                className={cn(
+                  "flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-lg",
+                  "transition-all duration-200",
+                  isScrolled
+                    ? "text-white hover:bg-white/10"
+                    : "text-gray-100 hover:bg-white/10",
+                  {
+                    "bg-white/10 text-white": activeDropdown === index,
+                  }
+                )}
+                onClick={() => setActiveDropdown(activeDropdown === index ? null : index)}
+                onKeyDown={(e) => handleKeyDown(e, index)}
+                aria-expanded={activeDropdown === index}
+                aria-haspopup="true"
+              >
                 {item.option}
-              </div>
+                <svg
+                  className={cn(
+                    "w-4 h-4 transition-transform duration-200",
+                    { "rotate-180": activeDropdown === index }
+                  )}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
 
               <div
                 className={cn(
-                  "absolute top-full left-0 mt-1 min-w-[180px] z-50 bg-white shadow-md rounded-md flex-col py-2",
-                  "invisible opacity-0 group-hover:visible group-hover:opacity-100 group-hover:flex transition-opacity duration-150"
+                  "absolute top-full left-0 mt-1 min-w-[200px] rounded-lg",
+                  "bg-black/80 backdrop-blur-md border border-white/10",
+                  "transform transition-all duration-200 origin-top-left",
+                  {
+                    "opacity-100 scale-100 visible": activeDropdown === index,
+                    "opacity-0 scale-95 invisible": activeDropdown !== index,
+                  }
                 )}
+                role="menu"
+                aria-orientation="vertical"
               >
                 {item.children?.map((child, i) => (
                   <Link
-                  key={i}
-                  href={child.link}
-                  className={cn(
-                    "px-4 py-2 text-sm text-gray-800 hover:bg-gray-100 hover:text-gray-900 whitespace-nowrap transition-colors duration-150 rounded-sm",
-                    {
-                      "bg-gray-100 font-semibold": pathname === child.link,
-                    }
-                  )}
-                >
-                  {child.option}
-                </Link>
-                
+                    key={i}
+                    href={child.link}
+                    className={cn(
+                      "block px-4 py-2.5 text-sm text-gray-300",
+                      "hover:bg-white/10 hover:text-white",
+                      "transition-colors duration-150",
+                      "first:rounded-t-lg last:rounded-b-lg",
+                      {
+                        "bg-white/10 text-white font-medium": pathname === child.link,
+                      }
+                    )}
+                    role="menuitem"
+                    onClick={() => setActiveDropdown(null)}
+                  >
+                    {child.option}
+                  </Link>
                 ))}
               </div>
             </div>
@@ -80,45 +149,34 @@ const MenuBar = () => {
         }
 
         if (item.link) {
-          if (item.external) {
-            return (
-              <a
-                key={index}
-                href={item.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={cn(
-                  "text-sm font-semibold border-b-2 duration-500 hover:border-b-sand-soft",
-                  {
-                    "border-b-sand-soft": pathname === item.link,
-                    "border-b-transparent": pathname !== item.link,
-                  }
-                )}
-              >
-                {item.option}
-              </a>
-            );
-          }
+          const LinkComponent = item.external ? 'a' : Link;
+          const linkProps = item.external ? { target: "_blank", rel: "noopener noreferrer" } : {};
+
           return (
-            <Link
+            <LinkComponent
               key={index}
               href={item.link}
+              {...linkProps}
               className={cn(
-                "text-sm font-semibold border-b-2 duration-500 hover:border-b-sand-soft",
+                "px-4 py-2 text-sm font-medium rounded-lg",
+                "transition-all duration-200",
+                isScrolled
+                  ? "text-white hover:bg-white/10"
+                  : "text-gray-100 hover:bg-white/10",
                 {
-                  "border-b-sand-soft": pathname === item.link,
-                  "border-b-transparent": pathname !== item.link,
+                  "bg-white/10 text-white": isActive,
                 }
               )}
+              role="menuitem"
             >
               {item.option}
-            </Link>
+            </LinkComponent>
           );
         }
 
         return null;
       })}
-    </Menubar>
+    </nav>
   );
 };
 

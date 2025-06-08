@@ -1,112 +1,161 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Globe, PhoneCall, Mail, Instagram, Youtube, Facebook, MessageCircle, Linkedin, Chrome } from "lucide-react";
-import { menuBarOptions } from "@/constants";
+import { 
+  PhoneCall, 
+  Mail, 
+  Instagram, 
+  Youtube, 
+  Facebook, 
+  MessageCircle, 
+  Chrome,
+  MapPin,
+  ArrowRight
+} from "lucide-react";
+
+const menuItems = [
+  { option: "Home", link: "/" },
+  { option: "Interior", link: "https://interior.space2haven.com", external: true },
+  { option: "Properties", link: "/properties" },
+  { option: "EMI Calculator", link: "/calculate-emi" },
+  { option: "About", link: "/about" },
+];
+
+const quickLinks = [
+  { label: "Privacy Policy", link: "/privacy-policy" },
+  { label: "Terms & Conditions", link: "/terms" },
+  { label: "Contact Us", link: "/contact" },
+];
+
+const socialLinks = [
+  { Icon: Chrome, href: "https://www.google.com" },
+  { Icon: Instagram, href: "https://www.instagram.com" },
+  { Icon: Youtube, href: "https://www.youtube.com" },
+  { Icon: Facebook, href: "https://www.facebook.com" },
+  { Icon: MessageCircle, href: "https://wa.me/918976511551" },
+];
 
 const Footer = () => {
+  const currentYear = new Date().getFullYear();
+  
   return (
-    <section className="min-h-[50vh] bg-gray-800 text-sand-soft2 py-8">
-      <div className="container mx-auto py-8 px-4 md:px-8 lg:px-16 relative">
-        <div className="flex flex-col md:flex-row justify-between gap-8">
-          {/* Logo Section */}
-          <div className="flex flex-col items-start gap-4">
-            <Link href="/" className="flex items-center gap-2">
-              <Image 
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                loading='eager'
-                src="/logo.svg"
-                alt="Space2Heaven"
-                width={50}
-                height={50}
-                className="max-sm:size-10"
-              />
-              <h1 className="text-2xl font-bold text-sand-soft2">Space2Heaven</h1>
+    <footer className="bg-gray-900 text-gray-300">
+      <div className="container mx-auto px-4 pt-16 pb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+          {/* Company Info */}
+          <div className="space-y-6">
+            <Link href="/" className="flex items-center gap-3 group">
+              <div className="relative w-12 h-12 overflow-hidden rounded-xl bg-white/5 p-2.5">
+                <Image 
+                  src="/logo.svg"
+                  alt="Space2Heaven"
+                  fill
+                  className="object-contain transition group-hover:scale-110"
+                />
+              </div>
+              <div className="flex flex-col">
+                <h3 className="text-xl font-bold text-white">Space2Heaven</h3>
+                <span className="text-xs text-gray-400">Real Estate & Interior Design</span>
+              </div>
             </Link>
-            <p className="text-sm text-gray-400 max-w-xs leading-relaxed">
-              Creating spaces that inspire and elevate your lifestyle.
+            <p className="text-sm text-gray-400 leading-relaxed">
+              Creating spaces that inspire and elevate your lifestyle. We specialize in premium real estate solutions and luxurious interior designs.
             </p>
-          </div>
-
-          {/* Links Section */}
-          <div className="flex flex-col items-center md:items-start lg:flex-row lg:justify-center space-y-4 lg:space-y-0 lg:space-x-8">
-            {menuBarOptions.map(({ option, link, external }, index) => (
-              external ? (
-                <a
+            <div className="flex items-center gap-4 pt-2">
+              {socialLinks.map(({ Icon, href }, index) => (
+                <Link 
                   key={index}
-                  href={link}
+                  href={href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm font-semibold border-b-2 duration-500 border-b-transparent hover:border-b-sand-soft text-sand-soft2"
+                  className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
                 >
-                  {option}
-                </a>
-              ) : (
+                  <Icon size={20} />
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* Quick Links */}
+          <div className="space-y-6">
+            <h4 className="text-lg font-semibold text-white">Quick Links</h4>
+            <div className="grid grid-cols-1 gap-3">
+              {menuItems.map((item, index) => (
+                item.external ? (
+                  <a
+                    key={index}
+                    href={item.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center text-gray-400 hover:text-white transition-colors group"
+                  >
+                    <ArrowRight size={16} className="mr-2 transition-transform group-hover:translate-x-1" />
+                    <span>{item.option}</span>
+                  </a>
+                ) : (
+                  <Link
+                    key={index}
+                    href={item.link}
+                    className="inline-flex items-center text-gray-400 hover:text-white transition-colors group"
+                  >
+                    <ArrowRight size={16} className="mr-2 transition-transform group-hover:translate-x-1" />
+                    <span>{item.option}</span>
+                  </Link>
+                )
+              ))}
+            </div>
+          </div>
+
+          {/* Legal Links */}
+          <div className="space-y-6">
+            <h4 className="text-lg font-semibold text-white">Legal</h4>
+            <div className="grid grid-cols-1 gap-3">
+              {quickLinks.map((item, index) => (
                 <Link
                   key={index}
-                  href={link}
-                  className="text-sm font-semibold border-b-2 duration-500 border-b-transparent hover:border-b-sand-soft text-sand-soft2"
+                  href={item.link}
+                  className="inline-flex items-center text-gray-400 hover:text-white transition-colors group"
                 >
-                  {option}
+                  <ArrowRight size={16} className="mr-2 transition-transform group-hover:translate-x-1" />
+                  <span>{item.label}</span>
                 </Link>
-              )
-            ))}
+              ))}
+            </div>
           </div>
 
-          {/* Contact Details Section */}
-          <div className="flex flex-col items-center md:items-end gap-6">
-            <div className="flex items-center gap-4 text-center md:text-right">
-              <p className="text-sm text-gray-400 leading-tight">
-                4th Floor, Zenia Building, <br />
-                Hiranandani Business Park, Thane
-              </p>
-              <Globe size={20} className="hidden md:inline-block text-sand-soft2" />
-            </div>
-
-            <div className="flex items-center gap-4">
-              <div className="text-sm">
-                <p>+91 897 651 1551</p>
-                <p>+91 828 698 4597</p>
+          {/* Contact Info */}
+          <div className="space-y-6">
+            <h4 className="text-lg font-semibold text-white">Contact Us</h4>
+            <div className="space-y-4">
+              <div className="flex items-start gap-3">
+                <MapPin size={20} className="text-gray-400 mt-1 flex-shrink-0" />
+                <p className="text-sm text-gray-400 leading-relaxed">
+                  4th Floor, Zenia Building,<br />
+                  Hiranandani Business Park, Thane
+                </p>
               </div>
-              <PhoneCall size={20} className="hidden md:inline-block text-sand-soft2" />
-            </div>
-
-            <div className="flex items-center gap-4">
-              <p className="text-sm">Hello@space2heaven.com</p>
-              <Mail size={20} className="hidden md:inline-block text-sand-soft2" />
+              <div className="flex items-center gap-3">
+                <PhoneCall size={20} className="text-gray-400 flex-shrink-0" />
+                <div className="space-y-1">
+                  <p className="text-sm">+91 897 651 1551</p>
+                  <p className="text-sm">+91 828 698 4597</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <Mail size={20} className="text-gray-400 flex-shrink-0" />
+                <p className="text-sm">Hello@space2heaven.com</p>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* 🟢 Social Media Links Section */}
-        <div className="flex flex-col items-center mt-8">
-          <h2 className="text-lg font-semibold text-sand-soft2 mb-4">Connect with us</h2>
-          <div className="flex gap-6">
-            <Link href="https://www.google.com" target="_blank" rel="noopener noreferrer" className="text-sand-soft2 hover:text-white transition">
-              <Chrome size={24} />
-            </Link>
-            <Link href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" className="text-sand-soft2 hover:text-white transition">
-              <Instagram size={24} />
-            </Link>
-            <Link href="https://www.youtube.com" target="_blank" rel="noopener noreferrer" className="text-sand-soft2 hover:text-white transition">
-              <Youtube size={24} />
-            </Link>
-            <Link href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" className="text-sand-soft2 hover:text-white transition">
-              <Facebook size={24} />
-            </Link>
-            <Link href="https://wa.me/918976511551" target="_blank" rel="noopener noreferrer" className="text-sand-soft2 hover:text-white transition">
-              <MessageCircle size={24} />
-            </Link>
-          </div>
-        </div>
-
-        {/* Copyright Section */}
-        <div className="mt-8 border-t border-gray-700 pt-4 text-center">
-          <p className="text-sm text-sand-soft2">
-            © {new Date().getFullYear()} Space2Heaven. All rights reserved.
+        {/* Copyright */}
+        <div className="mt-16 pt-8 border-t border-gray-800 text-center">
+          <p className="text-sm text-gray-400">
+            © {currentYear} Space2Heaven. All rights reserved.
           </p>
         </div>
       </div>
-    </section>
+    </footer>
   );
 };
 

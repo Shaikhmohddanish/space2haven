@@ -1,12 +1,9 @@
-'use client'
+'use client';
 
-import cn from 'classnames'
-import Link from "next/link"
-import Image from "next/image"
-import { Admin } from '@/types'
-import { useEffect, useState } from 'react'
-import { usePathname, useRouter } from "next/navigation"
-import { Sheet, SheetClose, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import Link from 'next/link';
+import Image from 'next/image';
+import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import {
   HomeIcon,
   Calculator,
@@ -14,201 +11,218 @@ import {
   Info,
   MapPinHouse,
   Menu,
-  UserRoundCog,
-  LogOut,
   ChevronDown,
-  ChevronUp,
-} from 'lucide-react'
-import axios from 'axios'
-import { useToast } from '@/hooks/use-toast'
+  X as CloseIcon,
+  FileText,
+  Phone
+} from 'lucide-react';
+
+const menuItems = [
+  {
+    route: '/',
+    label: 'Home',
+    icon: <HomeIcon size={20} />,
+  },
+  {
+    route: 'https://interior.space2haven.com',
+    label: 'Interior',
+    icon: <Sofa size={20} />,
+    external: true,
+  },
+  {
+    route: '/properties',
+    label: 'Properties',
+    icon: <MapPinHouse size={20} />,
+  },
+  {
+    label: 'Calculators',
+    icon: <Calculator size={20} />,
+    children: [
+      { route: '/calculate-emi', label: 'EMI Calculator' },
+      { route: '/loan-eligibility', label: 'Loan Eligibility' },
+    ],
+  },
+  {
+    route: '/about',
+    label: 'About',
+    icon: <Info size={20} />,
+  },
+  {
+    label: 'Legal',
+    icon: <FileText size={20} />,
+    children: [
+      { route: '/privacy-policy', label: 'Privacy Policy' },
+      { route: '/terms', label: 'Terms & Conditions' },
+      { route: '/contact', label: 'Contact Us' },
+    ],
+  },
+];
 
 const MobileNav = () => {
-  const router = useRouter();
-  const { toast } = useToast();
   const pathname = usePathname();
-  const [currentAdmin, setCurrentAdmin] = useState<Admin | null>(null);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
-  const sidebarLinks = [
-    {
-      route: "/",
-      label: "Home",
-      logo: <HomeIcon size={20} />,
-    },
-    {
-      route: "https://interior.space2haven.com",
-      label: "Interior",
-      logo: <Sofa size={20} />,
-      external: true,
-    },
-    {
-      route: "/properties",
-      label: "Properties",
-      logo: <MapPinHouse size={20} />,
-    },
-    {
-      label: "Calculators",
-      logo: <Calculator size={20} />,
-      children: [
-        {
-          route: "/calculate-emi",
-          label: "EMI Calculator",
-        },
-        {
-          route: "/loan-eligibility",
-          label: "Loan Eligibility Calculator",
-        },
-      ],
-    },
-    {
-      route: "/about",
-      label: "About",
-      logo: <Info size={20} />,
-    },
-  ];
-
+  // Handle body scroll
   useEffect(() => {
-    const adminDetails = localStorage.getItem("adminDetails");
-    setCurrentAdmin(adminDetails ? JSON.parse(adminDetails) : null);
-  }, []);
-
-  const adminLogout = async () => {
-    try {
-      await axios.post("/api/auth/admin/signout");
-      localStorage.removeItem("adminDetails");
-      setCurrentAdmin(null);
-      toast({ description: "Sign out successful!" });
-      router.push("/");
-    } catch (error) {
-      toast({ description: "Sign out failed!" });
-      console.error("Logout error:", error);
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.touchAction = 'none';
+    } else {
+      document.body.style.overflow = '';
+      document.body.style.touchAction = '';
     }
-  };
+
+    return () => {
+      document.body.style.overflow = '';
+      document.body.style.touchAction = '';
+    };
+  }, [isOpen]);
+
+  // Close mobile menu when route changes
+  useEffect(() => {
+    setIsOpen(false);
+    setActiveDropdown(null);
+  }, [pathname]);
 
   return (
-    <section className="w-full flex-center max-md:flex hidden">
-      <Sheet>
-        <SheetTrigger>
-          <Menu size={20} />
-        </SheetTrigger>
-        <SheetContent
-          className={`border-none px-0 pb-0 ${pathname === "/interior" ? "bg-interior" : "bg-home"}`}
+    <div className="md:hidden">
+      {/* Hamburger Button */}
+      <button
+        onClick={() => setIsOpen(true)}
+        className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+        aria-label="Open menu"
+      >
+        <Menu className="w-6 h-6 text-white" />
+      </button>
+
+      {/* Mobile Menu */}
+      <div 
+        className={`
+          fixed inset-0 z-[99999]
+          ${isOpen ? 'visible' : 'invisible pointer-events-none'}
+        `}
+      >
+        {/* Backdrop */}
+        <div 
+          className={`
+            fixed inset-0 bg-black/60 backdrop-blur-sm
+            transition-opacity duration-200
+            ${isOpen ? 'opacity-100' : 'opacity-0'}
+          `}
+          onClick={() => setIsOpen(false)}
+          aria-hidden="true"
+        />
+
+        {/* Menu Panel */}
+        <div 
+          className={`
+            fixed top-0 right-0 w-[280px] h-[100dvh]
+            bg-gray-900/95 backdrop-blur-md
+            transform transition-transform duration-300 ease-out
+            overflow-hidden
+            ${isOpen ? 'translate-x-0' : 'translate-x-full'}
+          `}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Main menu"
         >
-          <Link href="/" className="flex items-center gap-2 px-4 pb-4">
-            <Image
-              sizes="(max-width: 768px) 100vw"
-              loading='eager'
-              src="/logo.svg"
-              alt="HN"
-              width={32}
-              height={32}
-              className="max-sm:size-10"
-            />
-            <h1 className={`text-2xl font-bold ${pathname === "/interior" ? "text-sand-soft2" : "text-sand-soft"}`}>Space2Heaven</h1>
-          </Link>
+          {/* Header */}
+          <div className="sticky top-0 flex items-center justify-between p-4 border-b border-white/10 bg-gray-900/95 backdrop-blur-md">
+            <Link 
+              href="/" 
+              className="flex items-center gap-3"
+              onClick={() => setIsOpen(false)}
+            >
+              <div className="relative w-8 h-8">
+                <Image
+                  src="/logo.svg"
+                  alt="Space2Heaven"
+                  fill
+                  className="object-contain"
+                  sizes="32px"
+                  priority
+                />
+              </div>
+              <span className="text-lg font-bold text-white">Space2Heaven</span>
+            </Link>
+            <button
+              onClick={() => setIsOpen(false)}
+              className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+              aria-label="Close menu"
+            >
+              <CloseIcon className="w-5 h-5 text-white" />
+            </button>
+          </div>
 
-          <div className="mobile-menu bg-sand-soft px-4">
-            <section className="flex h-full flex-col gap-6 mt-4">
-              {sidebarLinks.map(({ route, logo, label, children, external }, index) => {
-                const isActive = pathname === route;
-
-                // Dropdown link (has children)
-                if (children) {
+          {/* Menu Items */}
+          <nav className="overflow-y-auto overscroll-contain h-[calc(100dvh-64px)]">
+            <div className="p-4 space-y-2">
+              {menuItems.map((item, index) => {
+                if (item.children) {
+                  const isDropdownOpen = activeDropdown === item.label;
                   return (
-                    <div key={index}>
-                      <div
-                        onClick={() => setDropdownOpen(!dropdownOpen)}
-                        className="menu-link w-full cursor-pointer flex justify-between items-center"
+                    <div key={index} className="space-y-1">
+                      <button
+                        onClick={() => setActiveDropdown(isDropdownOpen ? null : item.label)}
+                        className="flex items-center justify-between w-full p-3 rounded-lg text-white hover:bg-white/10 transition-colors"
+                        aria-expanded={isDropdownOpen}
                       >
-                        <div className="flex items-center gap-2">
-                          {logo}
-                          <p className="font-semibold">{label}</p>
+                        <div className="flex items-center gap-3">
+                          <span className="text-white/70">{item.icon}</span>
+                          <span>{item.label}</span>
                         </div>
-                        {dropdownOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                        <ChevronDown 
+                          className={`w-5 h-5 text-white/70 transition-transform duration-200 ${
+                            isDropdownOpen ? 'rotate-180' : ''
+                          }`}
+                        />
+                      </button>
+                      <div
+                        className={`pl-11 space-y-1 overflow-hidden transition-all duration-200 ${
+                          isDropdownOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                        }`}
+                      >
+                        {item.children.map((child, childIndex) => (
+                          <Link
+                            key={childIndex}
+                            href={child.route}
+                            className="block p-3 rounded-lg text-white/70 hover:bg-white/10 hover:text-white transition-colors"
+                            onClick={() => setIsOpen(false)}
+                          >
+                            {child.label}
+                          </Link>
+                        ))}
                       </div>
-                      {dropdownOpen && (
-                        <div className="ml-6 mt-2 space-y-1">
-                          {children.map((child, i) => (
-                            <SheetClose asChild key={i}>
-                              <Link
-                                href={child.route}
-                                className={cn("block text-sm p-2 rounded hover:bg-grey-1 hover:text-sand-soft", {
-                                  "bg-grey-1 text-sand-soft": pathname === child.route
-                                })}
-                              >
-                                {child.label}
-                              </Link>
-                            </SheetClose>
-                          ))}
-                        </div>
-                      )}
                     </div>
                   );
                 }
 
-                // External link
-                if (external) {
-                  return (
-                    <SheetClose asChild key={index}>
-                      <a
-                        href={route}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={cn("menu-link w-full", {
-                          "bg-grey-1 text-sand-soft": isActive,
-                        })}
-                      >
-                        {logo}
-                        <p className="font-semibold">{label}</p>
-                      </a>
-                    </SheetClose>
-                  );
-                }
-
-                // Regular links
+                const LinkComponent = item.external ? 'a' : Link;
                 return (
-                  <SheetClose asChild key={index}>
-                    <Link
-                      href={route}
-                      className={cn("menu-link w-full", {
-                        "bg-grey-1 text-sand-soft": isActive,
-                      })}
-                    >
-                      {logo}
-                      <p className="font-semibold">{label}</p>
-                    </Link>
-                  </SheetClose>
+                  <LinkComponent
+                    key={index}
+                    href={item.route}
+                    {...(item.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                    className={`
+                      flex items-center gap-3 p-3 rounded-lg text-white
+                      hover:bg-white/10 transition-colors
+                      ${pathname === item.route ? 'bg-white/10' : ''}
+                    `}
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <span className={`text-white/70 ${pathname === item.route ? 'text-white' : ''}`}>
+                      {item.icon}
+                    </span>
+                    <span>{item.label}</span>
+                  </LinkComponent>
                 );
               })}
-
-              {currentAdmin && (
-                <>
-                  <SheetClose asChild>
-                    <Link
-                      href={"/admin/dashboard"}
-                      className={cn("menu-link w-full", {
-                        "bg-grey-1 text-sand-soft": pathname === "/admin/dashboard",
-                      })}
-                    >
-                      <UserRoundCog size={20} />
-                      <p className="font-semibold">Admin Dashboard</p>
-                    </Link>
-                  </SheetClose>
-
-                  <button
-                    onClick={adminLogout}
-                    className="menu-link w-full hover:bg-grey-1 hover:text-sand-soft duration-300"
-                  >
-                    <LogOut size={20} />
-                    <p className="font-semibold">Sign Out</p>
-                  </button>
-                </>
-              )}
-            </section>
-          </div>
-        </SheetContent>
-      </Sheet>
-    </section>
+            </div>
+          </nav>
+        </div>
+      </div>
+    </div>
   );
 };
 

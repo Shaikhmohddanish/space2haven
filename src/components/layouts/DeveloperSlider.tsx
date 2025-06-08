@@ -1,83 +1,158 @@
+"use client";
+
 import React from 'react';
 import { Splide, SplideSlide } from '@splidejs/react-splide';
 import '@splidejs/react-splide/css';
 import Image from 'next/image';
+import '../../app/styles/slider.css';
 
-const developers = [
+interface Developer {
+  id: string;
+  name: string;
+  logo: string;
+  description: string;
+  projectCount: number;
+  stats: {
+    projects: number;
+    experience: string;
+    rating: number;
+  };
+  projects: Array<{
+    name: string;
+    image: string;
+  }>;
+}
+
+const developers: Developer[] = [
   {
-    name: 'L&T Realty',
-    logo: '/images/lnt.jpg',
-    link: '#'
-  },
-  {
-    name: 'Godrej Properties',
-    logo: '/images/godrej.jpg',
-    link: '#'
-  },
-  {
-    name: 'Piramal Realty',
-    logo: '/images/piramal.png',
-    link: '#'
-  },
-  {
-    name: 'Mahindra Lifespaces',
-    logo: '/images/mahindra.png',
-    link: '#'
-  },
-  {
+    id: 'lodha',
     name: 'Lodha Group',
-    logo: '/images/lodha_group.png',
-    link: '#'
+    logo: '/images/lodha.png',
+    description: 'World-Class Real Estate Developer',
+    projectCount: 42,
+    stats: {
+      projects: 42,
+      experience: '25+ Years',
+      rating: 4.8
+    },
+    projects: [
+      { name: 'Lodha Park', image: '/projects/lodha-park.jpg' },
+      { name: 'Lodha World Towers', image: '/projects/lodha-world.jpg' }
+    ]
   },
+  {
+    id: 'lnt',
+    name: 'L&T Realty',
+    logo: '/images/lnt.png',
+    description: 'Leading Infrastructure & Real Estate Developer',
+    projectCount: 25,
+    stats: {
+      projects: 55,
+      experience: '30+ Years',
+      rating: 4.9
+    },
+    projects: [
+      { name: 'L&T Seawoods', image: '/projects/lt-seawoods.jpg' },
+      { name: 'L&T Emerald Isle', image: '/projects/lt-emerald.jpg' }
+    ]
+  }
 ];
 
-const DeveloperSlider: React.FC = () => {
+const DeveloperSlider = () => {
   return (
-    <section className="container mx-auto">
-      <h2 className="text-2xl md:text-3xl font-bold text-center mb-6 text-darkBrown">
-        Top developers under one roof
-      </h2>
+    <div className="developer-slider-wrapper">
       <Splide
         options={{
-          type: 'loop',
           perPage: 3,
-          perMove: 1,
-          gap: '1rem',                    // Consistent gap between cards
-          autoplay: true,
-          pauseOnHover: true,
-          arrows: true,
-          pagination: false,
-          padding: '1rem',                // Padding inside slider
+          gap: '2rem',
+          arrows: false,
+          pagination: true,
+          padding: { left: '1rem', right: '1rem' },
           breakpoints: {
-            1024: { perPage: 3 },
-            768: { perPage: 1, gap: '1rem', padding: '1rem' }, // 2 cards per view on tablet
-            640: { perPage: 1, gap: '0.5rem', padding: '1rem' }, // 2 cards per view on mobile
-          },
+            1280: { perPage: 2, gap: '1.5rem' },
+            768: { perPage: 1, gap: '1rem' }
+          }
         }}
-        className="px-2"
+        className="developer-slider py-4"
       >
-        {developers.map((developer, index) => (
-          <SplideSlide key={index}>
-            <a href={developer.link} className="block group">
-              <div className="border border-gray-200 rounded-lg p-2 transition-shadow duration-300 hover:shadow-lg bg-white h-40 w-40 sm:h-44 sm:w-44 md:h-48 md:w-48 flex flex-col justify-center items-center mx-auto">
-                <div className="flex justify-center mb-2 h-20 w-20 sm:h-24 sm:w-24">
+        {developers.map((developer) => (
+          <SplideSlide key={developer.id}>
+            <div className="bg-white rounded-xl overflow-hidden shadow-lg">
+              {/* Header with Logo */}
+              <div className="p-6 flex items-center gap-4">
+                <div className="w-16 h-16 relative flex-shrink-0">
                   <Image
                     src={developer.logo}
                     alt={developer.name}
-                    width={80}
-                    height={60}
+                    fill
                     className="object-contain"
                   />
                 </div>
-                <h3 className="text-center text-darkBrown text-xs sm:text-sm font-medium group-hover:text-primary transition-colors truncate">
-                  {developer.name} <span className="text-orange-500">→</span>
-                </h3>
+                <div className="min-w-0">
+                  <h3 className="text-lg font-bold text-gray-900 truncate">
+                    {developer.name}
+                  </h3>
+                  <p className="text-sm text-gray-600 line-clamp-2">
+                    {developer.description}
+                  </p>
+                  <p className="text-sm text-purple-600 mt-1">
+                    {developer.projectCount} Projects
+                  </p>
+                </div>
               </div>
-            </a>
+
+              {/* Stats Grid */}
+              <div className="px-6 pb-6 grid grid-cols-3 gap-4">
+                <div className="text-center">
+                  <p className="text-2xl font-bold text-purple-600">
+                    {developer.stats.projects}
+                  </p>
+                  <p className="text-xs text-gray-600 font-medium">Projects</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-2xl font-bold text-purple-600">
+                    {developer.stats.experience}
+                  </p>
+                  <p className="text-xs text-gray-600 font-medium">Experience</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-2xl font-bold text-purple-600">
+                    {developer.stats.rating}
+                  </p>
+                  <p className="text-xs text-gray-600 font-medium">Rating</p>
+                </div>
+              </div>
+
+              {/* Project Images */}
+              <div className="grid grid-cols-2 gap-px bg-gray-100">
+                {developer.projects.map((project, idx) => (
+                  <div key={idx} className="relative aspect-[4/3] bg-white">
+                    <Image
+                      src={project.image}
+                      alt={project.name}
+                      fill
+                      className="object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent">
+                      <p className="absolute bottom-2 left-2 text-white text-sm font-medium">
+                        {project.name}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* View Projects Button */}
+              <div className="p-4 bg-gray-50">
+                <button className="w-full bg-black text-white py-3 rounded-lg font-medium hover:bg-gray-900 transition-all duration-300 hover:shadow-lg hover:scale-[1.02] focus:scale-[0.98]">
+                  View Projects
+                </button>
+              </div>
+            </div>
           </SplideSlide>
         ))}
       </Splide>
-    </section>
+    </div>
   );
 };
 

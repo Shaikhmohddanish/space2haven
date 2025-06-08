@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import Image from "next/image";
+import Link from "next/link";
 import { IoChevronDown, IoChevronUp } from "react-icons/io5";
 import LZString from "lz-string";
 
@@ -9,15 +11,12 @@ export interface Property {
   _id?: string;
   title: string;
   images: string[];
-
   address: {
     city: string;
     state: string;
   };
-
   price: string;
   propertyType: string;
-
   configurations: {
     bhkType: string;
     carpetArea: string;
@@ -26,7 +25,6 @@ export interface Property {
     builtupAreaUnit: string;
     price: string;
   }[];
-
   description: string;
   location: string;
   area: string;
@@ -50,27 +48,25 @@ interface CityProjects {
   image: string;
 }
 
-// ✅ Cache Settings
 const CACHE_KEY = "cachedProperties";
 const CACHE_EXPIRATION_TIME = 60 * 1000; // 1 Day in milliseconds
+
+const projectImages = [
+  "/images/project1.jpeg",
+  "/images/project2.jpeg",
+  "/images/project3.jpeg",
+  "/images/project4.jpeg",
+  "/images/project5.jpeg",
+];
 
 const CityProjects: React.FC = () => {
   const [properties, setProperties] = useState<Property[]>([]);
   const [cityData, setCityData] = useState<CityProjects[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAll, setShowAll] = useState(false);
-  const [isLargeScreen, setIsLargeScreen] = useState<boolean>(false); // Track screen size
+  const [isLargeScreen, setIsLargeScreen] = useState<boolean>(false);
+  const [hoveredCity, setHoveredCity] = useState<string | null>(null);
 
-  // 🖼️ Define images from the public/images directory
-  const projectImages = [
-    "/images/project1.jpeg",
-    "/images/project2.jpeg",
-    "/images/project3.jpeg",
-    "/images/project4.jpeg",
-    "/images/project5.jpeg",
-  ];
-
-  // ✅ Function to Get Cached Data
   const getCachedData = () => {
     const now = Date.now();
     const cachedData = localStorage.getItem(CACHE_KEY);
@@ -78,10 +74,8 @@ const CityProjects: React.FC = () => {
 
     if (cachedData && cachedTimestamp) {
       if (now - parseInt(cachedTimestamp, 10) < CACHE_EXPIRATION_TIME) {
-        console.log("✅ Using cached data");
         return JSON.parse(LZString.decompress(cachedData));
       } else {
-        console.log("🛑 Cache expired, fetching fresh data...");
         localStorage.removeItem(CACHE_KEY);
         localStorage.removeItem(`${CACHE_KEY}_timestamp`);
       }
@@ -91,33 +85,26 @@ const CityProjects: React.FC = () => {
 
   useEffect(() => {
     const now = Date.now();
-
-    // ✅ Check for cached data in localStorage
     const cachedData = getCachedData();
 
     if (cachedData) {
-      console.log("✅ Using cached property data");
       setProperties(cachedData);
       processCityData(cachedData);
       setLoading(false);
       return;
     }
 
-    // ✅ Fetch new property data if cache is expired or missing
     const fetchData = async () => {
       try {
-        console.log("🔄 Fetching fresh data from API...");
         const response = await axios.get<Property[]>("/api/properties");
         const data = response.data;
 
         setProperties(data);
         processCityData(data);
-
-        // ✅ Store compressed property data in localStorage
         localStorage.setItem(CACHE_KEY, LZString.compress(JSON.stringify(data)));
         localStorage.setItem(`${CACHE_KEY}_timestamp`, now.toString());
       } catch (error) {
-        console.error("❌ Error fetching data:", error);
+        console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
       }
@@ -126,15 +113,13 @@ const CityProjects: React.FC = () => {
     fetchData();
   }, []);
 
-  // ✅ Track screen size to prevent hydration mismatch
   useEffect(() => {
     const updateSize = () => setIsLargeScreen(window.innerWidth >= 1024);
-    updateSize(); // Set initial value
+    updateSize();
     window.addEventListener("resize", updateSize);
     return () => window.removeEventListener("resize", updateSize);
   }, []);
 
-  // ✅ Process City-Based Data from Properties
   const processCityData = (data: Property[]) => {
     const cityMap = new Map<string, { count: number; image: string }>();
 
@@ -146,7 +131,6 @@ const CityProjects: React.FC = () => {
           image: cityMap.get(city)!.image || property.images[0] || "",
         });
       } else {
-        // 🟢 Assign round-robin image from projectImages array
         const imageIndex = index % projectImages.length;
         cityMap.set(city, {
           count: 1,
@@ -159,52 +143,111 @@ const CityProjects: React.FC = () => {
   };
 
   if (loading) {
-    return <div className="text-center py-10">Loading...</div>;
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
+      </div>
+    );
   }
 
-  // ✅ Dynamically Adjust Number of Tiles
   const tilesToShow = showAll || isLargeScreen ? cityData : cityData.slice(0, 4);
 
   return (
-    <section className="w-full bg-teal-300 bg-cover bg-center px-6 md:px-12 py-4 md:py-6 relative z-10">
-      <div className="container mx-auto px-4 max-w-7xl">
+    <section className="w-full bg-white py-16 md:py-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Header */}
-        <div className="flex-center gap-4 flex-col mb-4">
-          <h1 className="text-3xl font-bold text-black">Choose Your City</h1>
-          <hr />
+        <div className="text-center max-w-3xl mx-auto mb-12 md:mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            Choose Your City
+          </h2>
+          <p className="text-lg text-gray-600">
+            Explore properties across prime locations
+          </p>
         </div>
 
-        {/* City Tiles */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-center">
+        {/* City Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
           {tilesToShow.map((city, index) => (
-            <a
+            <Link
               key={index}
               href={`/properties?search=${city.city.toLowerCase()}`}
-              className="relative block rounded-lg shadow-md overflow-hidden transition-transform transform hover:scale-105 bg-white"
-              style={{ aspectRatio: "1/1", maxWidth: "250px", margin: "0 auto" }}
+              className="group relative block"
+              onMouseEnter={() => setHoveredCity(city.city)}
+              onMouseLeave={() => setHoveredCity(null)}
             >
-              <div className="relative w-full h-full">
-                <img src={city.image} alt={city.city} className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-80"></div>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center text-white">
-                    <h3 className="text-lg font-semibold">{city.city}</h3>
-                    <p className="text-sm">{city.count} Projects</p>
+              <div className="relative h-[250px] w-full overflow-hidden rounded-2xl">
+                {/* Background Image */}
+                <Image
+                  src={city.image}
+                  alt={city.city}
+                  fill
+                  className={`
+                    object-cover transition-transform duration-700
+                    ${hoveredCity === city.city ? 'scale-110' : 'scale-100'}
+                  `}
+                />
+                
+                {/* Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+
+                {/* Content */}
+                <div className="absolute inset-0 p-6 flex flex-col justify-end">
+                  <div className="transform transition-transform duration-300 group-hover:translate-y-[-8px]">
+                    {/* City Name */}
+                    <h3 className="text-2xl font-bold text-white mb-2">
+                      {city.city}
+                    </h3>
+
+                    {/* Projects Count */}
+                    <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-3 py-1.5 rounded-full">
+                      <span className="w-2 h-2 bg-purple-500 rounded-full" />
+                      <span className="text-sm text-white">
+                        {city.count} Projects
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Explore Button */}
+                  <div className={`
+                    mt-4 transform transition-all duration-300
+                    ${hoveredCity === city.city ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}
+                  `}>
+                    <button className="inline-flex items-center gap-2 text-sm text-white">
+                      <span>View Projects</span>
+                      <svg 
+                        className="w-4 h-4" 
+                        fill="none" 
+                        viewBox="0 0 24 24" 
+                        stroke="currentColor"
+                      >
+                        <path 
+                          strokeLinecap="round" 
+                          strokeLinejoin="round" 
+                          strokeWidth={2} 
+                          d="M17 8l4 4m0 0l-4 4m4-4H3" 
+                        />
+                      </svg>
+                    </button>
                   </div>
                 </div>
               </div>
-            </a>
+            </Link>
           ))}
         </div>
 
-        {/* Expand Button - Show only on small screens */}
+        {/* Show More Button */}
         {cityData.length > 4 && !isLargeScreen && (
-          <div className="flex justify-center mt-4">
+          <div className="flex justify-center mt-8">
             <button
               onClick={() => setShowAll(!showAll)}
-              className="p-2 bg-green-500 rounded-full text-white transition-transform duration-300 hover:bg-green-600 focus:outline-none"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-gray-100 hover:bg-gray-200 rounded-full text-gray-700 font-medium transition-all duration-200"
             >
-              {showAll ? <IoChevronUp className="text-2xl" /> : <IoChevronDown className="text-2xl" />}
+              <span>{showAll ? 'Show Less' : 'Show More'}</span>
+              {showAll ? (
+                <IoChevronUp className="text-xl" />
+              ) : (
+                <IoChevronDown className="text-xl" />
+              )}
             </button>
           </div>
         )}
