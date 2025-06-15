@@ -136,7 +136,7 @@ export default function PropertyDetails({ property,recommended }: PropertyDetail
   </div>
 
   <div className="border-r border-gray-300">
-    <p className="text-sm text-gray-500">Built-up Area</p>
+    <p className="text-sm text-gray-500">Built-up Areas</p>
     <p className="font-semibold">On request</p>
   </div>
 
