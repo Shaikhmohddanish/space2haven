@@ -195,17 +195,32 @@ const PropertiesPageContent = ({
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
+  // Add a ref to the main scrollable container
+  const contentTopRef = useRef<HTMLDivElement>(null);
+
   const handleNextPage = () => {
     if (page < totalPages) {
       setPage((prev) => prev + 1);
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      setTimeout(() => {
+        if (contentTopRef.current) {
+          contentTopRef.current.scrollIntoView({ behavior: "smooth" });
+        } else {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+      }, 0);
     }
   };
 
   const handlePrevPage = () => {
     if (page > 1) {
       setPage((prev) => prev - 1);
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      setTimeout(() => {
+        if (contentTopRef.current) {
+          contentTopRef.current.scrollIntoView({ behavior: "smooth" });
+        } else {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+      }, 0);
     }
   };
 
@@ -216,7 +231,7 @@ const PropertiesPageContent = ({
 
   return (
     <section className="min-h-screen w-full bg-gray-50">
-      <div className="w-full max-w-[2000px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div ref={contentTopRef} className="w-full max-w-[2000px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <main className="flex flex-col gap-8">
           {loading && showFullScreenLoader ? (
             <div className="fixed inset-0 bg-white/80 backdrop-blur-sm flex items-center justify-center z-50">
