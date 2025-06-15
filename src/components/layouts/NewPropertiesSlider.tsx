@@ -17,7 +17,15 @@ interface NewPropertiesSliderProps {
 
 const NewPropertiesSlider = ({ data }: NewPropertiesSliderProps) => {
   const router = useRouter();
-  const [selectedProperty, setSelectedProperty] = useState<string | null>(null);
+  const [selectedProperty, setSelectedProperty] = useState<{ title: string, id: string } | null>(null);
+
+  const handleGetInTouch = (property: Property) => {
+    setSelectedProperty({ title: property.title, id: property._id });
+  };
+
+  const handleClosePopup = () => {
+    setSelectedProperty(null);
+  };
 
   const MemoizedSlideCard = React.memo(function MemoizedSlideCard({ property, onDetails, onGetInTouch }: { property: Property, onDetails: () => void, onGetInTouch: () => void }) {
     return (
@@ -98,50 +106,52 @@ const NewPropertiesSlider = ({ data }: NewPropertiesSliderProps) => {
   });
 
   return (
-    <Splide
-      options={{
-        perPage: 3,
-        gap: "2rem",
-        arrows: false,
-        pagination: true,
-        padding: { left: "1rem", right: "1rem" },
-        easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
-        speed: 700,
-        rewind: true,
-        rewindByDrag: true,
-        breakpoints: {
-          1280: { perPage: 3, gap: "1.5rem" },
-          1024: { perPage: 2, gap: "1.5rem" },
-          768: { perPage: 2, gap: "1rem" },
-          640: { perPage: 1, gap: "1rem", padding: { left: "0.5rem", right: "0.5rem" } },
-        },
-        classes: {
-          arrows: 'splide__arrows custom-arrows',
-          arrow: 'splide__arrow custom-arrow',
-          prev: 'splide__arrow--prev custom-prev',
-          next: 'splide__arrow--next custom-next',
-          pagination: 'splide__pagination custom-pagination',
-          page: 'splide__pagination__page custom-page',
-        },
-      }}
-      className="w-full py-4"
-    >
-      {data.map((property) => (
-        <SplideSlide key={property._id}>
-          <MemoizedSlideCard
-            property={property}
-            onDetails={() => router.push(`/properties/${property._id}`)}
-            onGetInTouch={() => setSelectedProperty(property.title)}
-          />
-          {selectedProperty === property.title && (
-            <GetInTouchPopup
-              propertyTitle={selectedProperty}
-              onClose={() => setSelectedProperty(null)}
+    <>
+      <Splide
+        options={{
+          perPage: 3,
+          gap: "2rem",
+          arrows: false,
+          pagination: true,
+          padding: { left: "1rem", right: "1rem" },
+          easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+          speed: 700,
+          rewind: true,
+          rewindByDrag: true,
+          breakpoints: {
+            1280: { perPage: 3, gap: "1.5rem" },
+            1024: { perPage: 2, gap: "1.5rem" },
+            768: { perPage: 2, gap: "1rem" },
+            640: { perPage: 1, gap: "1rem", padding: { left: "0.5rem", right: "0.5rem" } },
+          },
+          classes: {
+            arrows: 'splide__arrows custom-arrows',
+            arrow: 'splide__arrow custom-arrow',
+            prev: 'splide__arrow--prev custom-prev',
+            next: 'splide__arrow--next custom-next',
+            pagination: 'splide__pagination custom-pagination',
+            page: 'splide__pagination__page custom-page',
+          },
+        }}
+        className="w-full py-4"
+      >
+        {data.map((property) => (
+          <SplideSlide key={property._id}>
+            <MemoizedSlideCard
+              property={property}
+              onDetails={() => router.push(`/properties/${property._id}`)}
+              onGetInTouch={() => handleGetInTouch(property)}
             />
-          )}
-        </SplideSlide>
-      ))}
-    </Splide>
+          </SplideSlide>
+        ))}
+      </Splide>
+      {selectedProperty && (
+        <GetInTouchPopup
+          propertyTitle={selectedProperty.title}
+          onClose={handleClosePopup}
+        />
+      )}
+    </>
   );
 };
 
