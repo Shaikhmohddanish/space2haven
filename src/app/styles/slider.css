@@ -93,10 +93,6 @@
   transition: transform 0.7s ease;
 }
 
-.property-card:hover .property-image {
-  transform: scale(1.1);
-}
-
 /* Button Animations */
 .cta-button {
   transition: all 0.3s ease;

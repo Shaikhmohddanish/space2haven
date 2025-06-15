@@ -1,8 +1,9 @@
+import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { PropertyCardProps } from '@/types';
 
-const PropertyCard = ({ id, imageSrc, price, features, configuration, tag, location, propertyType, recommend }: PropertyCardProps) => {
+const PropertyCard = React.memo(({ id, imageSrc, price, features, configuration, tag, location, propertyType, recommend }: PropertyCardProps) => {
     return (
         <Link href={`/properties/${id}`} className="property-card-styles">
 
@@ -17,11 +18,11 @@ const PropertyCard = ({ id, imageSrc, price, features, configuration, tag, locat
             <div className="w-full h-full relative">
                 <Image
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    loading='eager'
+                    loading='lazy'
                     src={imageSrc}
                     alt={tag}
                     fill
-                    priority
+                    priority={false}
                     className="w-full h-full object-cover"
                 />
             </div>
@@ -35,6 +36,7 @@ const PropertyCard = ({ id, imageSrc, price, features, configuration, tag, locat
             </div>
         </Link>
     );
-};
+});
+PropertyCard.displayName = "PropertyCard";
 
 export default PropertyCard;

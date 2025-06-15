@@ -9,6 +9,7 @@ import "../../app/styles/slider.css";
 import { useRouter } from "next/navigation";
 import { IoCalendarOutline, IoLocationOutline, IoHomeOutline } from "react-icons/io5";
 import GetInTouchPopup from "./GetInTouchPopup";
+import Image from "next/image";
 
 interface FeaturedPropertiesSliderProps {
   data: Property[];
@@ -53,10 +54,14 @@ const FeaturedPropertiesSlider = ({ data }: FeaturedPropertiesSliderProps) => {
           >
             {/* Image Container */}
             <div className="relative aspect-[16/10] overflow-hidden">
-              <img
+              <Image
                 src={property.images?.[0] || "/default-image.webp"}
                 alt={property.title}
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                loading="lazy"
+                priority={false}
               />
               
               {/* Overlay with gradient */}
