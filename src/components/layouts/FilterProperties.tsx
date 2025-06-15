@@ -44,24 +44,20 @@ const convertToIndianCurrencyWords = (num: string | number): string => {
   }).format(n);
 };
 
-// Fix: Accept any string for listingType, but cast to 'buy' | 'rent' | undefined when using in FiltersState
 const FilterProperties = ({
   setFilters,
   filters,
   setOpen,
-  search,
-  setSearch,
 }: {
   setFilters: (filters: FiltersState) => void;
-  filters: any; // Accept any, cast as needed
+  filters: any;
   setOpen: (open: boolean) => void;
-  search: string;
-  setSearch: (val: string) => void;
 }) => {
   const { toast } = useToast();
   const router = useRouter();
   const { properties } = useContext(PropertyCacheContext);
 
+  const [search, setSearch] = useState(filters?.search || "");
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -80,6 +76,7 @@ const FilterProperties = ({
   };
 
   const [localFilters, setLocalFilters] = useState<FiltersState>({
+    search: filters?.search || "",
     configuration: parseConfiguration(filters?.configuration),
     budget: filters?.budget || { min: "", max: "" },
     propertyType: Array.isArray(filters?.propertyType) ? filters.propertyType : [],
@@ -88,11 +85,12 @@ const FilterProperties = ({
     state: filters?.state || "",
     newProperty: filters?.newProperty || false,
     resale: filters?.resale || false,
-    listingType: (filters?.listingType === "buy" || filters?.listingType === "rent") ? filters?.listingType : "buy",
+    listingType: filters?.listingType || "buy",
   });
 
   useEffect(() => {
     setLocalFilters({
+      search: filters?.search || "",
       configuration: parseConfiguration(filters?.configuration),
       budget: filters?.budget || { min: "", max: "" },
       propertyType: Array.isArray(filters?.propertyType) ? filters.propertyType : [],
@@ -101,7 +99,7 @@ const FilterProperties = ({
       state: filters?.state || "",
       newProperty: filters?.newProperty || false,
       resale: filters?.resale || false,
-      listingType: (filters?.listingType === "buy" || filters?.listingType === "rent") ? filters?.listingType : "buy",
+      listingType: filters?.listingType || "buy",
     });
   }, [filters]);
 

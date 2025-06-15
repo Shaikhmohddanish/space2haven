@@ -9,12 +9,9 @@ import clsx from "clsx"; // ✅ Import clsx for className merging
 
 interface ExtendedDialogBoxProps extends DialogBoxProps {
   className?: string; // ✅ Add className as optional prop
-  // Add these if you want to pass search state down to FilterProperties
-  search?: string;
-  setSearch?: (val: string) => void;
 }
 
-const DialogBox = ({ type = "contact", filters, setFilters, className, search, setSearch }: ExtendedDialogBoxProps) => {
+const DialogBox = ({ type = "contact", filters, setFilters, className }: ExtendedDialogBoxProps) => {
   const [isOpen, setIsOpen] = useState(false);  // 🟢 Add state to control dialog open/close
 
   return (
@@ -42,8 +39,6 @@ const DialogBox = ({ type = "contact", filters, setFilters, className, search, s
               filters={filters}
               setFilters={setFilters}
               setOpen={setIsOpen}  // 🟢 Pass setIsOpen directly to close the dialog
-              search={search || ""}
-              setSearch={setSearch || (() => {})}
             />
           ) : (
             <p className="text-center text-gray-500">Filters are unavailable.</p>
