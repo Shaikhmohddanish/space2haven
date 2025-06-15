@@ -84,6 +84,14 @@ const FeaturedPropertiesSlider = ({ data }: FeaturedPropertiesSliderProps) => {
                   </span>
                 )}
               </div>
+
+              {/* Possession Date at bottom right */}
+              {property.possessionDate && (
+                <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-lg">
+                  <IoCalendarOutline className="text-base text-purple-400" />
+                  <span>Possession: {property.possessionDate}</span>
+                </div>
+              )}
             </div>
 
             {/* Content */}
@@ -97,12 +105,6 @@ const FeaturedPropertiesSlider = ({ data }: FeaturedPropertiesSliderProps) => {
                   <span className="text-xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">₹{formatPrice(property.price)}</span>
                   <span className="text-sm text-gray-500 font-medium">onwards</span>
                 </div>
-                {property.possessionDate && (
-                  <div className="flex items-center gap-2 text-gray-600">
-                    <IoCalendarOutline className="text-lg text-purple-500" />
-                    <span className="text-sm font-medium">Possession: {property.possessionDate}</span>
-                  </div>
-                )}
               </div>
 
               {/* Price and CTA */}
