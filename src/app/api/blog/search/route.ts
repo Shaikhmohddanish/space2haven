@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { client, blogPostsQuery } from '@/lib/sanity'
+import { demoBlogPosts } from '@/lib/demoData'
 
 export async function GET(request: NextRequest) {
   try {
@@ -37,6 +38,31 @@ export async function GET(request: NextRequest) {
     const params: Record<string, any> = {}
     if (category) params.categoryId = category
     if (query) params.query = `"${query}*"`
+
+    // Fallback to demo data if client is not configured
+    if (!client) {
+      let filteredPosts = demoBlogPosts
+      if (category) {
+        filteredPosts = filteredPosts.filter(post => post.categories.some(cat => cat._id === category || cat.slug.current === category))
+      }
+      if (query) {
+        const q = query.toLowerCase().replace(/\*/g, '')
+        filteredPosts = filteredPosts.filter(post =>
+          post.title.toLowerCase().includes(q) ||
+          (post.excerpt && post.excerpt.toLowerCase().includes(q)) ||
+          (post.tags && post.tags.some(tag => tag.toLowerCase().includes(q)))
+        )
+      }
+      const pagedPosts = filteredPosts.slice(offset, offset + limit)
+      return NextResponse.json({
+        posts: pagedPosts,
+        pagination: {
+          limit,
+          offset,
+          hasMore: pagedPosts.length === limit
+        }
+      })
+    }
 
     const posts = await client.fetch(groqQuery, params)
 
