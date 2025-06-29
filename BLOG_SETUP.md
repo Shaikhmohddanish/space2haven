@@ -11,7 +11,6 @@ This is a comprehensive blog system built with Next.js 15 and Sanity.io CMS. It 
 - ⚡ **Optimized Performance** with static generation
 - 🔗 **SEO Optimized** with proper meta tags
 - 📊 **Related Articles** based on categories
-- 📧 **Newsletter Subscription**
 - 🎯 **Professional UI/UX**
 
 ## Setup Instructions
@@ -256,7 +255,6 @@ The blog system includes these pages:
 - **BlogDetail** - Individual blog post display with related articles
 - **BlogSearchResults** - Advanced search interface
 - **BlogNavigation** - Navigation component for site header
-- **NewsletterSignup** - Email subscription component
 
 #### UI Components Used
 
@@ -300,7 +298,6 @@ The blog system includes these pages:
 - Create custom page templates
 
 #### Integration
-- Newsletter service integration (Mailchimp, ConvertKit, etc.)
 - Analytics tracking
 - Comment system integration
 
@@ -374,7 +371,6 @@ src/
 │       ├── BlogDetail.tsx              # Blog post detail
 │       ├── BlogSearchResults.tsx       # Search results
 │       ├── BlogNavigation.tsx          # Navigation component
-│       ├── NewsletterSignup.tsx        # Newsletter component
 │       └── index.ts                    # Component exports
 ├── lib/
 │   └── sanity.ts                       # Sanity client & queries
