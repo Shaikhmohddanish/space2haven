@@ -135,13 +135,20 @@ export default function BlogList({ posts, categories, currentCategory }: BlogLis
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
       {/* Hero Section */}
-      <div className="relative bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 py-20">
-        <div className="absolute inset-0 bg-black/20"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <section className="relative flex flex-col items-center justify-center text-center py-16 px-4 sm:px-6 md:px-8 h-[50vh]">
+        <img
+          src="/blog/blog-banner.jpg"
+          alt="Space2Haven Blog Banner"
+          className="object-cover object-center absolute inset-0 w-full h-full pointer-events-none select-none"
+          style={{ zIndex: 0 }}
+        />
+        {/* Dark overlay for banner */}
+        <div className="absolute inset-0 bg-black/70 md:bg-black/60 lg:bg-black/50 z-0" />
+        <div className="relative z-10 max-w-2xl mx-auto space-y-6">
           <motion.h1
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-4xl md:text-6xl font-bold text-white mb-6"
+            className="text-4xl md:text-6xl font-bold text-white mb-6 drop-shadow-lg"
           >
             Our Blog
           </motion.h1>
@@ -149,12 +156,12 @@ export default function BlogList({ posts, categories, currentCategory }: BlogLis
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-xl text-blue-100 max-w-2xl mx-auto"
+            className="text-xl text-gray-200 max-w-2xl mx-auto"
           >
             Insights, tips, and stories from the world of real estate
           </motion.p>
         </div>
-      </div>
+      </section>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Search and Filter Section */}

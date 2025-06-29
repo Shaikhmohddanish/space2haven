@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { motion } from 'framer-motion'
 import { 
   CalendarDays, 
   Clock, 
@@ -198,6 +197,26 @@ export default function BlogDetail({ post, relatedPosts }: BlogDetailProps) {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Hero Banner Section */}
+      <section className="relative flex flex-col items-center justify-center text-center py-16 px-4 sm:px-6 md:px-8 h-[50vh]">
+        <img
+          src="/blog/blog-detail-banner.jpg"
+          alt="Blog Article - Space2Heaven"
+          className="object-cover object-center absolute inset-0 w-full h-full pointer-events-none select-none"
+          style={{ zIndex: 0 }}
+        />
+        {/* Dark overlay for banner */}
+        <div className="absolute inset-0 bg-black/70 md:bg-black/60 lg:bg-black/50 z-0" />
+        <div className="relative z-10 max-w-2xl mx-auto space-y-6">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white drop-shadow-lg">
+            Blog Article
+          </h1>
+          <p className="text-lg sm:text-xl text-gray-200">
+            Insights and expertise from our real estate professionals.
+          </p>
+        </div>
+      </section>
+
       {/* Back Button */}
       <div className="bg-white border-b">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -212,11 +231,7 @@ export default function BlogDetail({ post, relatedPosts }: BlogDetailProps) {
 
       <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Article Header */}
-        <motion.header
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
-        >
+        <header className="mb-8">
           {/* Categories */}
           <div className="flex flex-wrap gap-2 mb-4">
             {post.categories.map((category) => (
@@ -306,11 +321,7 @@ export default function BlogDetail({ post, relatedPosts }: BlogDetailProps) {
               </Button>
 
               {showShareMenu && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="absolute top-full left-0 mt-2 bg-white border rounded-lg shadow-lg p-2 z-10"
-                >
+                <div className="absolute top-full left-0 mt-2 bg-white border rounded-lg shadow-lg p-2 z-10">
                   <button
                     onClick={() => handleShare('facebook')}
                     className="flex items-center space-x-2 w-full px-3 py-2 text-sm hover:bg-gray-100 rounded"
@@ -339,20 +350,15 @@ export default function BlogDetail({ post, relatedPosts }: BlogDetailProps) {
                     <Copy className="w-4 h-4 text-gray-600" />
                     <span>Copy Link</span>
                   </button>
-                </motion.div>
+                </div>
               )}
             </div>
           </div>
-        </motion.header>
+        </header>
 
         {/* Featured Image */}
         {post.mainImage && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2 }}
-            className="mb-8"
-          >
+          <div className="mb-8">
             <div className="relative aspect-video rounded-xl overflow-hidden">
               <SafeImage
                 src={urlFor(post.mainImage).width(1200).height(800).url()}
@@ -362,27 +368,17 @@ export default function BlogDetail({ post, relatedPosts }: BlogDetailProps) {
                 priority
               />
             </div>
-          </motion.div>
+          </div>
         )}
 
         {/* Article Content */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="prose prose-lg max-w-none bg-white rounded-xl p-8 shadow-sm"
-        >
+        <div className="prose prose-lg max-w-none bg-white rounded-xl p-8 shadow-sm">
           <PortableText value={post.content} components={portableTextComponents} />
-        </motion.div>
+        </div>
 
         {/* Tags */}
         {post.tags && post.tags.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="mt-8"
-          >
+          <div className="mt-8">
             <h3 className="text-lg font-semibold text-gray-900 mb-3">Tags</h3>
             <div className="flex flex-wrap gap-2">
               {post.tags.map((tag) => (
@@ -394,18 +390,14 @@ export default function BlogDetail({ post, relatedPosts }: BlogDetailProps) {
                 </span>
               ))}
             </div>
-          </motion.div>
+          </div>
         )}
       </article>
 
       {/* Related Posts */}
       {relatedPosts.length > 0 && (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 bg-white mt-12">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-          >
+          <div>
             <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
               Related Articles
             </h2>
@@ -418,18 +410,14 @@ export default function BlogDetail({ post, relatedPosts }: BlogDetailProps) {
                 />
               ))}
             </div>
-          </motion.div>
+          </div>
         </section>
       )}
 
       {/* CTA Section */}
       <section className="bg-gradient-to-r from-blue-600 to-purple-600 py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-          >
+          <div>
             <h2 className="text-3xl font-bold text-white mb-4">
               Stay Updated with Our Latest Insights
             </h2>
@@ -446,7 +434,7 @@ export default function BlogDetail({ post, relatedPosts }: BlogDetailProps) {
                 Subscribe
               </Button>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
     </div>
@@ -455,12 +443,7 @@ export default function BlogDetail({ post, relatedPosts }: BlogDetailProps) {
 
 function RelatedPostCard({ post, index }: { post: BlogPost; index: number }) {
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.1 * index }}
-      className="group bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden"
-    >
+    <article className="group bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden">
       <Link href={`/blog/${post.slug.current}`}>
         <div className="relative aspect-video overflow-hidden">
           {post.mainImage ? (
@@ -513,6 +496,6 @@ function RelatedPostCard({ post, index }: { post: BlogPost; index: number }) {
           </div>
         </div>
       </Link>
-    </motion.article>
+    </article>
   )
 }

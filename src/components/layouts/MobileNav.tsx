@@ -14,7 +14,8 @@ import {
   ChevronDown,
   X as CloseIcon,
   FileText,
-  Phone
+  Phone,
+  BookOpen
 } from 'lucide-react';
 
 const menuItems = [
@@ -35,6 +36,11 @@ const menuItems = [
     icon: <MapPinHouse size={20} />,
   },
   {
+    route: '/blog',
+    label: 'Blog',
+    icon: <BookOpen size={20} />,
+  },
+  {
     label: 'Calculators',
     icon: <Calculator size={20} />,
     children: [
@@ -53,7 +59,6 @@ const menuItems = [
     children: [
       { route: '/privacy-policy', label: 'Privacy Policy' },
       { route: '/terms', label: 'Terms & Conditions' },
-      { route: '/contact', label: 'Contact Us' },
     ],
   },
 ];

@@ -30,7 +30,6 @@ const menuBarOptions: MenuItem[] = [
     children: [
       { option: "Privacy Policy", link: "/privacy-policy" },
       { option: "Terms & Conditions", link: "/terms" },
-      { option: "Contact Us", link: "/contact" },
     ],
   },
 ];

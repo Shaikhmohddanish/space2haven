@@ -35,10 +35,23 @@ async function getBlogData() {
 function BlogLoadingSkeleton() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
-      <div className="relative bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 py-20">
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="h-12 bg-white/20 rounded-lg w-64 mx-auto mb-6 animate-pulse"></div>
-          <div className="h-6 bg-white/20 rounded w-96 mx-auto animate-pulse"></div>
+      {/* Blog Banner with dark overlay */}
+      <div className="relative flex flex-col items-center justify-center text-center w-full h-[400px] sm:h-[450px] md:h-[500px] lg:h-[550px]">
+        <div className="absolute inset-0 w-full h-full">
+          <img
+            src="/blog/blog-banner.jpg"
+            alt="Space2Haven Blog Banner"
+            className="object-cover object-center w-full h-full pointer-events-none select-none"
+            style={{ zIndex: 0 }}
+          />
+        </div>
+        <div className="relative z-30 max-w-2xl mx-auto space-y-6 flex flex-col items-center justify-center h-full">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white drop-shadow-lg animate-pulse">
+            Blog
+          </h1>
+          <p className="text-lg sm:text-xl md:text-2xl text-blue-100 font-medium animate-pulse">
+            Discover insights, tips, and stories from the world of real estate.
+          </p>
         </div>
       </div>
       
