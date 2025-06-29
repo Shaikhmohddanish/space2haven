@@ -53,6 +53,7 @@ async function getBlogPost(slug: string) {
   }
 }
 
+
 function BlogPostLoadingSkeleton() {
   return (
     <div className="min-h-screen bg-gray-50">
