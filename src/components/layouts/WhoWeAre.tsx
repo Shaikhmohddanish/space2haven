@@ -52,11 +52,11 @@ const WhoWeAre: React.FC = () => {
               <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                 <div className="grid grid-cols-2 gap-6">
                   <div>
-                    <div className="text-3xl font-bold">10+</div>
+                    <div className="text-3xl font-bold">5+</div>
                     <div className="text-sm text-gray-200">Years Experience</div>
                   </div>
                   <div>
-                    <div className="text-3xl font-bold">500+</div>
+                    <div className="text-3xl font-bold">100+</div>
                     <div className="text-sm text-gray-200">Happy Clients</div>
                   </div>
                 </div>
