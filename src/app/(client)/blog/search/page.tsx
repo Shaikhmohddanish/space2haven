@@ -4,13 +4,6 @@ import { BlogPost, Category } from '@/lib/sanity'
 import { demoBlogPosts, demoCategories } from '@/lib/demoData'
 import BlogSearchResults from '@/components/blog/BlogSearchResults'
 
-interface SearchPageProps {
-  searchParams: {
-    q?: string
-    category?: string
-  }
-}
-
 async function getSearchData() {
   try {
     // Check if Sanity is configured
@@ -37,7 +30,8 @@ async function getSearchData() {
   }
 }
 
-export default async function SearchPage({ searchParams }: SearchPageProps) {
+/** @param {{ searchParams: { q?: string, category?: string } }} props */
+export default async function SearchPage({ searchParams }: any) {
   const { posts, categories } = await getSearchData()
   const query = searchParams.q || ''
   const categoryFilter = searchParams.category || ''
