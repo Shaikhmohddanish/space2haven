@@ -1,8 +1,10 @@
 'use client';
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay } from "swiper/modules";
+import PopupForm from "../ui/PopupForm";
 import "swiper/css";
 import "swiper/css/pagination";
 
@@ -65,15 +67,65 @@ const insightsData = {
 
 const InsightsTabs = () => {
   const [activeTab, setActiveTab] = useState("For Customers");
+  const [popupForm, setPopupForm] = useState({
+    isOpen: false,
+    type: 'sell-rent' as 'sell-rent' | 'sales-marketing' | 'videography',
+    title: ''
+  });
+  const router = useRouter();
 
   const currentData =
     activeTab === "For Customers" ? insightsData.customers : insightsData.business;
+
+  const handleExploreClick = (title: string, tabType: string) => {
+    if (tabType === "For Customers") {
+      switch (title) {
+        case "Buy or Rent Property":
+          router.push("/properties");
+          break;
+        case "Sell or Rent Your Property":
+          setPopupForm({
+            isOpen: true,
+            type: 'sell-rent',
+            title: 'Sell or Rent Your Property'
+          });
+          break;
+        case "Interior Design":
+          window.open("https://interior.space2haven.com", "_blank");
+          break;
+      }
+    } else if (tabType === "For Business") {
+      switch (title) {
+        case "Sales & Marketing Support":
+          setPopupForm({
+            isOpen: true,
+            type: 'sales-marketing',
+            title: 'Sales & Marketing Support'
+          });
+          break;
+        case "Interior Design":
+          window.open("https://interior.space2haven.com", "_blank");
+          break;
+        case "Videography":
+          setPopupForm({
+            isOpen: true,
+            type: 'videography',
+            title: 'Videography Services'
+          });
+          break;
+      }
+    }
+  };
+
+  const closePopup = () => {
+    setPopupForm(prev => ({ ...prev, isOpen: false }));
+  };
 
   return (
     <section className="w-full px-4 py-12 md:px-12 bg-white">
       <div className="max-w-7xl mx-auto">
         <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">
-          Insights & Tools
+          Services
         </h2>
 
         {/* Tabs */}
@@ -149,6 +201,7 @@ const InsightsTabs = () => {
                 </div>
 
                 <button 
+                  onClick={() => handleExploreClick(item.title, activeTab)}
                   className="inline-flex items-center text-purple-600 font-medium group hover:text-purple-700 transition-colors duration-300"
                 >
                   <span>{item.cta}</span>
@@ -170,6 +223,14 @@ const InsightsTabs = () => {
             </SwiperSlide>
           ))}
         </Swiper>
+
+        {/* Popup Form */}
+        <PopupForm
+          isOpen={popupForm.isOpen}
+          onClose={closePopup}
+          formType={popupForm.type}
+          title={popupForm.title}
+        />
       </div>
     </section>
   );

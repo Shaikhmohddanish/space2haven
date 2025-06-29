@@ -1,11 +1,13 @@
 'use client'
 
 import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import Image from "next/image"
 
 const WhoWeAre: React.FC = () => {
   const [showFullText, setShowFullText] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
+  const router = useRouter()
 
   useEffect(() => {
     setIsMounted(true)
@@ -52,11 +54,11 @@ const WhoWeAre: React.FC = () => {
               <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                 <div className="grid grid-cols-2 gap-6">
                   <div>
-                    <div className="text-3xl font-bold">10+</div>
+                    <div className="text-3xl font-bold">5+</div>
                     <div className="text-sm text-gray-200">Years Experience</div>
                   </div>
                   <div>
-                    <div className="text-3xl font-bold">500+</div>
+                    <div className="text-3xl font-bold">50+</div>
                     <div className="text-sm text-gray-200">Happy Clients</div>
                   </div>
                 </div>
@@ -116,7 +118,10 @@ const WhoWeAre: React.FC = () => {
 
             {/* Contact Button */}
             <div className="pt-6">
-              <button className="inline-flex items-center gap-2 px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition-colors duration-200">
+              <button 
+                onClick={() => router.push('/contact')}
+                className="inline-flex items-center gap-2 px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition-colors duration-200"
+              >
                 Contact Us
                 <svg 
                   className="w-4 h-4" 
