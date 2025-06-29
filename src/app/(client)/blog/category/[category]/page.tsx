@@ -5,12 +5,6 @@ import { BlogPost, Category } from '@/lib/sanity'
 import BlogList from '@/components/blog/BlogList'
 import { demoBlogPosts, demoCategories } from '@/lib/demoData'
 
-interface CategoryPageProps {
-  params: {
-    category: string
-  }
-}
-
 async function getCategoryData(categorySlug: string) {
   try {
     if (!client) {
@@ -49,7 +43,8 @@ async function getCategoryData(categorySlug: string) {
   }
 }
 
-export default async function CategoryPage({ params }: CategoryPageProps) {
+/** @param {{ params: { category: string } }} props */
+export default async function CategoryPage({ params }: any) {
   const data = await getCategoryData(params.category)
 
   if (!data) {
@@ -100,7 +95,8 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   )
 }
 
-export async function generateMetadata({ params }: CategoryPageProps) {
+/** @param {{ params: { category: string } }} props */
+export async function generateMetadata({ params }: any) {
   const data = await getCategoryData(params.category)
 
   if (!data) {
