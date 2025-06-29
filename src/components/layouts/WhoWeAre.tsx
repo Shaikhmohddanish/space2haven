@@ -2,7 +2,7 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
-export default function WhoWeAre() {
+export default function AboutPage() {
   return (
     <div className="container py-12 md:py-16 lg:py-24">
       <div className="mx-auto max-w-5xl space-y-12">
