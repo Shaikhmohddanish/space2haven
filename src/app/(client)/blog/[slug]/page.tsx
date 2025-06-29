@@ -7,12 +7,6 @@ import BlogDetail from '@/components/blog/BlogDetail'
 import Navbar from '@/components/layouts/Navbar'
 import Footer from '@/components/layouts/Footer'
 
-interface BlogPostPageProps {
-  params: {
-    slug: string
-  }
-}
-
 async function getBlogPost(slug: string) {
   try {
     // Check if Sanity is configured
@@ -97,7 +91,7 @@ function BlogPostLoadingSkeleton() {
   )
 }
 
-export default async function BlogPostPage({ params }: BlogPostPageProps) {
+export default async function BlogPostPage({ params }: { params: { slug: string } }) {
   const data = await getBlogPost(params.slug)
 
   if (!data) {
@@ -117,7 +111,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   )
 }
 
-export async function generateMetadata({ params }: BlogPostPageProps) {
+export async function generateMetadata({ params }: { params: { slug: string } }) {
   const data = await getBlogPost(params.slug)
 
   if (!data) {
