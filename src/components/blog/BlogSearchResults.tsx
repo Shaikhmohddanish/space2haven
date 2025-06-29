@@ -170,8 +170,8 @@ export default function BlogSearchResults({
                 </Badge>
               )}
               <Button
-                variant="ghost"
-                size="sm"
+                variant="outline"
+                size="small"
                 onClick={handleClearFilters}
                 className="text-blue-600 hover:text-blue-800"
               >
