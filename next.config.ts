@@ -14,6 +14,14 @@ const nextConfig = {
         protocol: "https",
         hostname: "res.cloudinary.com", // ✅ Allows Cloudinary-hosted images
       },
+      {
+        protocol: "https",
+        hostname: "picsum.photos", // ✅ Allows Picsum demo images
+      },
+      {
+        protocol: "https",
+        hostname: "cdn.sanity.io", // ✅ Allows Sanity CDN images
+      },
     ],
   },
   eslint: {

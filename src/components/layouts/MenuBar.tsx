@@ -16,6 +16,7 @@ const menuBarOptions: MenuItem[] = [
   { option: "Home", link: "/" },
   { option: "Interior", link: "https://interior.space2haven.com", external: true },
   { option: "Properties", link: "/properties" },
+  { option: "Blog", link: "/blog" },
   {
     option: "Calculators",
     children: [
