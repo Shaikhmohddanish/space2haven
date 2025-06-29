@@ -4,6 +4,8 @@ import { client, blogPostQuery, relatedPostsQuery } from '@/lib/sanity'
 import { demoBlogPosts, demoCategories } from '@/lib/demoData'
 import { BlogPost } from '@/lib/sanity'
 import BlogDetail from '@/components/blog/BlogDetail'
+import Navbar from '@/components/layouts/Navbar'
+import Footer from '@/components/layouts/Footer'
 
 interface BlogPostPageProps {
   params: {
@@ -105,9 +107,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { post, relatedPosts } = data
 
   return (
-    <Suspense fallback={<BlogPostLoadingSkeleton />}>
-      <BlogDetail post={post} relatedPosts={relatedPosts} />
-    </Suspense>
+    <>
+      <Navbar />
+      <Suspense fallback={<BlogPostLoadingSkeleton />}>
+        <BlogDetail post={post} relatedPosts={relatedPosts} />
+      </Suspense>
+      <Footer />
+    </>
   )
 }
 
