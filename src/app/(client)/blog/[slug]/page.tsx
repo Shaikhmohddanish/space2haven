@@ -92,7 +92,8 @@ function BlogPostLoadingSkeleton() {
   )
 }
 
-export default async function BlogPostPage({ params }: { params: { slug: string } }) {
+/** @param {{ params: { slug: string } }} props */
+export default async function BlogPostPage({ params }: any) {
   const data = await getBlogPost(params.slug)
 
   if (!data) {
@@ -112,7 +113,8 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
   )
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
+/** @param {{ params: { slug: string } }} props */
+export async function generateMetadata({ params }: any) {
   const data = await getBlogPost(params.slug)
 
   if (!data) {
