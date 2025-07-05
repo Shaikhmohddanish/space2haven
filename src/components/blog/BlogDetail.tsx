@@ -375,13 +375,13 @@ export default function BlogDetail({ post, relatedPosts }: BlogDetailProps) {
         {/* Featured Image */}
         {post.mainImage && (
           <div className="mb-8">
-            <div className="relative aspect-video rounded-xl overflow-hidden bg-white">
+            <div className="w-full bg-white flex items-center justify-center">
               <SafeImage
                 src={urlFor(post.mainImage).width(1200).height(800).url()}
                 alt={post.mainImage.alt || post.title}
                 width={1200}
                 height={800}
-                className="object-contain"
+                className="max-w-full h-auto w-auto mx-auto object-contain"
                 priority
               />
             </div>
@@ -462,14 +462,14 @@ function RelatedPostCard({ post, index }: { post: BlogPost; index: number }) {
   return (
     <article className="group bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden">
       <Link href={`/blog/${post.slug.current}`}>
-        <div className="relative aspect-video overflow-hidden bg-white">
+        <div className="w-full bg-white flex items-center justify-center">
           {post.mainImage ? (
             <SafeImage
               src={urlFor(post.mainImage).width(400).height(300).url()}
               alt={post.mainImage.alt || post.title}
               width={400}
               height={300}
-              className="object-contain group-hover:scale-105 transition-transform duration-300"
+              className="max-w-full h-auto w-auto mx-auto object-contain"
             />
           ) : (
             <PlaceholderImage 

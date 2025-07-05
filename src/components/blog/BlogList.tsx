@@ -368,21 +368,20 @@ function BlogCard({ post, index }: { post: BlogPost; index: number }) {
 function BlogCardContent({ post }: { post: BlogPost }) {
   return (
     <>
-      <div className="relative aspect-video overflow-hidden">
+      <div className="relative w-full bg-white flex items-center justify-center" style={{ minHeight: 200, maxHeight: 400 }}>
         {post.mainImage ? (
           <SafeImage
             src={urlFor(post.mainImage).width(600).height(400).url()}
             alt={post.mainImage.alt || post.title}
             width={600}
             height={400}
-            className="object-contain bg-white group-hover:scale-105 transition-transform duration-300"
+            className="object-contain max-h-96 w-auto h-auto mx-auto"
           />
         ) : (
           <div className="w-full h-full bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center">
             <div className="text-6xl text-blue-300">📰</div>
           </div>
         )}
-        
         {/* Category Badge */}
         {post.categories.length > 0 && (
           <div className="absolute top-4 left-4">
