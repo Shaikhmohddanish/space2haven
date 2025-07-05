@@ -29,8 +29,8 @@ async function getCategoryData(categorySlug: string) {
   }
 }
 
-/** @param {{ params: { category: string } }} props */
-export default async function CategoryPage({ params }: any) {
+export default async function CategoryPage(props: any) {
+  const { params } = props
   const data = await getCategoryData(params.category)
 
   if (!data) {
@@ -81,8 +81,8 @@ export default async function CategoryPage({ params }: any) {
   )
 }
 
-/** @param {{ params: { category: string } }} props */
-export async function generateMetadata({ params }: any) {
+export async function generateMetadata(props: any) {
+  const { params } = props
   const data = await getCategoryData(params.category)
 
   if (!data) {

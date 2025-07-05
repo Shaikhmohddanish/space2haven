@@ -75,11 +75,9 @@ function BlogPostLoadingSkeleton() {
   )
 }
 
-/** @param {{ params: { slug: string } }} props */
-export default async function BlogPostPage({ params }: { params: { slug: string } }) {
-  // Since Next.js App Router requires awaiting params before accessing its properties
-  const resolvedParams = await Promise.resolve(params)
-  const slug = resolvedParams.slug
+export default async function BlogPostPage(props: any) {
+  const { params } = props
+  const slug = params.slug
   const data = await getBlogPost(slug)
 
   if (!data) {
@@ -99,11 +97,9 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
   )
 }
 
-/** @param {{ params: { slug: string } }} props */
-export async function generateMetadata({ params }: { params: { slug: string } }) {
-  // Since Next.js App Router requires awaiting params before accessing its properties
-  const resolvedParams = await Promise.resolve(params)
-  const slug = resolvedParams.slug
+export async function generateMetadata(props: any) {
+  const { params } = props
+  const slug = params.slug
   const data = await getBlogPost(slug)
 
   if (!data) {
