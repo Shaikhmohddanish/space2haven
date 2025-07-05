@@ -1,6 +1,5 @@
 import { Suspense } from 'react'
 import { client, blogPostsQuery, categoriesQuery } from '@/lib/sanity'
-import { demoBlogPosts, demoCategories } from '@/lib/demoData'
 import BlogList from '@/components/blog/BlogList'
 import { BlogPost, Category } from '@/lib/sanity'
 import Navbar from '@/components/layouts/Navbar'
@@ -8,26 +7,18 @@ import Footer from '@/components/layouts/Footer'
 
 async function getBlogData() {
   try {
-    // Check if Sanity is configured
-    if (!client) {
-      console.log('Using demo data - Sanity not configured')
-      return { 
-        posts: demoBlogPosts as BlogPost[], 
-        categories: demoCategories as Category[] 
-      }
-    }
-
     const [posts, categories] = await Promise.all([
-      client!.fetch<BlogPost[]>(blogPostsQuery),
-      client!.fetch<Category[]>(categoriesQuery)
+      client.fetch<BlogPost[]>(blogPostsQuery),
+      client.fetch<Category[]>(categoriesQuery)
     ])
     
     return { posts, categories }
   } catch (error) {
-    console.error('Error fetching blog data, falling back to demo data:', error)
+    console.error('Error fetching blog data:', error)
+    // Return empty arrays if there's an error
     return { 
-      posts: demoBlogPosts as BlogPost[], 
-      categories: demoCategories as Category[] 
+      posts: [] as BlogPost[], 
+      categories: [] as Category[] 
     }
   }
 }

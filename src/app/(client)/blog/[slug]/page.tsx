@@ -1,7 +1,6 @@
 import { Suspense } from 'react'
 import { notFound } from 'next/navigation'
 import { client, blogPostQuery, relatedPostsQuery } from '@/lib/sanity'
-import { demoBlogPosts, demoCategories } from '@/lib/demoData'
 import { BlogPost } from '@/lib/sanity'
 import BlogDetail from '@/components/blog/BlogDetail'
 import Navbar from '@/components/layouts/Navbar'
@@ -9,29 +8,22 @@ import Footer from '@/components/layouts/Footer'
 
 async function getBlogPost(slug: string) {
   try {
-    // Check if Sanity is configured
-    if (!process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || !client) {
-      console.log('Using demo data - Sanity not configured')
-      const post = demoBlogPosts.find(p => p.slug.current === slug)
-      if (!post) return null
-      
-      // Get related posts from same categories
-      const categoryIds = post.categories.map(cat => cat._id)
-      const relatedPosts = demoBlogPosts
-        .filter(p => p._id !== post._id && p.categories.some(cat => categoryIds.includes(cat._id)))
-        .slice(0, 6)
-      
-      return { post: post as BlogPost, relatedPosts: relatedPosts as BlogPost[] }
+    console.log(`Fetching blog post with slug: ${slug}`)
+    
+    if (!slug) {
+      console.log('No slug provided, returning 404')
+      return null
     }
 
     const post = await client.fetch<BlogPost>(blogPostQuery, { slug })
     
     if (!post) {
+      console.log(`Blog post with slug "${slug}" not found in Sanity`)
       return null
     }
 
     // Get related posts based on categories
-    const categoryIds = post.categories.map(cat => cat._id)
+    const categoryIds = post.categories?.map(cat => cat._id) || []
     const relatedPosts = await client.fetch<BlogPost[]>(relatedPostsQuery, {
       categories: categoryIds,
       postId: post._id
@@ -39,17 +31,8 @@ async function getBlogPost(slug: string) {
 
     return { post, relatedPosts }
   } catch (error) {
-    console.error('Error fetching blog post, trying demo data:', error)
-    // Fallback to demo data
-    const post = demoBlogPosts.find(p => p.slug.current === slug)
-    if (!post) return null
-    
-    const categoryIds = post.categories.map(cat => cat._id)
-    const relatedPosts = demoBlogPosts
-      .filter(p => p._id !== post._id && p.categories.some(cat => categoryIds.includes(cat._id)))
-      .slice(0, 6)
-    
-    return { post: post as BlogPost, relatedPosts: relatedPosts as BlogPost[] }
+    console.error('Error fetching blog post:', error)
+    return null
   }
 }
 
@@ -93,8 +76,11 @@ function BlogPostLoadingSkeleton() {
 }
 
 /** @param {{ params: { slug: string } }} props */
-export default async function BlogPostPage({ params }: any) {
-  const data = await getBlogPost(params.slug)
+export default async function BlogPostPage({ params }: { params: { slug: string } }) {
+  // Since Next.js App Router requires awaiting params before accessing its properties
+  const resolvedParams = await Promise.resolve(params)
+  const slug = resolvedParams.slug
+  const data = await getBlogPost(slug)
 
   if (!data) {
     notFound()
@@ -114,8 +100,11 @@ export default async function BlogPostPage({ params }: any) {
 }
 
 /** @param {{ params: { slug: string } }} props */
-export async function generateMetadata({ params }: any) {
-  const data = await getBlogPost(params.slug)
+export async function generateMetadata({ params }: { params: { slug: string } }) {
+  // Since Next.js App Router requires awaiting params before accessing its properties
+  const resolvedParams = await Promise.resolve(params)
+  const slug = resolvedParams.slug
+  const data = await getBlogPost(slug)
 
   if (!data) {
     return {
@@ -155,13 +144,6 @@ export async function generateMetadata({ params }: any) {
 // Generate static params for popular blog posts (optional)
 export async function generateStaticParams() {
   try {
-    if (!process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || !client) {
-      // Return demo post slugs
-      return demoBlogPosts.slice(0, 10).map((post) => ({
-        slug: post.slug.current,
-      }))
-    }
-
     const posts = await client.fetch<{ slug: { current: string } }[]>(
       `*[_type == "post" && defined(slug.current)][0...10] {
         slug
@@ -173,9 +155,7 @@ export async function generateStaticParams() {
     }))
   } catch (error) {
     console.error('Error generating static params:', error)
-    // Fallback to demo data
-    return demoBlogPosts.slice(0, 10).map((post) => ({
-      slug: post.slug.current,
-    }))
+    // Return empty array if we can't fetch posts
+    return []
   }
 }

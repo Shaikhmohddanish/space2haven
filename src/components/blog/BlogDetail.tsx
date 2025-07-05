@@ -43,7 +43,17 @@ const SafeImage = ({ src, alt, width, height, className, fill, priority }: {
   const [imageError, setImageError] = useState(false)
   
   // Use placeholder for demo images or when there's an error
-  if (imageError || src.includes('demo-image')) {
+  if (imageError || src.includes('demo-image') || src.includes('author-')) {
+    // Use different placeholder for author images
+    if (src.includes('author-') || width === 40) {
+      return (
+        <div className={`bg-gray-100 flex items-center justify-center rounded-full ${className || ''}`} 
+             style={{width: width || 40, height: height || 40}}>
+          <User className="w-6 h-6 text-gray-400" />
+        </div>
+      );
+    }
+    
     return (
       <PlaceholderImage 
         width={width} 
@@ -266,14 +276,20 @@ export default function BlogDetail({ post, relatedPosts }: BlogDetailProps) {
           <div className="flex flex-wrap items-center gap-6 text-sm text-gray-500 mb-6">
             {post.author && (
               <div className="flex items-center space-x-2">
-                {post.author.image && (
-                  <SafeImage
-                    src={urlFor(post.author.image).width(40).height(40).url()}
-                    alt={post.author.name}
-                    width={40}
-                    height={40}
-                    className="rounded-full"
-                  />
+                {post.author.image ? (
+                  <div className="relative w-10 h-10 overflow-hidden rounded-full">
+                    <SafeImage
+                      src={urlFor(post.author.image).width(40).height(40).url()}
+                      alt={post.author.name}
+                      width={40}
+                      height={40}
+                      className="rounded-full"
+                    />
+                  </div>
+                ) : (
+                  <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
+                    <User className="w-6 h-6 text-gray-500" />
+                  </div>
                 )}
                 <div>
                   <div className="flex items-center space-x-1">

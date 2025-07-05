@@ -1,54 +1,68 @@
-import { createClient } from '@sanity/client'
-import imageUrlBuilder from '@sanity/image-url'
-import { mockImageUrl } from './demoData'
+import { createClient } from 'next-sanity'
+import createImageUrlBuilder from '@sanity/image-url'
 
-// Check if Sanity is configured
-const isConfigured = !!(process.env.NEXT_PUBLIC_SANITY_PROJECT_ID && process.env.NEXT_PUBLIC_SANITY_DATASET)
+// Get environment variables - using default values to ensure Sanity always works
+const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'rtxewyqu'
+const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || 'production'
+const apiVersion = process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2023-06-01'
+const useCdn = process.env.NEXT_PUBLIC_SANITY_USE_CDN === 'true'
 
-export const client = isConfigured ? createClient({
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET!,
-  useCdn: true, // set to false for fresh data
-  apiVersion: '2023-05-03', // use current date (YYYY-MM-DD) to target the latest API version
+// Always consider Sanity configured with the default project ID
+const isConfigured = true
+
+// Create the Sanity client
+export const client = createClient({
+  projectId,
+  dataset,
+  apiVersion,
+  useCdn,
   token: process.env.SANITY_API_TOKEN, // Only needed if you want to update content with the client
-}) : null
+})
 
-const builder = isConfigured && client ? imageUrlBuilder(client) : null
+// Create image URL builder
+const imageBuilder = createImageUrlBuilder({
+  projectId,
+  dataset,
+})
 
 export function urlFor(source: any) {
-  // Handle demo data
-  if (!isConfigured || !builder) {
-    if (typeof source === 'string' || source?.asset?._ref?.startsWith('demo-image') || source?.asset?._ref?.startsWith('author-')) {
-      const imageId = typeof source === 'string' ? source : source.asset._ref
-      return {
-        url: () => mockImageUrl(imageId),
-        width: (w: number) => ({ 
-          height: (h: number) => ({ 
-            url: () => mockImageUrl(imageId, w, h) 
-          }),
-          url: () => mockImageUrl(imageId, w)
-        }),
-        height: (h: number) => ({ 
-          url: () => mockImageUrl(imageId, 800, h) 
-        })
-      }
-    }
-    // Fallback for invalid sources
+  // Handle the case when source is null or undefined
+  if (!source) {
+    // Return a placeholder image builder
     return {
-      url: () => mockImageUrl('fallback'),
+      url: () => 'https://placehold.co/800x600?text=Image+Not+Found',
       width: (w: number) => ({ 
         height: (h: number) => ({ 
-          url: () => mockImageUrl('fallback', w, h) 
+          url: () => `https://placehold.co/${w}x${h}?text=Image+Not+Found` 
         }),
-        url: () => mockImageUrl('fallback', w)
+        url: () => `https://placehold.co/${w}x600?text=Image+Not+Found`
       }),
       height: (h: number) => ({ 
-        url: () => mockImageUrl('fallback', 800, h) 
+        url: () => `https://placehold.co/800x${h}?text=Image+Not+Found` 
+      }),
+      auto: (format: string) => ({
+        fit: (fit: string) => ({
+          url: () => 'https://placehold.co/800x600?text=Image+Not+Found'
+        })
       })
-    }
+    };
   }
   
-  return builder.image(source)
+  // Use the Sanity image builder
+  return imageBuilder.image(source);
+}
+
+// Helper function to get optimized image URL with parameters
+export const urlForImage = (source: any) => {
+  return urlFor(source).auto('format').fit('max')
+}
+
+// Configuration object for easy access
+export const config = {
+  projectId,
+  dataset,
+  apiVersion,
+  useCdn,
 }
 
 // Blog post types

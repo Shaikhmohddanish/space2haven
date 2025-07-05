@@ -3,19 +3,9 @@ import { notFound } from 'next/navigation'
 import { client, postsByCategoryQuery, categoriesQuery } from '@/lib/sanity'
 import { BlogPost, Category } from '@/lib/sanity'
 import BlogList from '@/components/blog/BlogList'
-import { demoBlogPosts, demoCategories } from '@/lib/demoData'
 
 async function getCategoryData(categorySlug: string) {
   try {
-    if (!client) {
-      // Fallback to demo data if client is not configured
-      const category = demoCategories.find(cat => cat.slug.current === categorySlug)
-      if (!category) return null;
-      // Get posts for this category
-      const posts = demoBlogPosts.filter(post => post.categories.some(cat => cat.slug.current === categorySlug))
-      return { posts, categories: demoCategories, currentCategory: category }
-    }
-
     // First, get the category info
     const category = await client.fetch<Category>(
       `*[_type == "category" && slug.current == $slug][0]`,
@@ -35,11 +25,7 @@ async function getCategoryData(categorySlug: string) {
     return { posts, categories: allCategories, currentCategory: category }
   } catch (error) {
     console.error('Error fetching category data:', error)
-    // Fallback to demo data on error
-    const category = demoCategories.find(cat => cat.slug.current === categorySlug)
-    if (!category) return null;
-    const posts = demoBlogPosts.filter(post => post.categories.some(cat => cat.slug.current === categorySlug))
-    return { posts, categories: demoCategories, currentCategory: category }
+    return null
   }
 }
 
@@ -120,12 +106,6 @@ export async function generateMetadata({ params }: any) {
 
 export async function generateStaticParams() {
   try {
-    if (!client) {
-      // Fallback to demo data
-      return demoCategories.map((category) => ({
-        category: category.slug.current,
-      }))
-    }
     const categories = await client.fetch<{ slug: { current: string } }[]>(
       `*[_type == "category" && defined(slug.current)] {
         slug
@@ -137,9 +117,7 @@ export async function generateStaticParams() {
     }))
   } catch (error) {
     console.error('Error generating static params:', error)
-    // Fallback to demo data
-    return demoCategories.map((category) => ({
-      category: category.slug.current,
-    }))
+    // Return empty array if we can't fetch categories
+    return []
   }
 }

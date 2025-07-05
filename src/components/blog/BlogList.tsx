@@ -86,16 +86,24 @@ const SafeImage = ({ src, alt, width, height, className, fill, priority }: {
 }
 
 export default function BlogList({ posts, categories, currentCategory }: BlogListProps) {
-  const [filteredPosts, setFilteredPosts] = useState<BlogPost[]>(posts)
+  // Make sure we only display posts with valid slugs
+  const validPosts = posts.filter(post => post.slug && post.slug.current);
+  
+  const [filteredPosts, setFilteredPosts] = useState<BlogPost[]>([])
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string>(currentCategory || 'all')
   const [currentPage, setCurrentPage] = useState(1)
   const [isLoading, setIsLoading] = useState(false)
 
+  // Initialize filtered posts on component mount or when posts change
+  useEffect(() => {
+    setFilteredPosts(validPosts);
+  }, [posts]);
+
   // Filter posts based on search and category
   useEffect(() => {
     setIsLoading(true)
-    let filtered = posts
+    let filtered = validPosts
 
     // Filter by search term
     if (searchTerm) {
@@ -330,6 +338,9 @@ export default function BlogList({ posts, categories, currentCategory }: BlogLis
 }
 
 function BlogCard({ post, index }: { post: BlogPost; index: number }) {
+  // Check if post has a valid slug
+  const hasValidSlug = post.slug && post.slug.current;
+  
   return (
     <motion.article
       initial={{ opacity: 0, y: 20 }}
@@ -337,89 +348,107 @@ function BlogCard({ post, index }: { post: BlogPost; index: number }) {
       transition={{ delay: index * 0.1 }}
       className="group bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden"
     >
-      <Link href={`/blog/${post.slug.current}`}>
-        <div className="relative aspect-video overflow-hidden">
-          {post.mainImage ? (
-            <SafeImage
-              src={urlFor(post.mainImage).width(600).height(400).url()}
-              alt={post.mainImage.alt || post.title}
-              fill
-              className="object-cover group-hover:scale-105 transition-transform duration-300"
-            />
-          ) : (
-            <div className="w-full h-full bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center">
-              <div className="text-6xl text-blue-300">📰</div>
-            </div>
-          )}
-          
-          {/* Category Badge */}
-          {post.categories.length > 0 && (
-            <div className="absolute top-4 left-4">
-              <Badge
-                variant="secondary"
-                className="bg-white/90 backdrop-blur-sm text-gray-900"
-                style={{
-                  backgroundColor: post.categories[0].color 
-                    ? `${post.categories[0].color}20`
-                    : undefined,
-                  borderColor: post.categories[0].color || undefined
-                }}
-              >
-                {post.categories[0].title}
-              </Badge>
-            </div>
-          )}
+      {hasValidSlug ? (
+        <Link href={`/blog/${post.slug.current}`}>
+          <BlogCardContent post={post} />
+        </Link>
+      ) : (
+        <div className="opacity-70">
+          <BlogCardContent post={post} />
+          <div className="px-6 pb-4">
+            <Badge variant="destructive">Invalid Post</Badge>
+          </div>
         </div>
+      )}
+    </motion.article>
+  );
+}
 
-        <div className="p-6">
-          <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors line-clamp-2">
-            {post.title}
-          </h3>
-          
-          {post.excerpt && (
-            <p className="text-gray-600 mb-4 line-clamp-3">
-              {post.excerpt}
-            </p>
-          )}
+// Separate the content from the link to avoid duplication
+function BlogCardContent({ post }: { post: BlogPost }) {
+  return (
+    <>
+      <div className="relative aspect-video overflow-hidden">
+        {post.mainImage ? (
+          <SafeImage
+            src={urlFor(post.mainImage).width(600).height(400).url()}
+            alt={post.mainImage.alt || post.title}
+            fill
+            className="object-cover group-hover:scale-105 transition-transform duration-300"
+          />
+        ) : (
+          <div className="w-full h-full bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center">
+            <div className="text-6xl text-blue-300">📰</div>
+          </div>
+        )}
+        
+        {/* Category Badge */}
+        {post.categories.length > 0 && (
+          <div className="absolute top-4 left-4">
+            <Badge
+              variant="secondary"
+              className="bg-white/90 backdrop-blur-sm text-gray-900"
+              style={{
+                backgroundColor: post.categories[0].color 
+                  ? `${post.categories[0].color}20`
+                  : undefined,
+                borderColor: post.categories[0].color || undefined
+              }}
+            >
+              {post.categories[0].title}
+            </Badge>
+          </div>
+        )}
+      </div>
 
-          <div className="flex items-center justify-between text-sm text-gray-500">
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-1">
-                <CalendarDays className="w-4 h-4" />
-                <span>{format(new Date(post.publishedAt), 'MMM d, yyyy')}</span>
-              </div>
-              
-              {post.readTime && (
-                <div className="flex items-center space-x-1">
-                  <Clock className="w-4 h-4" />
-                  <span>{post.readTime} min read</span>
-                </div>
-              )}
+      <div className="p-6">
+        <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors line-clamp-2">
+          {post.title}
+        </h3>
+        
+        {post.excerpt && (
+          <p className="text-gray-600 mb-4 line-clamp-3">
+            {post.excerpt}
+          </p>
+        )}
+
+        <div className="flex items-center justify-between text-sm text-gray-500">
+          <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-1">
+              <CalendarDays className="w-4 h-4" />
+              <span>{format(new Date(post.publishedAt), 'MMM d, yyyy')}</span>
             </div>
-
-            {post.author && (
+            
+            {post.readTime && (
               <div className="flex items-center space-x-1">
-                <User className="w-4 h-4" />
-                <span>{post.author.name}</span>
+                <Clock className="w-4 h-4" />
+                <span>{post.readTime} min read</span>
               </div>
             )}
           </div>
 
-          {/* Tags */}
-          {post.tags && post.tags.length > 0 && (
-            <div className="flex flex-wrap gap-2 mt-4">
-              {post.tags.slice(0, 3).map((tag) => (
-                <span
-                  key={tag}
-                  className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-md"
-                >
-                  #{tag}
-                </span>
-              ))}
+          {post.author && (
+            <div className="flex items-center space-x-1">
+              <User className="w-4 h-4" />
+              <span>{post.author.name}</span>
             </div>
           )}
         </div>
-      </Link>
-    </motion.article>
-  )
+
+        {/* Tags */}
+        {post.tags && post.tags.length > 0 && (
+          <div className="flex flex-wrap gap-2 mt-4">
+            {post.tags.slice(0, 3).map((tag) => (
+              <span
+                key={tag}
+                className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-md"
+              >
+                #{tag}
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
+    </>
+  );
 }
