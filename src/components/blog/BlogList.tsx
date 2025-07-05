@@ -373,8 +373,9 @@ function BlogCardContent({ post }: { post: BlogPost }) {
           <SafeImage
             src={urlFor(post.mainImage).width(600).height(400).url()}
             alt={post.mainImage.alt || post.title}
-            fill
-            className="object-cover group-hover:scale-105 transition-transform duration-300"
+            width={600}
+            height={400}
+            className="object-contain bg-white group-hover:scale-105 transition-transform duration-300"
           />
         ) : (
           <div className="w-full h-full bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center">

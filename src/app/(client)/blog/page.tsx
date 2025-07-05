@@ -8,8 +8,8 @@ import Footer from '@/components/layouts/Footer'
 async function getBlogData() {
   try {
     const [posts, categories] = await Promise.all([
-      client.fetch<BlogPost[]>(blogPostsQuery),
-      client.fetch<Category[]>(categoriesQuery)
+      client.fetch<BlogPost[]>(blogPostsQuery, {}, { cache: 'no-store' }),
+      client.fetch<Category[]>(categoriesQuery, {}, { cache: 'no-store' })
     ])
     
     return { posts, categories }
