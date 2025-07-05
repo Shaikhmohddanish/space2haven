@@ -24,7 +24,7 @@ export default function AboutMotionSections() {
             About Space2Haven
           </h1>
           <p className="text-lg sm:text-xl md:text-2xl text-blue-100 font-medium">
-            Your trusted partner for buying, selling, and renting properties in Mumbai, Maharashtra, and beyond.
+            Your trusted partner for buying, selling, and renting real estate properties in Mumbai, Maharashtra, and beyond.
           </p>
           <div className="flex justify-center">
             <Link href="/contact">
@@ -45,10 +45,10 @@ export default function AboutMotionSections() {
               <h2 className="text-2xl font-bold text-gray-900">Who We Are</h2>
             </div>
             <p className="text-gray-700 text-base md:text-lg">
-              Space2Haven is a leading real estate platform dedicated to making property transactions seamless and transparent. Based in Mumbai, we specialize in residential and commercial property sales, rentals, and investments across Maharashtra, with plans to expand nationwide.
+              Space2Haven is a premier real estate company dedicated to making property transactions seamless and transparent. Based in Mumbai, we specialize in residential and commercial property sales, rentals, and investments across Maharashtra, with plans to expand nationwide.
             </p>
             <p className="text-gray-700 text-base md:text-lg">
-              Our team combines deep local expertise with a customer-first approach, ensuring you find the perfect property or the right buyer/tenant with ease and confidence.
+              Our team combines deep local expertise with a customer-first approach, ensuring you find the perfect property or the right buyer/tenant with ease and confidence. We also offer interior design services through our specialized platform at interior.space2haven.com.
             </p>
           </div>
           <div className="overflow-hidden rounded-xl shadow-lg">
@@ -80,10 +80,10 @@ export default function AboutMotionSections() {
               <h2 className="text-2xl font-bold text-gray-900">Our Mission</h2>
             </div>
             <p className="text-gray-700 text-base md:text-lg">
-              To empower buyers, sellers, and renters with the most trusted property solutions, leveraging technology and local knowledge for a smooth, stress-free experience.
+              To empower buyers, sellers, and renters with the most trusted real estate solutions, leveraging technology and local market knowledge for a smooth, stress-free property transaction experience.
             </p>
             <p className="text-gray-700 text-base md:text-lg">
-              Whether you are looking for your dream home, a smart investment, or a reliable tenant, Space2Haven is here to guide you every step of the way.
+              Whether you are looking for your dream home, a smart investment property, or a reliable tenant, Space2Haven is here to guide you through every step of the real estate journey. For those interested in enhancing their spaces, our interior design services are available at interior.space2haven.com.
             </p>
           </div>
         </div>
@@ -99,17 +99,17 @@ export default function AboutMotionSections() {
             {[
               {
                 name: "Alexandra Reynolds",
-                role: "Principal Designer & Founder",
+                role: "Real Estate Director & Founder",
                 image: "/about/testimonial-1.jpg",
               },
               {
                 name: "Marcus Chen",
-                role: "Senior Interior Designer",
+                role: "Senior Property Consultant",
                 image: "/about/testimonial-3.jpg",
               },
               {
                 name: "Sophia Williams",
-                role: "Project Manager",
+                role: "Client Relations Manager",
                 image: "/about/testimonial-1.jpg",
               },
             ].map((member, index) => (
@@ -134,6 +134,73 @@ export default function AboutMotionSections() {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Our Services Section */}
+      <section className="py-12 md:py-16 bg-gradient-to-b from-white to-blue-50">
+        <div className="container mx-auto max-w-5xl px-4 md:px-0">
+          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8">
+            Our Services
+          </h2>
+          <div className="grid gap-8 md:grid-cols-2">
+            {/* Real Estate Services */}
+            <div className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow">
+              <div className="flex items-center gap-2 mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-600">
+                  <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                  <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+                <h3 className="text-xl font-bold">Real Estate</h3>
+              </div>
+              <p className="text-gray-600 mb-4">
+                Our primary focus is helping you buy, sell, or rent properties in Mumbai and throughout Maharashtra. 
+                With expert market knowledge and a client-first approach, we ensure smooth transactions and the best value.
+              </p>
+              <ul className="space-y-2 text-gray-700 mb-4">
+                <li>• Property Buying & Selling</li>
+                <li>• Rental Services</li>
+                <li>• Investment Advisory</li>
+                <li>• Property Management</li>
+              </ul>
+            </div>
+            
+            {/* Interior Design Services */}
+            <div className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow">
+              <div className="flex items-center gap-2 mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-purple-600">
+                  <path d="M12 2H2v10h10V2Z"></path>
+                  <path d="M22 12h-4v10h4V12Z"></path>
+                  <path d="M12 12h-4v10h4V12Z"></path>
+                  <path d="M22 2h-6v6h6V2Z"></path>
+                </svg>
+                <h3 className="text-xl font-bold">Interior Design</h3>
+              </div>
+              <p className="text-gray-600 mb-4">
+                Through our specialized interior design platform, we transform houses into personalized homes with expert design solutions tailored to your taste and budget.
+              </p>
+              <ul className="space-y-2 text-gray-700 mb-4">
+                <li>• Residential Interiors</li>
+                <li>• Commercial Spaces</li>
+                <li>• Renovation Projects</li>
+                <li>• Furniture & Decor</li>
+              </ul>
+              <div className="mt-4">
+                <a 
+                  href="https://interior.space2haven.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-purple-600 font-medium hover:underline flex items-center gap-1"
+                >
+                  Visit Interior Design Website
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M7 7h10v10"></path>
+                    <path d="M7 17 17 7"></path>
+                  </svg>
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </section>

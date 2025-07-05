@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay } from "swiper/modules";
 import PopupForm from "../ui/PopupForm";
@@ -16,7 +17,7 @@ const insightsData = {
       title: "Buy or Rent Property",
       description:
         "Discover the best properties to buy or rent with verified listings & expert assistance.",
-      imageSrc: "https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg",
+      imageSrc: "/images/services/buy-rent-property.jpg",
       bgColor: "bg-yellow-50",
       cta: "Explore Now",
     },
@@ -24,7 +25,7 @@ const insightsData = {
       title: "Sell or Rent Your Property",
       description:
         "Get personalized help to sell or rent your property quickly through our expert team.",
-      imageSrc: "https://images.pexels.com/photos/1866149/pexels-photo-1866149.jpeg",
+      imageSrc: "/images/services/sell-rent-property.jpg",
       bgColor: "bg-green-50",
       cta: "Explore Now",
     },
@@ -32,7 +33,7 @@ const insightsData = {
       title: "Interior Design",
       description:
         "Transform your space with expert-designed interiors tailored to your style & budget.",
-      imageSrc: "https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg",
+      imageSrc: "/images/services/interior-design.jpg",
       bgColor: "bg-pink-50",
       cta: "Explore Now",
     },
@@ -42,7 +43,7 @@ const insightsData = {
       title: "Sales & Marketing Support",
       description:
         "We help real estate developers and channel partners grow with expert sales and marketing support.",
-      imageSrc: "https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg",
+      imageSrc: "/images/services/sales-marketing.jpg",
       bgColor: "bg-purple-50",
       cta: "Explore Now",
     },
@@ -50,7 +51,7 @@ const insightsData = {
       title: "Interior Design",
       description:
         "Transforming spaces with personalized, functional, and aesthetic design solutions.",
-      imageSrc: "https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg",
+      imageSrc: "/images/services/interior-design.jpg",
       bgColor: "bg-rose-50",
       cta: "Explore Now",
     },
@@ -58,7 +59,7 @@ const insightsData = {
       title: "Videography",
       description:
         "High-quality video production that captures your brand's story and elevates your presence.",
-      imageSrc: "https://images.pexels.com/photos/2608517/pexels-photo-2608517.jpeg",
+      imageSrc: "/images/services/videography.jpg",
       bgColor: "bg-blue-50",
       cta: "Explore Now",
     },
@@ -188,15 +189,18 @@ const InsightsTabs = () => {
                 </div>
 
                 <div className="my-6 relative overflow-hidden rounded-lg h-56 group">
-                  <img
+                  <Image
                     src={item.imageSrc}
                     alt={item.title}
-                    loading="lazy"
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    priority={index === 0}
                     onError={(e) => {
-                      e.currentTarget.onerror = null;
-                      e.currentTarget.src = "/images/default-image.webp";
+                      // @ts-ignore - Next.js Image doesn't have currentTarget.src, but this is a fallback
+                      const target = e.target as HTMLImageElement;
+                      if (target) target.src = "/images/default-image.webp";
                     }}
-                    className="w-full h-full object-cover transform transition-transform duration-300 group-hover:scale-110"
+                    className="object-cover transform transition-transform duration-300 group-hover:scale-110"
                   />
                 </div>
 
