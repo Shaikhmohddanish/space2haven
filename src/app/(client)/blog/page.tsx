@@ -4,6 +4,40 @@ import BlogList from '@/components/blog/BlogList'
 import { BlogPost, Category } from '@/lib/sanity'
 import Navbar from '@/components/layouts/Navbar'
 import Footer from '@/components/layouts/Footer'
+import JsonLd from '@/components/JsonLd'
+import { Metadata } from 'next'
+
+// Define metadata for the blog page
+export const metadata: Metadata = {
+  title: "Real Estate Blog | Space2Heaven",
+  description: "Expert insights on real estate trends, buying guides, investment tips, and property market analysis from Space2Heaven's experienced professionals.",
+  keywords: ["real estate blog", "property insights", "home buying tips", "real estate investment", "property market analysis", "real estate trends"],
+  alternates: {
+    canonical: "/blog",
+  },
+  openGraph: {
+    title: "Real Estate Blog | Space2Heaven",
+    description: "Expert insights on real estate trends, buying guides, investment tips, and property market analysis from Space2Heaven's experienced professionals.",
+    url: "/blog",
+    siteName: "Space2Heaven",
+    images: [
+      {
+        url: "/blog/blog-banner.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Space2Heaven Real Estate Blog",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Real Estate Blog | Space2Heaven",
+    description: "Expert insights on real estate trends, buying guides, investment tips, and property market analysis from Space2Heaven's experienced professionals.",
+    images: ["/blog/blog-banner.jpg"],
+  },
+}
 
 async function getBlogData() {
   try {
@@ -91,12 +125,4 @@ export default async function BlogPage() {
   )
 }
 
-export const metadata = {
-  title: 'Blog - Space2Heaven',
-  description: 'Discover insights, tips, and stories from the world of real estate. Stay updated with the latest trends and expert advice.',
-  openGraph: {
-    title: 'Blog - Space2Heaven',
-    description: 'Discover insights, tips, and stories from the world of real estate.',
-    type: 'website',
-  },
-}
+// Metadata is already defined at the top of the file

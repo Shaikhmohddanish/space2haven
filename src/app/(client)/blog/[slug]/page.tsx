@@ -5,6 +5,9 @@ import { BlogPost } from '@/lib/sanity'
 import BlogDetail from '@/components/blog/BlogDetail'
 import Navbar from '@/components/layouts/Navbar'
 import Footer from '@/components/layouts/Footer'
+import JsonLd from '@/components/JsonLd'
+import { generateArticleSchema } from '@/lib/seo-utils'
+import { Metadata } from 'next'
 
 async function getBlogPost(slug: string) {
   try {
@@ -86,8 +89,32 @@ export default async function BlogPostPage(props: any) {
 
   const { post, relatedPosts } = data
 
+  // Create structured data for the blog post
+  let imageUrl = '/blog/blog-banner.jpg';
+  
+  if (post.mainImage?.asset?._ref) {
+    // Extract the image ID from the reference
+    const refParts = post.mainImage.asset._ref.split('-');
+    const imageId = refParts[1];
+    const extension = refParts[2];
+    
+    // Construct the Sanity CDN URL
+    imageUrl = `https://cdn.sanity.io/images/${process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'project-id'}/${process.env.NEXT_PUBLIC_SANITY_DATASET || 'production'}/${imageId}-${refParts[refParts.length - 1]}`;
+  }
+    
+  const articleSchema = generateArticleSchema({
+    title: post.title,
+    image: imageUrl,
+    publishedAt: post.publishedAt,
+    updatedAt: post.publishedAt,
+    author: post.author,
+    excerpt: post.excerpt,
+    slug: params.slug
+  });
+
   return (
     <>
+      <JsonLd data={articleSchema} />
       <Navbar />
       <Suspense fallback={<BlogPostLoadingSkeleton />}>
         <BlogDetail post={post} relatedPosts={relatedPosts} />
@@ -97,42 +124,67 @@ export default async function BlogPostPage(props: any) {
   )
 }
 
-export async function generateMetadata(props: any) {
-  const { params } = props
-  const slug = params.slug
-  const data = await getBlogPost(slug)
+export async function generateMetadata(props: any): Promise<Metadata> {
+  const { params } = props;
+  const slug = params.slug;
+  const data = await getBlogPost(slug);
 
   if (!data) {
     return {
-      title: 'Post Not Found',
-    }
+      title: 'Post Not Found | Space2Heaven Blog',
+      description: 'The requested blog post could not be found.',
+      robots: { index: false },
+    };
   }
 
-  const { post } = data
+  const { post } = data;
+  
+  // Extract category names for keywords
+  const categoryKeywords = post.categories?.map(cat => cat.title) || [];
+  
+  // Handle image URL for different Sanity configurations
+  let imageUrl = '/blog/blog-banner.jpg';
+  
+  if (post.mainImage?.asset?._ref) {
+    // Extract the image ID from the reference
+    const refParts = post.mainImage.asset._ref.split('-');
+    const imageId = refParts[1];
+    const extension = refParts[2];
+    
+    // Construct the Sanity CDN URL
+    imageUrl = `https://cdn.sanity.io/images/${process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'project-id'}/${process.env.NEXT_PUBLIC_SANITY_DATASET || 'production'}/${imageId}-${refParts[refParts.length - 1]}`;
+  }
 
   return {
     title: `${post.title} - Space2Heaven Blog`,
     description: post.excerpt || `Read "${post.title}" and discover insights about real estate.`,
+    keywords: [...categoryKeywords, 'real estate blog', 'property insights', 'real estate advice'],
+    alternates: {
+      canonical: `/blog/${slug}`,
+    },
     openGraph: {
       title: post.title,
       description: post.excerpt || `Read "${post.title}" and discover insights about real estate.`,
       type: 'article',
       publishedTime: post.publishedAt,
-      authors: post.author ? [post.author.name] : undefined,
-      images: post.mainImage ? [
+      url: `/blog/${slug}`,
+      siteName: 'Space2Heaven',
+      authors: post.author ? [post.author.name] : ['Space2Heaven Team'],
+      images: [
         {
-          url: `${post.mainImage.asset._ref}`,
+          url: imageUrl,
           width: 1200,
           height: 630,
-          alt: post.mainImage.alt || post.title,
+          alt: post.mainImage?.alt || post.title,
         }
-      ] : undefined,
+      ],
     },
     twitter: {
       card: 'summary_large_image',
       title: post.title,
-      description: post.excerpt,
-      images: post.mainImage ? [`${post.mainImage.asset._ref}`] : undefined,
+      description: post.excerpt || `Read "${post.title}" and discover insights about real estate.`,
+      images: [imageUrl],
+      creator: '@space2heaven',
     },
   }
 }
