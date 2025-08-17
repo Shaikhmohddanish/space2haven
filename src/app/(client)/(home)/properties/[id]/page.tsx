@@ -1,4 +1,7 @@
 import { notFound, redirect } from "next/navigation";
+import type { Metadata } from "next";
+import { connectDB } from "@/lib/dbConnection";
+import PropertyModel from "@/models/propertyModel";
 import PropertyDetails from "./PropertyDetails";
 
 async function fetchProperty(idOrSlug: string) {
@@ -27,4 +30,60 @@ export default async function PropertyById({ params }: { params: { id: string } 
             <PropertyDetails property={result.property} recommended={result.recommended} />
         </section>
     );
+}
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+  const idOrSlug = params.id;
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://space2heaven.com";
+  try {
+    await connectDB();
+    const isObjectId = /^[a-fA-F0-9]{24}$/.test(idOrSlug);
+    const property = isObjectId
+      ? await PropertyModel.findById(idOrSlug).lean()
+      : await PropertyModel.findOne({ slug: idOrSlug }).lean();
+
+    if (!property) {
+      return {
+        title: "Property Not Found | Space2Heaven",
+        description: "The property you are looking for could not be found.",
+        openGraph: { url: `${baseUrl}/properties/${idOrSlug}` },
+        alternates: { canonical: `${baseUrl}/properties/${idOrSlug}` },
+      };
+    }
+
+    const title = property.title ? `${property.title} | Space2Heaven` : "Property Details | Space2Heaven";
+    const descBase = property.description || property.overview || "Explore this property on Space2Heaven.";
+    const description = typeof descBase === "string" && descBase.length > 160 ? `${descBase.slice(0, 157)}...` : descBase;
+    const imageUrl = `${baseUrl}/properties/${idOrSlug}/opengraph-image`;
+
+    return {
+      title,
+      description,
+      alternates: { canonical: `${baseUrl}/properties/${idOrSlug}` },
+      openGraph: {
+        title,
+        description,
+        url: `${baseUrl}/properties/${idOrSlug}`,
+        siteName: "Space2Heaven",
+        images: [{ url: imageUrl, width: 1200, height: 630, alt: property.title || "Property image" }],
+        type: "website",
+      },
+      twitter: {
+        card: "summary_large_image",
+        title,
+        description,
+        images: [imageUrl],
+      },
+    };
+  } catch {
+    return {
+      title: "Property Details | Space2Heaven",
+      description: "Explore our property listings on Space2Heaven.",
+      openGraph: { url: `${baseUrl}/properties/${idOrSlug}` },
+      alternates: { canonical: `${baseUrl}/properties/${idOrSlug}` },
+    };
+  }
 }
