@@ -1,6 +1,11 @@
 import { Metadata } from 'next';
 import { generatePropertySchema } from '@/lib/seo-utils';
 import JsonLd from '@/components/JsonLd';
+import { connectDB } from '@/lib/dbConnection';
+import PropertyModel from '@/models/propertyModel';
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 type Props = {
   params: { id: string };
@@ -12,11 +17,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://space2heaven.com';
 
   try {
+    await connectDB();
     const isObjectId = /^[a-fA-F0-9]{24}$/.test(idOrSlug);
-    const apiUrl = isObjectId ? `/api/properties?id=${idOrSlug}` : `/api/properties?slug=${idOrSlug}`;
-    const response = await fetch(apiUrl, { cache: 'no-store' });
-    const payload = await response.json();
-    const property = payload?.matchingData || payload;
+    const property = isObjectId
+      ? await PropertyModel.findById(idOrSlug).lean()
+      : await PropertyModel.findOne({ slug: idOrSlug }).lean();
 
     if (!property || Array.isArray(property)) {
       return {
@@ -78,11 +83,11 @@ export default async function PropertyLayout({ params, children }: Props) {
   let schemaData = null;
   
   try {
+    await connectDB();
     const isObjectId = /^[a-fA-F0-9]{24}$/.test(params.id);
-    const apiUrl = isObjectId ? `/api/properties?id=${params.id}` : `/api/properties?slug=${params.id}`;
-    const response = await fetch(apiUrl, { cache: 'no-store' });
-    const payload = await response.json();
-    const property = payload?.matchingData || payload;
+    const property = isObjectId
+      ? await PropertyModel.findById(params.id).lean()
+      : await PropertyModel.findOne({ slug: params.id }).lean();
     
     if (property) {
       schemaData = generatePropertySchema(property);
