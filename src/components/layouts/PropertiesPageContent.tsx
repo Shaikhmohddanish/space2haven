@@ -4,7 +4,7 @@ import GetInTouchForm from "./GetInTouchForm";
 import { PropertiesPageContentProps, Property } from "@/types";
 import axios from "axios";
 import { useEffect, useState, useMemo, useRef } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import FeaturedPropertiesSlider from "./FeaturedPropertiesSlider";
 import NewPropertiesSlider from "./NewPropertiesSlider";
 import DeveloperSlider from "./DeveloperSlider";
@@ -24,12 +24,8 @@ const PropertiesPageContent = ({
   setFilters,
   cachedProperties,
 }: PropertiesPageContentProps & { cachedProperties?: Property[] }) => {
-  const pathname = usePathname();
   const searchParams = useSearchParams();
-  const isPropertyDetailsPage = pathname.startsWith("/properties/");
   const searchTerm = searchParams.get("search") || "";
-
-  if (isPropertyDetailsPage) return null;
 
   // State initialization:
   const [data, setData] = useState<Property[]>([]);

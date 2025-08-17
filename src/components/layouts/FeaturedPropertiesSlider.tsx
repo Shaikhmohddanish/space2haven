@@ -111,7 +111,7 @@ const FeaturedPropertiesSlider = ({ data }: FeaturedPropertiesSliderProps) => {
               <div className="flex gap-3">
                 <button
                   className="flex-1 px-4 py-2.5 bg-black text-white rounded-lg font-medium hover:bg-gray-900 transition-all duration-300 hover:shadow-lg hover:scale-[1.02] focus:scale-[0.98]"
-                  onClick={() => router.push(`/properties/${property._id}`)}
+                  onClick={() => router.push(`/properties/${(property as any).slug || property._id}`)}
                 >
                   View Details
                 </button>

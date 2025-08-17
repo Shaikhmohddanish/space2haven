@@ -36,6 +36,7 @@ export interface Property {
 
 export interface PropertyCardProps {
   id: string;
+  slug?: string;
   imageSrc: string;
   price: string;
   features: string[]; // Updated from string to string[]

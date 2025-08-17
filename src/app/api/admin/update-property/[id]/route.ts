@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import PropertyModel from "@/models/propertyModel";
 import { connectDB } from "@/lib/dbConnection";
 import mongoose from "mongoose";
+import { generateSlug } from "@/lib/slug";
 
 const processFormData = async (req: NextRequest): Promise<Record<string, any>> => {
   const formData = await req.formData();
@@ -72,6 +73,10 @@ export const PUT = async (req: NextRequest, context: any) => {
       return NextResponse.json({ error: "Property not found" }, { status: 404 });
     }
 
+    // If title changed, refresh slug
+    if (updatedProperty.title) {
+      updatedProperty.slug = generateSlug(updatedProperty.title);
+    }
     // Update the property in the database
     const updateResult = await PropertyModel.findByIdAndUpdate(id, updatedProperty, { new: true });
     console.log("✅ Property updated successfully:", updateResult);

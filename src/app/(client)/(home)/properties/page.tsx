@@ -1,10 +1,10 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { LoaderLayout, PropertiesPageContent } from "@/components";
 import { FilterObject } from "@/types";
 import dynamic from "next/dynamic";
-import { useParams, usePathname } from "next/navigation";
+import { useParams, usePathname, useSearchParams } from "next/navigation";
 import axios from "axios";
 import PropertyDetails from "./[id]/PropertyDetails"; // ✅ Import Property Details Component
 import LZString from "lz-string"; // ✅ Import compression library
@@ -53,7 +53,7 @@ interface Property {
 
 // ✅ Cache Constants
 const CACHE_KEY = "cachedProperties";
-const CACHE_EXPIRATION_TIME = 60 * 1000; // 1 Day in milliseconds
+const CACHE_EXPIRATION_TIME = 24 * 60 * 60 * 1000; // 24 hours
 
 // ✅ Function to Get Cached Data
 const getCachedData = () => {
@@ -77,10 +77,13 @@ const getCachedData = () => {
 const PropertiesPage = () => {
   const params = useParams();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
 
-  // ✅ Extract Property ID from URL
-  const propertyId = params?.id || pathname.split("/").pop();
-  const isValidPropertyId = propertyId && propertyId.length === 24;
+  // ✅ Extract property key (slug or id) from URL or rewrite query
+  const queryId = searchParams.get("id");
+  const lastSegment = pathname.split("/").pop();
+  const propertyKey = (params as any)?.id || queryId || (lastSegment !== "properties" ? lastSegment : undefined);
+  const isDetailRoute = Boolean(propertyKey);
 
   // ✅ State for Search & Filters
   const [search, setSearch] = useState<string>("");
@@ -99,14 +102,15 @@ const PropertiesPage = () => {
   const [recommended, setRecommended] = useState<Property[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const detailCacheRef = useRef<Record<string, Property | undefined>>({});
 
   // ✅ Check Cache First Before Fetching from API
   useEffect(() => {
-    if (!isValidPropertyId) return;
+    if (!isDetailRoute || !propertyKey) return;
 
     const fetchProperty = async () => {
       setLoading(true);
-      console.log("🔍 Checking cache for property:", propertyId);
+      console.log("🔍 Checking cache for property:", propertyKey);
 
       try {
         // ✅ Try retrieving the full properties list from cache
@@ -114,7 +118,7 @@ const PropertiesPage = () => {
 
         if (cachedData) {
           const recommendedProperties: Property[] = cachedData?.filter(property => property.recommend) || [];
-          const cachedProperty = cachedData?.find((p) => p._id === propertyId);
+          const cachedProperty = cachedData?.find((p) => p._id === propertyKey || (p as any).slug === propertyKey);
             if (cachedProperty) {
               console.log("✅ Property found in cache:", cachedProperty);
               setProperty(cachedProperty);
@@ -124,9 +128,18 @@ const PropertiesPage = () => {
             }
         }
 
+        // ✅ In-memory detail cache (per session)
+        if (detailCacheRef.current[propertyKey as string]) {
+          setProperty(detailCacheRef.current[propertyKey as string] || null);
+          setRecommended([]);
+          setLoading(false);
+          return;
+        }
+
         // ✅ If not found in cache, fetch from API (DO NOT UPDATE CACHE)
         console.log("🔄 Property not in cache, fetching from API...");
-        const response = await axios.get(`/api/properties?id=${propertyId}`);
+        const isObjectId = typeof propertyKey === 'string' && propertyKey.length === 24;
+        const response = await axios.get(isObjectId ? `/api/properties?id=${propertyKey}` : `/api/properties?slug=${propertyKey}`);
 
         if (!response.data.matchingData) {
           throw new Error("Property not found.");
@@ -135,6 +148,7 @@ const PropertiesPage = () => {
         console.log("🏡 Property Data from API:", response.data);
         setProperty(response.data.matchingData);
         setRecommended(response.data.recommendedData || []);
+        detailCacheRef.current[propertyKey as string] = response.data.matchingData;
       } catch (err) {
         console.error("❌ Error fetching property:", err);
         setError("Failed to load property details.");
@@ -144,10 +158,10 @@ const PropertiesPage = () => {
     };
 
     fetchProperty();
-  }, [propertyId, isValidPropertyId]);
+  }, [propertyKey, isDetailRoute]);
 
-  // ✅ If on `/properties/[id]`, show **Property Details** instead of Grid
-  if (isValidPropertyId) {
+  // ✅ If on `/properties/[slug-or-id]`, show **Property Details** instead of Grid
+  if (isDetailRoute) {
     if (loading) return <LoaderLayout />;
     if (error) return <div className="text-center text-red-500 py-20">{error}</div>;
 

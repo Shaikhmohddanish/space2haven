@@ -140,7 +140,7 @@ const NewPropertiesSlider = ({ data }: NewPropertiesSliderProps) => {
           <SplideSlide key={property._id}>
             <MemoizedSlideCard
               property={property}
-              onDetails={() => router.push(`/properties/${property._id}`)}
+              onDetails={() => router.push(`/properties/${(property as any).slug || property._id}`)}
               onGetInTouch={() => handleGetInTouch(property)}
             />
           </SplideSlide>

@@ -9,6 +9,7 @@ export const GET = async (req: Request) => {
     const { searchParams } = new URL(req.url);
 
     const id = searchParams.get("id");
+    const slug = searchParams.get("slug");
     const query = searchParams.get("query");
     const bhk = searchParams.get("bhk");
     const minPrice = searchParams.get("minPrice");
@@ -57,10 +58,30 @@ export const GET = async (req: Request) => {
       // ✅ Fetch 3 recommended properties (excluding the current one)
       const recommendedData = await PropertyModel.find({ _id: { $ne: id } }).limit(3);
 
+      return NextResponse.json(
+        { matchingData, recommendedData },
+        {
+          status: 200,
+          headers: {
+            "Cache-Control": "public, s-maxage=300, stale-while-revalidate=86400",
+          },
+        }
+      );
+    }
+
+    // ✅ Fetch property by slug if present
+    if (slug) {
+      const matchingData = await PropertyModel.findOne({ slug }).lean();
+
+      if (!matchingData) {
+        return NextResponse.json({ error: "Property not found" }, { status: 404 });
+      }
+
+      const recommendedData = await PropertyModel.find({ _id: { $ne: matchingData._id } }).limit(3);
       return NextResponse.json({ matchingData, recommendedData }, { status: 200 });
     }
 
-    // ✅ Apply search filters if `id` is NOT present
+    // ✅ Apply search filters if neither `id` nor `slug` is present
     if (query) {
       filter.$or = [
         { title: { $regex: query, $options: "i" } },
@@ -88,7 +109,12 @@ export const GET = async (req: Request) => {
     const searchResults = await PropertyModel.find(filter);
     console.log("✅ Returning results:", searchResults.length);
 
-    return NextResponse.json(searchResults, { status: 200 });
+    return NextResponse.json(searchResults, {
+      status: 200,
+      headers: {
+        "Cache-Control": "public, s-maxage=300, stale-while-revalidate=86400",
+      },
+    });
   } catch (error: any) {
     console.error("API Error:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });

@@ -3,9 +3,9 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { PropertyCardProps } from '@/types';
 
-const PropertyCard = React.memo(({ id, imageSrc, price, features, configuration, tag, location, propertyType, recommend }: PropertyCardProps) => {
+const PropertyCard = React.memo(({ id, slug, imageSrc, price, features, configuration, tag, location, propertyType, recommend }: PropertyCardProps) => {
     return (
-        <Link href={`/properties/${id}`} className="property-card-styles">
+        <Link href={`/properties/${slug || id}`} className="property-card-styles">
 
             {/* Tag on top of the image */}
             {recommend && (

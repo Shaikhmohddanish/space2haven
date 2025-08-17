@@ -47,7 +47,7 @@ const NewPropertiesGrid = ({ data }: { data: Property[] }) => {
             {/* View Details Button at Bottom Middle */}
             <button
               className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/70 text-white px-4 py-2 rounded-md hover:bg-black/80 transition"
-              onClick={() => router.push(`/properties/${property._id}`)}
+              onClick={() => router.push(`/properties/${(property as any).slug || property._id}`)}
             >
               View Details
             </button>

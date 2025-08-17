@@ -1,6 +1,7 @@
 import { connectDB } from "@/lib/dbConnection";
 import PropertyModel from "@/models/propertyModel";
 import { NextRequest, NextResponse } from "next/server";
+import { generateSlug } from "@/lib/slug";
 
 const processFormData = async (req: Request): Promise<any> => {
     const formData = await req.formData();
@@ -67,6 +68,10 @@ export const POST = async (req: NextRequest) => {
         }
 
         await connectDB();
+        // Ensure slug
+        if (!inputData.slug && inputData.title) {
+            inputData.slug = generateSlug(inputData.title);
+        }
         const addProperty = new PropertyModel(inputData);
         await addProperty.save();
 

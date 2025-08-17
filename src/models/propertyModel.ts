@@ -4,6 +4,7 @@ const PropertySchema = new Schema({
     _id: { type: Types.ObjectId, auto: true },  // ✅ Explicitly define _id
     title: { type: String, required: true },    
     propertyHeading: { type: String, required: true },
+    slug: { type: String, unique: true, index: true },
     images: { type: [String], required: true },
     price: { type: String, required: true },
     propertyType: { type: String, required: true },
