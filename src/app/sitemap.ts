@@ -1,5 +1,7 @@
 import { MetadataRoute } from 'next';
 
+export const dynamic = 'force-dynamic';
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Base URL from env or default
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://space2heaven.com';
@@ -25,8 +27,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Fetch dynamic routes - properties
   let propertyRoutes: MetadataRoute.Sitemap = [];
   try {
-    const propertiesResponse = await fetch(`${baseUrl}/api/properties`, { 
-      cache: 'no-cache' 
+    const propertiesResponse = await fetch(`/api/properties`, { 
+      cache: 'no-store'
     });
     const properties = await propertiesResponse.json();
     
@@ -43,8 +45,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Fetch dynamic routes - blog posts
   let blogRoutes: MetadataRoute.Sitemap = [];
   try {
-    const blogResponse = await fetch(`${baseUrl}/api/blog/posts`, { 
-      cache: 'no-cache' 
+    const blogResponse = await fetch(`/api/blog/posts`, { 
+      cache: 'no-store'
     });
     const blogPosts = await blogResponse.json();
     
