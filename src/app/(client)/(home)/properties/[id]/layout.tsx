@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
 
     const rawImage = property.images && property.images.length > 0 ? property.images[0] : '/images/default-image.webp';
-    const imageUrl = /^https?:\/\//.test(rawImage) ? rawImage : `${baseUrl}${rawImage}`;
+    const imageUrl = `${baseUrl}/properties/${idOrSlug}/opengraph-image`;
 
     const title = property.title ? `${property.title} | Space2Heaven` : 'Property Details | Space2Heaven';
     const descBase = property.description || property.overview || 'Explore this property on Space2Heaven.';
