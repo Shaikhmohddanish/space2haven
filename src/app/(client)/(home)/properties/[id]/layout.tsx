@@ -8,52 +8,49 @@ type Props = {
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const id = params.id;
-  
+  const idOrSlug = params.id;
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://space2heaven.com';
+
   try {
-    // Fetch property data
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'https://space2heaven.com'}/api/properties?id=${id}`, {
-      cache: 'no-cache'
-    });
-    const { matchingData: property } = await response.json();
-    
-    if (!property) {
+    const isObjectId = /^[a-fA-F0-9]{24}$/.test(idOrSlug);
+    const apiUrl = isObjectId ? `/api/properties?id=${idOrSlug}` : `/api/properties?slug=${idOrSlug}`;
+    const response = await fetch(apiUrl, { cache: 'no-store' });
+    const payload = await response.json();
+    const property = payload?.matchingData || payload;
+
+    if (!property || Array.isArray(property)) {
       return {
         title: 'Property Not Found | Space2Heaven',
         description: 'The property you are looking for could not be found.',
+        alternates: { canonical: `${baseUrl}/properties/${idOrSlug}` },
+        openGraph: { url: `${baseUrl}/properties/${idOrSlug}` },
       };
     }
 
-    // Base property image
-    const propertyImage = property.images && property.images.length > 0 
-      ? property.images[0] 
-      : '/images/default-image.webp';
+    const rawImage = property.images && property.images.length > 0 ? property.images[0] : '/images/default-image.webp';
+    const imageUrl = /^https?:\/\//.test(rawImage) ? rawImage : `${baseUrl}${rawImage}`;
 
-    // Create metadata for property
+    const title = property.title ? `${property.title} | Space2Heaven` : 'Property Details | Space2Heaven';
+    const descBase = property.description || property.overview || 'Explore this property on Space2Heaven.';
+    const description = typeof descBase === 'string' && descBase.length > 160 ? `${descBase.slice(0, 157)}...` : descBase;
+
     return {
-      title: `${property.title} | Space2Heaven`,
-      description: property.description.substring(0, 160) + '...' || `${property.title} - Explore this property listing on Space2Heaven.`,
-      keywords: [
-        property.type || 'property', 
-        property.city || 'real estate', 
-        `${property.bedrooms || ''} bhk`, 
-        'property for sale', 
-        'real estate listing'
-      ],
+      title,
+      description,
       alternates: {
-        canonical: `/properties/${id}`,
+        canonical: `${baseUrl}/properties/${idOrSlug}`,
       },
       openGraph: {
-        title: property.title,
-        description: property.description.substring(0, 160) + '...' || `${property.title} - Explore this property listing on Space2Heaven.`,
-        url: `/properties/${id}`,
+        title,
+        description,
+        url: `${baseUrl}/properties/${idOrSlug}`,
         siteName: 'Space2Heaven',
         images: [
           {
-            url: propertyImage,
+            url: imageUrl,
             width: 1200,
             height: 630,
-            alt: property.title,
+            alt: property.title || 'Property image',
           },
         ],
         locale: 'en_US',
@@ -61,9 +58,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       },
       twitter: {
         card: 'summary_large_image',
-        title: property.title,
-        description: property.description.substring(0, 160) + '...' || `${property.title} - Explore this property listing on Space2Heaven.`,
-        images: [propertyImage],
+        title,
+        description,
+        images: [imageUrl],
       },
     };
   } catch (error) {
@@ -71,6 +68,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return {
       title: 'Property Details | Space2Heaven',
       description: 'Explore our property listings on Space2Heaven.',
+      alternates: { canonical: `${baseUrl}/properties/${idOrSlug}` },
+      openGraph: { url: `${baseUrl}/properties/${idOrSlug}` },
     };
   }
 }
@@ -79,11 +78,11 @@ export default async function PropertyLayout({ params, children }: Props) {
   let schemaData = null;
   
   try {
-    // Fetch property data for structured data
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'https://space2heaven.com'}/api/properties?id=${params.id}`, {
-      cache: 'no-cache'
-    });
-    const { matchingData: property } = await response.json();
+    const isObjectId = /^[a-fA-F0-9]{24}$/.test(params.id);
+    const apiUrl = isObjectId ? `/api/properties?id=${params.id}` : `/api/properties?slug=${params.id}`;
+    const response = await fetch(apiUrl, { cache: 'no-store' });
+    const payload = await response.json();
+    const property = payload?.matchingData || payload;
     
     if (property) {
       schemaData = generatePropertySchema(property);

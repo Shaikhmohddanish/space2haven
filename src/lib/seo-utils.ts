@@ -74,30 +74,31 @@ export function generateMetadata({
 export function generatePropertySchema(property: any) {
   return {
     '@context': 'https://schema.org',
-    '@type': 'RealEstateAgent',
-    name: 'Space2Heaven',
+    '@type': 'RealEstateListing',
+    name: property.title,
+    description: property.description,
+    url: `https://space2heaven.com/properties/${property.slug || property._id}`,
     image: property.images?.[0] || '/images/homeBanner.webp',
+    datePosted: property.updatedAt || property.createdAt || new Date().toISOString(),
     address: {
       '@type': 'PostalAddress',
-      addressLocality: property.location?.city,
-      addressRegion: property.location?.state,
-      addressCountry: property.location?.country || 'India',
+      addressLocality: property.address?.city,
+      addressRegion: property.address?.state,
+      addressCountry: 'India',
     },
-    makesOffer: {
+    offers: {
       '@type': 'Offer',
+      priceCurrency: 'INR',
+      price: property.price,
+      availability: 'https://schema.org/InStock',
       itemOffered: {
-        '@type': 'Residence',
-        name: property.title,
-        description: property.description,
-        numberOfRooms: property.bedrooms,
+        '@type': 'Apartment',
+        numberOfRoomsTotal: property.configuration,
         floorSize: {
           '@type': 'QuantitativeValue',
           value: property.area,
-          unitCode: 'SQF',
+          unitText: property.areaUnit || 'sq.ft',
         },
-        price: property.price,
-        priceCurrency: 'INR',
-        image: property.images?.[0] || '/images/homeBanner.webp',
       },
     },
   };
