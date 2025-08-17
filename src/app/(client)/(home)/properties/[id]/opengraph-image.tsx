@@ -2,7 +2,7 @@ import { ImageResponse } from 'next/og'
 import { connectDB } from '@/lib/dbConnection'
 import PropertyModel from '@/models/propertyModel'
 
-export const runtime = 'edge'
+export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
 // 1200 x 630 recommended
