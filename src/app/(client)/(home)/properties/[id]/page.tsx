@@ -54,9 +54,14 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
       };
     }
 
-    const title = property.title ? `${property.title} | Space2Heaven` : "Property Details | Space2Heaven";
-    const descBase = property.description || property.overview || "Explore this property on Space2Heaven.";
-    const description = typeof descBase === "string" && descBase.length > 160 ? `${descBase.slice(0, 157)}...` : descBase;
+    const city: string = property?.address?.city || "";
+    const state: string = property?.address?.state || "";
+    const locationSuffix = city || state ? `, ${[city, state].filter(Boolean).join(", ")}` : "";
+    const title = property.title ? `${property.title}${locationSuffix} | Space2Heaven` : "Property Details | Space2Heaven";
+
+    const sourceText: string = property.overview || property.description || "Explore this property on Space2Heaven.";
+    const trimmed = sourceText.replace(/\s+/g, " ").trim();
+    const description = trimmed.length > 100 ? `${trimmed.slice(0, 100).replace(/\s+\S*$/, "")}...` : trimmed;
     const imageUrl = `${baseUrl}/properties/${idOrSlug}/opengraph-image`;
 
     return {

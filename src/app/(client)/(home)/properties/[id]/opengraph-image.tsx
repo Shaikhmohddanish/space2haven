@@ -27,7 +27,14 @@ export default async function Image({ params }: { params: { id: string } }) {
 
   const title: string = property?.title || 'Space2Heaven Property'
   const city: string = property?.address?.city || ''
+  const state: string = property?.address?.state || ''
   const price: string = property?.price ? `₹ ${property.price}` : ''
+  const overviewText: string = (property?.overview || property?.description || '')
+    .toString()
+    .replace(/\s+/g, ' ')
+    .slice(0, 100)
+    .replace(/\s+\S*$/, '')
+  const location = [city, state].filter(Boolean).join(', ')
 
   return new ImageResponse(
     (
@@ -48,20 +55,25 @@ export default async function Image({ params }: { params: { id: string } }) {
           backgroundPosition: 'center',
         }}
       >
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '12px',
-          background: 'rgba(0,0,0,0.55)',
-          padding: '24px 28px',
-          borderRadius: '12px',
-          maxWidth: '1000px',
-        }}>
-          <div style={{ fontSize: 54, fontWeight: 800 }}>{title}</div>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '12px',
+            background: 'rgba(0,0,0,0.55)',
+            padding: '24px 28px',
+            borderRadius: '12px',
+            maxWidth: '1000px',
+          }}
+        >
+          <div style={{ fontSize: 54, fontWeight: 800, lineHeight: 1.1 }}>{title}</div>
           <div style={{ display: 'flex', gap: 24, fontSize: 28, fontWeight: 600 }}>
-            {city && <div>{city}</div>}
+            {location && <div>{location}</div>}
             {price && <div>{price}</div>}
           </div>
+          {overviewText && (
+            <div style={{ fontSize: 24, opacity: 0.95, marginTop: 6 }}>{overviewText}...</div>
+          )}
         </div>
 
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
